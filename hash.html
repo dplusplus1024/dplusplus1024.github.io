@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>D++</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="files/style.css">
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+</style>
+<script src="files/words.js"></script>
+</head>
+
+<script>
+function binString2buf(string) {
+	var result = new Uint8Array(32);
+	for (var i = 0; i < 32; i++) {
+		// taking 8 bytes and putting it into 8 bits
+		// console.log("loop #" + i);
+		result[i] = 0;
+		for (var c = 0; c < 8; c++) {
+			if (Number(string[i*8 + c]) === 1) {
+				result[i] |= 1 << (7 - c);
+			}
+		}
+	    // console.log("result[" + i + "] is: " + result[i]);
+	}
+	return result;
+}
+
+function buf2bin(buffer) {
+	var view = new Uint8Array(buffer);
+	var result = "";
+	for (var i = 0; i < view.length; i++) {
+		var binary = view[i].toString(2);
+		binary = "00000000".substr(binary.length) + binary;
+		result += binary;
+	}
+	return result;
+}
+
+function buf2hex(buffer) {
+	// buffer is an ArrayBuffer
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
+async function shaMe(inputString) {
+	console.log("inputstring is " + inputString);
+	var inputBytes = binString2buf(inputString);
+	console.log("inputBytes is " + inputBytes);
+    var hashBytes = await window.crypto.subtle.digest("SHA-256", inputBytes);
+
+    // console.log(buf2hex(hashBytes));
+    // console.log(buf2bin(hashBytes));
+	return buf2bin(hashBytes);
+}
+
+function convertBin() {
+	var binary = document.getElementById("binary").value;
+	if (binary == "")
+		$("#result").html("Please input a binary number.");
+	else {
+		binary = parseInt(binary, 2);
+		console.log(binary);
+		console.log();
+		$("#result").html("<center><table><tr><td><b>Result:</b><br>" + wordlist[binary] + "</td><td><b>Decimal:</b><br>" + binary + "</td></tr></table>");
+	}
+}
+
+function isNumberKey(evt, element, max) {
+  var charCode = (evt.which) ? evt.which : event.keyCode;
+  var len = $(element).val().length;
+
+  if (len >= max)
+	return false;
+
+
+  if (charCode != 48 && charCode != 49)
+    return false;
+}
+
+function searchStringInArray (str, strArray) {
+	str = str.toLowerCase();
+    for (var j = 0; j < strArray.length; j++) {
+        if (strArray[j] == str) {
+			console.log('we found a match, it is ' + strArray[j]);
+			return j;
+		}
+    }
+    return -1;
+}
+
+function hex2bin(hex){
+    return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
+}
+
+async function checksum() {
+	var key = "";
+	var wallet = "";
+
+	var words = document.getElementsByClassName("bip-input");
+	for (var i = 0; i < words.length; i++) {
+		var binary = words[i].value;
+		if (binary == "") {
+			$("#checksum-result").html("Please enter valid seed words.");
+			document.getElementById("qrcode-container").style.display = "none";
+			return false;
+		}
+
+		wallet = wallet + binary + " ";
+
+		binary = searchStringInArray(binary, wordlist);
+		if (binary < 0) {
+			$("#checksum-result").html("Invalid seed words.");
+			document.getElementById("qrcode-container").style.display = "none";
+			return false;
+		}
+		binary = binary.toString(2)
+		binary = "00000000000".substr(binary.length) + binary;
+
+		key += binary;
+	}
+	console.log("wallet is " + wallet);
+	if ($('#checksum').val() == "") {
+			$("#checksum-result").html("Please enter the first three bits of the checksum.");
+			document.getElementById("qrcode-container").style.display = "none";
+			return false;
+	}
+
+	// for fun, show all 8 possible checksum words
+	validChecksums(key);
+
+	key += $("#checksum").val();
+	console.log("key is " + key);
+	console.log("key length is " + key.length);
+	var result = await shaMe(key);
+	console.log("updating sha ???!?!?!?!?!?!?!?!");
+
+	var hash = result.substring(0, 8);
+	hash = Number($('#checksum').val() + hash);
+
+	var twentyFour = wordlist[parseInt(hash, 2)];
+	wallet += twentyFour;
+
+	// generateQRCode(wallet);
+
+	console.log(wallet);
+	$("#checksum-result").html("<b>Seed Words in Binary:</b><br>" + key + "<br><br><b>SHA-256 Hash of Seed Words:</b><br>" + result);
+	// $("#checksum-result").html("<b>Checksum:</b><br>" + twentyFour + "<br><br><b>Binary:</b><br>" + key + "<br><br><b>Hash:</b><br>" + result + "<br><br><b>Mnemonic:</b><br>" + wallet);
+}
+
+async function validChecksums(key) {
+	var results = "";
+
+	// document.getElementById("possible-checksums-result").innerHTML = "<br><b>All Possible Checksums:</b><br>";
+	for (var i = 0; i < 8; i++) {
+		var myKey = key;
+		var binary = i.toString(2);
+		binary = "000".substr(binary.length) + binary;
+		console.log("binary for checksum is: " + binary);
+
+		myKey += binary;
+
+		let result = await shaMe(myKey);
+
+		var hash = result.substring(0, 8);
+		console.log("binary(blurg) here is " + binary);
+		hash = binary + hash;
+		console.log("last 11 bits are now: " + hash);
+
+		var twentyFour = wordlist[parseInt(hash, 2)];
+		console.log("possible checksum is " + twentyFour);
+		results += twentyFour + " ";
+		console.log("results is now " + results);
+	}
+	console.log("TESTING!!!!!!!!!!!!!!!!!");
+	console.log("all the results are " + results);
+	// document.getElementById("possible-checksums-result").innerHTML += results;
+}
+
+function autofill(word, checksum) {
+	$(".bip-input").val(word);
+	$('#checksum').val(checksum);
+}
+
+function generateQRCode(string) {
+	let qrcodeContainer = document.getElementById("qrcode");
+	qrcodeContainer.innerHTML = "";
+	new QRCode(qrcodeContainer, string);
+	document.getElementById("qrcode-container").style.display = "block";
+}
+</script>
+
+<br>
+<img src=images/Title.png style="width:500px; max-width:95%">
+<br><br>
+<h3>Convert Binary to BIP 39 word</h3>
+
+<input class="button-class" placeholder="11 Bit Binary Number" id="binary" onkeypress="return isNumberKey(event,this, 11)"><br>
+<button class="button-class" onclick="convertBin()">Convert</button>
+<br><br>
+
+<div id="result"></div>
+
+<br><hr><br>
+
+<h3>Calculate BIP 39 Hash</h3>
+
+<center>
+<!--button onclick="autofill('abandon', '000')">Autofill (All Zeros)</button>
+<button onclick="autofill('zoo', '111')">Autofill (All Ones)</button><br>
+<button onclick="autofill('bacon', '000')" style="margin-top:5px">Autofill (All Bacons)</button>
+<br><br-->
+<table>
+<tr>
+<td>
+1. <input class="bip-input">
+</td>
+<td>
+2. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+3. <input class="bip-input">
+</td>
+<td>
+4. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+5. <input class="bip-input">
+</td>
+<td>
+6. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+7. <input class="bip-input">
+</td>
+<td>
+8. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+9. <input class="bip-input">
+</td>
+<td>
+10. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+11. <input class="bip-input">
+</td>
+<td>
+12. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+13. <input class="bip-input">
+</td>
+<td>
+14. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+15. <input class="bip-input">
+</td>
+<td>
+16. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+17. <input class="bip-input">
+</td>
+<td>
+18. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+19. <input class="bip-input">
+</td>
+<td>
+20. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+21. <input class="bip-input">
+</td>
+<td>
+22. <input class="bip-input">
+</td>
+</tr>
+
+<tr>
+<td>
+23. <input class="bip-input">
+</td>
+<td>
+24. <input id="checksum" class="input" placeholder="First 3 bits of checksum" onkeypress="return isNumberKey(event,this, 3)">
+</td>
+</tr>
+
+</table>
+
+<button onclick="checksum()" class="button-class">Submit</button>
+
+<div id="possible-checksums-result"></div>
+
+<div id="checksum-result" style="margin-top:25px; overflow-wrap: break-word; width:500px"></div>
+
+<div id="qrcode-container" style="margin-top:25px;">
+  <div id="qrcode" class="qrcode"></div>
+</div>
+
+<footer style="margin-top:100px; font-size:13px; line-height:4px">
+© 2021 D++  &nbsp;&nbsp;<a href=https://dplusplus.me>http://dplusplus.me</a>&nbsp;&nbsp;&nbsp;<a href=https://twitter.com/D_plus__plus><img src="images/Twitter.jpg" width=14> d_plus__plus</a>&nbsp;&nbsp;&nbsp;<a href=https://www.instagram.com/d_plus_plus/><img src="images/Instagram.jpg" width=14> d_plus_plus</a>
+</footer>
+
+</html>

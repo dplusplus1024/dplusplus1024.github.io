@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>D++</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="files/style.css">
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+</style>
+<script src="files/words.js"></script>
+</head>
+
+<script>
+function PBKDF2(string) {
+  fetch("http://localhost:1024/PBKDF2/" + string).then(function(response) {
+    return response.text();
+  }).then(function(text) {
+    $('#PBKDF2').html(text);
+    $('#result').show();
+    console.log(text);
+  }).catch(function(error) {
+    console.log(error);
+  });
+}
+
+function stepOne() {
+  var seed = $('#seed').val();
+  var pass =  $('#pass').val();
+  if (seed) {
+    if (pass)
+      PBKDF2(seed + '/' + pass)
+    else
+      PBKDF2(seed);
+  }
+}
+</script>
+
+<br>
+<img src=images/Wallet.jpg style="width:500px; max-width:95%">
+<br><br>
+<img src=https://raw.githubusercontent.com/bitcoinbook/bitcoinbook/develop/images/mbc2_0507.png class="diagram">
+<br><br>
+<h3>Step 1: PBKDF2 Key Stretching</h3>
+
+<input class="button-class" placeholder="Seed Phrase" id="seed"><br>
+<input class="button-class" placeholder="Optional Passphrase" id="pass"><br>
+<button class="button-class" onclick="stepOne()">Submit</button>
+<br><br>
+
+<div id="result" style="display:none">
+  <b style="font-size:16px; text-transform:uppercase">Result of  2048 rounds of HMAC-SHA512 using PBKDF2</b><br><br>
+  <div id="PBKDF2"></div>
+</div>
+
+<!--br><hr><br>
+
+<h3>Calculate BIP 39 Checksum</h3>
+
+<center>
+
+
+<button onclick="checksum()" class="button-class">Calculate Checksum</button>
+
+<div id="possible-checksums-result"></div>
+
+<div id="checksum-result" style="margin-top:25px; overflow-wrap: break-word; width:500px"></div>
+
+<div id="qrcode-container" style="margin-top:25px;">
+  <div id="qrcode" class="qrcode"></div>
+</div-->
+
+
+<footer style="margin-top:100px; font-size:13px; line-height:4px">
+© 2021 D++  &nbsp;&nbsp;<a href=https://dplusplus.me>http://dplusplus.me</a>&nbsp;&nbsp;&nbsp;<a href=https://twitter.com/D_plus__plus><img src="images/Twitter.jpg" width=14> d_plus__plus</a>&nbsp;&nbsp;&nbsp;<a href=https://www.instagram.com/d_plus_plus/><img src="images/Instagram.jpg" width=14> d_plus_plus</a>
+</footer>
+
+</html>
