@@ -118,6 +118,8 @@ body {
 }
 
 button {
+  color:white;
+  background:black;
   border: 1px solid black;
 }
 
