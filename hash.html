@@ -195,10 +195,10 @@ function generateQRCode(string) {
 	document.getElementById("qrcode-container").style.display = "block";
 }
 </script>
-
+<header>
+<!--img src=images/Title.png style="width:500px; max-width:95%"-->
+</header>
 <br>
-<img src=images/Title.png style="width:500px; max-width:95%">
-<br><br>
 <h3>Convert Binary to BIP 39 word</h3>
 
 <input class="button-class" placeholder="11 Bit Binary Number" id="binary" onkeypress="return isNumberKey(event,this, 11)"><br>
@@ -209,7 +209,7 @@ function generateQRCode(string) {
 
 <br>
 
-<h3>Calculate BIP 39 Hash</h3>
+<h3>Calculate Hash of Seed Phrase</h3>
 
 <center>
 <!--button onclick="autofill('abandon', '000')">Autofill (All Zeros)</button>
