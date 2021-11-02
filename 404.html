@@ -1,6 +1,10 @@
 <script>
+  var path = window.location.pathname;
   console.log("Page path is " + window.location.pathname);
-  //window.location.replace("http://stackoverflow.com");
+  if (path == "words")
+    window.location.replace("https://dplusplus.me/words.html");
+  if (path == "hash")
+    window.location.replace("https://dplusplus.me/hash.html");  
   console.log('sup baby d');
 </script>
 sup b
