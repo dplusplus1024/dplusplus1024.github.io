@@ -39,6 +39,33 @@ body, h3, button, input, h4 {
   margin: 0 auto;
 }
 
+.text-center {
+    margin: 0 auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.number {
+  display: inline-block;
+  width:20px;
+  text-align:right;
+  margin-right:4px;
+}
+
+.col-sm-6 {
+  margin-bottom:14px;
+}
+
+#checksum-result {
+  margin-top:25px;
+  overflow-wrap: break-word;
+  width:500px;
+  max-width:95%;
+}
+
 body {
   padding-top:30px;
   text-align: center;
