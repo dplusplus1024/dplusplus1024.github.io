@@ -121,6 +121,8 @@ button {
   color:white;
   background:black;
   border: 1px solid black;
+  padding-top:2px;
+  padding-bottom:2px;
 }
 
 .button {
