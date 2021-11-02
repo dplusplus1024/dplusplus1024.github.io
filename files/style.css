@@ -40,9 +40,8 @@ body, h3, button, input, h4 {
 }
 
 body {
+  padding-top:30px;
   text-align: center;
-  padding-top: 30px;
-  padding-bottom: 80px;
 }
 
 button {
@@ -89,4 +88,32 @@ tr, td, table {
 
 h2 {
 	margin-bottom:20px;
+}
+/*
+header {
+  color:white;
+  background:#003ff8;
+  font-size:13px;
+  line-height:28px;
+  padding:30px;
+  top:0;
+}
+*/
+footer {
+  color:white;
+  background:black;
+  margin-top:60px;
+  font-size:13px;
+  line-height:28px;
+  padding:15px;
+}
+
+footer a {
+  color:white;
+}
+
+footer a:hover {
+  color:white;
+  font-weight:bold;
+  text-decoration:none;
 }
