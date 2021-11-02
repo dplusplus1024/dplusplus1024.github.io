@@ -26,7 +26,7 @@
   var result = path.split("/");
   result = searchStringInArray(result[1], paths);
   if (result < 0) {
-      document.write('404 file not found');
+    window.location.replace("https://dplusplus.me");
     }
   else {
     window.location.replace("https://dplusplus.me" + path + ".html");
