@@ -5,6 +5,9 @@
 }
 
 @media (max-width: 599px) {
+  #hide-on-mobile {
+    display:none;
+  }
   h3 {
     font-size: 20px;
   }
