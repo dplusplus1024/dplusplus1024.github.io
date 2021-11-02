@@ -1,7 +1,32 @@
 <script>
+  var paths = `
+  words
+  wallet
+  master
+  hash`;
+  
+  var paths = paths.split("\n");
+  
+  function searchStringInArray (str, strArray) {
+	  str = str.toLowerCase();
+    for (var j = 0; j < strArray.length; j++) {
+        if (strArray[j] == str) {
+			    console.log('we found a match, it is ' + strArray[j]);
+			    return j;
+		    }
+    }
+    return -1;
+  }
+  
   var path = window.location.pathname;
+  
   console.log("Page path is " + window.location.pathname);
-  window.location.replace("https://dplusplus.me" + path + ".html");
-  console.log('sup baby d');
+
+  var result = searchStringInArray(binary, wordlist);
+		if (result < 0) {
+      document.write('404 file not found');
+    }
+  else {
+    window.location.replace("https://dplusplus.me" + path + ".html");
+  }
 </script>
-sup b
