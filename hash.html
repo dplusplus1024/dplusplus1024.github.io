@@ -207,7 +207,7 @@ function generateQRCode(string) {
 <button class="button-class" onclick="convertBin()">Convert</button>
 <br><br>
 
-<div id="result"></div>
+<div id="result" style="font-size:18px;"></div>
 
 <br><hr><br>
 
@@ -218,122 +218,62 @@ function generateQRCode(string) {
 <button onclick="autofill('zoo', '111')">Autofill (All Ones)</button><br>
 <button onclick="autofill('bacon', '000')" style="margin-top:5px">Autofill (All Bacons)</button>
 <br><br-->
-<table>
-<tr>
-<td>
-1. <input class="bip-input">
-</td>
-<td>
-2. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-3. <input class="bip-input">
-</td>
-<td>
-4. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-5. <input class="bip-input">
-</td>
-<td>
-6. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-7. <input class="bip-input">
-</td>
-<td>
-8. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-9. <input class="bip-input">
-</td>
-<td>
-10. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-11. <input class="bip-input">
-</td>
-<td>
-12. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-13. <input class="bip-input">
-</td>
-<td>
-14. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-15. <input class="bip-input">
-</td>
-<td>
-16. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-17. <input class="bip-input">
-</td>
-<td>
-18. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-19. <input class="bip-input">
-</td>
-<td>
-20. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-21. <input class="bip-input">
-</td>
-<td>
-22. <input class="bip-input">
-</td>
-</tr>
-
-<tr>
-<td>
-23. <input class="bip-input">
-</td>
-<td>
-24. <input id="checksum" class="input" placeholder="First 3 bits of checksum" onkeypress="return isNumberKey(event,this, 3)">
-</td>
-</tr>
-
-</table>
+<div class="container">
+	<div class="row" style="margin-top:20px">
+		<div class="col-sm-6 text-center"><span class="number">1.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">2.</span><input class="bip-input"></div>
+  </div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">3.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">4.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">5.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">6.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">7.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">8.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">9.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">10.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">11.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">12.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">13.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">14.</span><input class="bip-input"></div>
+  </div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">15.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">16.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">17.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">18.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">19.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">20.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">21.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">22.</span><input class="bip-input"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-center"><span class="number">23.</span><input class="bip-input"></div>
+		<div class="col-sm-6 text-center"><span class="number">24.</span><input id="checksum" class="input" placeholder="First 3 bits of checksum" onkeypress="return isNumberKey(event,this, 3)"></div>
+	</div>
+</div>
 
 <button onclick="checksum()" class="button-class">Submit</button>
 
 <div id="possible-checksums-result"></div>
 
-<div id="checksum-result" style="margin-top:25px; overflow-wrap: break-word; width:500px"></div>
+<div id="checksum-result"></div>
 
 <div id="qrcode-container" style="margin-top:25px;">
   <div id="qrcode" class="qrcode"></div>
