@@ -199,6 +199,7 @@ function generateQRCode(string) {
 <!--img src=images/Title.png style="width:500px; max-width:95%"-->
 </header>
 <br>
+<div class="container">
 <h3>Convert Binary to BIP 39 word</h3>
 
 <input class="button-class" placeholder="11 Bit Binary Number" id="binary" onkeypress="return isNumberKey(event,this, 11)"><br>
@@ -216,7 +217,7 @@ function generateQRCode(string) {
 <button onclick="autofill('zoo', '111')">Autofill (All Ones)</button><br>
 <button onclick="autofill('bacon', '000')" style="margin-top:5px">Autofill (All Bacons)</button>
 <br><br-->
-<div class="container">
+
 	<div class="row" style="margin-top:20px">
 		<div class="col-sm-6 text-center"><span class="number">1.</span><input class="bip-input"></div>
 		<div class="col-sm-6 text-center"><span class="number">2.</span><input class="bip-input"></div>
@@ -265,9 +266,10 @@ function generateQRCode(string) {
 		<div class="col-sm-6 text-center"><span class="number">23.</span><input class="bip-input"></div>
 		<div class="col-sm-6 text-center"><span class="number">24.</span><input id="checksum" class="input" placeholder="First 3 bits of checksum" onkeypress="return isNumberKey(event,this, 3)"></div>
 	</div>
-</div>
 
-<button onclick="checksum()" class="button-class">Submit</button>
+<button onclick="checksum()" class="button-class" id="submit-button">Submit</button>
+
+</div> <!-- end container -->
 
 <div id="possible-checksums-result"></div>
 
