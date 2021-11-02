@@ -21,9 +21,9 @@
   var path = window.location.pathname;
   
   console.log("Page path is " + window.location.pathname);
-
-  var result = searchStringInArray(binary, wordlist);
-		if (result < 0) {
+  var result = path.split("\");
+  result = searchStringInArray(result[1], paths);
+  if (result < 0) {
       document.write('404 file not found');
     }
   else {
