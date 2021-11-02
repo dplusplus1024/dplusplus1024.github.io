@@ -70,7 +70,7 @@ function convertBin() {
 		binary = parseInt(binary, 2);
 		console.log(binary);
 		console.log();
-		$("#result").html("<center><b>Result:</b><br>" + wordlist[binary] + "<br><br><b>Decimal:</b><br>" + binary);
+		$("#result").html("<center><b>Result:</b><br>" + wordlist[binary] + "<br><br><b>Decimal:</b><br>" + binary + "<br><br>");
 	}
 }
 
@@ -205,9 +205,9 @@ function generateQRCode(string) {
 <button class="button-class" onclick="convertBin()">Convert</button>
 <br><br>
 
-<div id="result" style="font-size:18px;"></div>
+<div id="result" style="font-size:17px;"></div>
 
-<br><hr><br>
+<br>
 
 <h3>Calculate BIP 39 Hash</h3>
 
