@@ -21,7 +21,7 @@
   var path = window.location.pathname;
   
   console.log("Page path is " + window.location.pathname);
-  var result = path.split("\");
+  var result = path.split("\\");
   result = searchStringInArray(result[1], paths);
   if (result < 0) {
       document.write('404 file not found');
