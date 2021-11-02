@@ -32,6 +32,15 @@
     -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
     box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
   }
+  .bip-input, #checksum {
+    width: 80%;
+  }
+  .number {
+    margin-left: -30px!important;
+  }
+  #submit-button {
+    margin-left: -8px;
+  }
 }
 
 a {
@@ -144,6 +153,10 @@ button {
 	text-align:center;
 	max-width:80%!important;
 	margin-bottom:5px;
+}
+
+.button-class {
+  width:80%%;
 }
 
 tr, td, table {
