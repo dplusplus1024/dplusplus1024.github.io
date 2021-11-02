@@ -70,7 +70,7 @@ function convertBin() {
 		binary = parseInt(binary, 2);
 		console.log(binary);
 		console.log();
-		$("#result").html("<center><table><tr><td><b>Result:</b><br>" + wordlist[binary] + "</td><td><b>Decimal:</b><br>" + binary + "</td></tr></table>");
+		$("#result").html("<center><b>Result:</b><br>" + wordlist[binary] + "<br><br><b>Decimal:</b><br>" + binary);
 	}
 }
 
@@ -141,7 +141,6 @@ async function checksum() {
 	console.log("key is " + key);
 	console.log("key length is " + key.length);
 	var result = await shaMe(key);
-	console.log("updating sha ???!?!?!?!?!?!?!?!");
 
 	var hash = result.substring(0, 8);
 	hash = Number($('#checksum').val() + hash);
@@ -180,7 +179,6 @@ async function validChecksums(key) {
 		results += twentyFour + " ";
 		console.log("results is now " + results);
 	}
-	console.log("TESTING!!!!!!!!!!!!!!!!!");
 	console.log("all the results are " + results);
 	// document.getElementById("possible-checksums-result").innerHTML += results;
 }
