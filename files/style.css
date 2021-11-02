@@ -1,15 +1,36 @@
+/* DESKTOP VIEW */
 @media (min-width: 600px) {
   #hide-on-desktop {
     display:none;
   }
+  header {
+    background:white;
+    background-image: url("../images/Title.png");
+    background-size:500px;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    padding-top:90px;
+  }
 }
-
+/* MOBILE VIEW */
 @media (max-width: 599px) {
   #hide-on-mobile {
     display:none;
   }
   h3 {
     font-size: 20px;
+  }
+  header {
+    background:black;
+    background-image: url("../images/BlackTitle.png");
+    background-size:90%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height:70px;
+    margin-bottom:15px;
+    -webkit-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+    -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+    box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
   }
 }
 
@@ -83,7 +104,7 @@ body, h3, button, input, h4 {
 }
 
 body {
-  padding-top:30px;
+      background-image: url("https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg");
   text-align: center;
 }
 
