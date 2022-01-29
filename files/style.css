@@ -1,15 +1,23 @@
+header {
+  background:black;
+  background-image: url("../images/BlackTitle.png");
+  -webkit-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+  -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+  box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 /* DESKTOP VIEW */
 @media (min-width: 600px) {
   #hide-on-desktop {
     display:none;
   }
   header {
-    background:white;
-    background-image: url("../images/Title.png");
-    background-size:500px;
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    padding-top:90px;
+    /* filter: invert(1); */
+    background-size:480px;
+    height:80px;
+    margin-bottom:30px;
   }
 }
 /* MOBILE VIEW */
@@ -21,16 +29,9 @@
     font-size: 20px;
   }
   header {
-    background:black;
-    background-image: url("../images/BlackTitle.png");
     background-size:90%;
-    background-repeat: no-repeat;
-    background-position: center;
     height:70px;
     margin-bottom:15px;
-    -webkit-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
-    -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
-    box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
   }
   .bip-input, #checksum {
     width: 80%;
@@ -41,6 +42,57 @@
   #submit-button {
     margin-left: -8px;
   }
+  #nonce-stuff {
+    display:flex;
+  }
+}
+
+.jagged-border-top {
+  position: relative;
+  color: white;
+  background-color: black;
+  margin-left:-1px;
+  margin-right:-1px;
+}
+
+.jagged-border-top:after {
+  content: "";
+  position: absolute;
+  display: block;
+  height: 10px;
+  bottom: -10px;
+  /* -height */
+  left: 0;
+  right: 0;
+  /* TODO Add browser prefixes */
+  background: linear-gradient( 45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%);
+  background-size: 8px 20px;
+  /* toothSize doubleHeight */
+  background-position: 0 -10px;
+  /* horizontalOffset -height */
+}
+
+.jagged-border-top-inverse {
+  position: relative;
+  color: black;
+  background-color: white;
+}
+
+.jagged-border-top-inverse:after {
+  content: "";
+  position: absolute;
+  display: block;
+  height: 10px;
+  bottom: -10px;
+  /* -height */
+  left: 0;
+  right: 0;
+  /* TODO Add browser prefixes */
+  background: linear-gradient( 45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%);
+  background-size: 8px 20px;
+  /* toothSize doubleHeight */
+  background-position: 0 -10px;
+  /* horizontalOffset -height */
 }
 
 a {
@@ -73,8 +125,9 @@ td {
 
 body, h3, button, input, h4 {
   /* font-family: 'PT Sans Narrow', sans-serif; */
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
+  /* font-family: 'Roboto', sans-serif; */
+  font-family: monospace;
+  /* font-weight: 300; */
 }
 
 #main {
@@ -109,11 +162,12 @@ body, h3, button, input, h4 {
   margin-top:25px;
   overflow-wrap: break-word;
   width:500px;
-  max-width:95%;
+  max-width: 80%;
+  margin-left: -12px;
+  font-size:15px;
 }
 
 body {
-      background-image: url("https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg");
   text-align: center;
 }
 
@@ -121,8 +175,8 @@ button {
   color:white;
   background:black;
   border: 1px solid black;
-  padding-top:2px;
-  padding-bottom:2px;
+  padding-top:3px;
+  padding-bottom:3px;
 }
 
 .button {
@@ -197,4 +251,22 @@ footer a:hover {
   color:white;
   font-weight:bold;
   text-decoration:none;
+}
+
+.office-banner {
+  background-color: #5ddd9d;
+  opacity: .9;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  padding: 0.125em;
+  font-size: 44.5px;
+  text-align: center;
+  white-space: nowrap;
+  transform: rotate(-10deg);
+  position: fixed;
+  top: 40%;
+  left: -5%;
+  right: -5%;
+  z-index: 100;
+  margin-top: 0;
 }
