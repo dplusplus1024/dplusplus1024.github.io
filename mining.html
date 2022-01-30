@@ -28,7 +28,6 @@ body {
 }
 @media (max-width:630px) {
  #main-div {
-    overflow-wrap: break-word;
     max-width:320px;
  }
  h1 {
@@ -41,11 +40,74 @@ body {
 </style>
 </head>
 
+<header style="background-image: url('images/Mining.jpg')">
+<!--img src=images/Title.png style="width:500px; max-width:95%"-->
+</header>
+<br>
+<div class="container" style="max-width:625px; width:100%;">
+
+<div class="office-banner" style="display:none">
+<h1>
+    &nbsp; You found the nonce! <img style="cursor:pointer" src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
+</h1>
+<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
+</div>
+
+<h3><i>Guess the Nonce to Find a Block!</i></h3>
+<center>
+<div style="background-color:black; border:1px solid black;" id="main-div">
+	<div style="color:white; background-color:black; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:left;">
+		<b><u>BLOCK HEADER</u></b><br><br>
+		← previous block hash:<br>
+		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
+		difficulty target:<br>
+		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br><br>
+		timestamp: <span id="epoch" class="code"></span><br>
+		<br>
+		<span id="nonce-stuff" style="display:flex; flex-wrap: wrap">
+		<!-- can be 32 bits, largest unsigned integer is 4,294,967,295, around 4 billion values
+    technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
+	  -->
+		<span style="flex-wrap: wrap">nonce: </span><input type="number" max=4294967295 min=0 id="nonce-input"
+		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295"
+    style="flex-grow: 2; border:1px solid white; height:30px; margin-left:4px; line-height:30px"></input>
+
+		<button onclick="tryNonce()" style="font-weight:bold!important; font-size:14px!important; flex-grow: 1; margin-left:1px; font-size:12px; font-weight:400; text-transform: uppercase; height:30px; line-height:30px; border:0px solid red; padding-top:1px; padding-bottom:12px; color:black; background:#5ddd9d">
+			HASH
+		</button>
+		</span>
+	</div>
+
+  <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
+  <div class="jagged-border-top"></div>
+  <div style="text-align: left; color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px"><b><u>RESULT</u></b><br><br>
+    block header hash: <span id="hash" class="code"></span><br>
+  	<center>is <span id="result-area"></span> the target of</center>
+  	<span id="target-compare" class="code"></span>
+    <center><b><div id="message" style="color:red; letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b></center>
+  </div>
+  <div class="jagged-border-top-inverse"></div>
+  </div> <!-- closed results-block -->
+
+	<div style="background-color:black; color:white;">
+		<div style="background-color:black; color:white; padding:15px; padding-top:25px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
+    <b><u>TRANSACTIONS</u></b><br><br>
+		Transaction #1<br>
+		Transaction #2<br>
+		Transaction #3<br>
+		...<br>
+		Transaction #n<br><br><br>
+	</div>
+</div>
+<br><br><br><br>
+</div> <!-- end container -->
+<script src="files/footer.js"></script>
+
 <script>
 function compareBig(hash, target) {
 	// expects two 32 byte buffers
-	console.log("the hash is " + hash);
-	console.log("the target is " + target);
+	// console.log("the hash is " + hash);
+	// console.log("the target is " + target);
 	// if the hash is greater than the target, return false, meaning if the hash equals the target we have found a block
 	for (var i = 0; i < 32; i++) {
 		if (hash[i] > target[i])
@@ -57,7 +119,7 @@ function compareBig(hash, target) {
 }
 
 function hex2buf(string) {
-	console.log(string);
+	// console.log(string);
 	var result = new Uint8Array(32);
 	var hexCounter = 0;
 	for (var i = 0; i < 32; i++) {
@@ -90,7 +152,7 @@ function testCompare() {
 	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82842edabb7deb82a1");
 	console.log(compareBig(hash, target));
 }
-testCompare();
+// testCompare();
 
 function binString2buf(string) {
 	var result = new Uint8Array(32);
@@ -131,7 +193,7 @@ function numToArrayBuffer(string) {
 	string = Number(string).toString(2);
 	// make sure it's 32 bits
 	string = "00000000000000000000000000000000".substr(string.length) + string;
-	console.log("string is " + string);
+	// console.log("string is " + string);
 
 	var result = new Uint8Array(4);
 	for (var i = 0; i < 4; i++) {
@@ -165,7 +227,7 @@ function buf2hex(buffer) {
 }
 
 async function shaMe(inputString) {
-	console.log("inputstring is " + inputString);
+	// console.log("inputstring is " + inputString);
   // let's not convert, this was for the other workshop
 	// need to convert this to binary
 
@@ -173,24 +235,12 @@ async function shaMe(inputString) {
 	// console.log("inputBytes is " + inputBytes);
 
 	let inputNum = numToArrayBuffer(inputString);
-  console.log("inputNum is " + inputNum);
+  // console.log("inputNum is " + inputNum);
   var hashBytes = await window.crypto.subtle.digest("SHA-256", inputNum);
 
   // console.log(buf2hex(hashBytes));
   // console.log(buf2bin(hashBytes));
 	return buf2bin(hashBytes);
-}
-
-function convertBin() {
-	var binary = document.getElementById("binary").value;
-	if (binary == "")
-		$("#result").html("Please input a binary number.");
-	else {
-		binary = parseInt(binary, 2);
-		console.log(binary);
-		console.log();
-		$("#result").html("<center><b>Result:</b><br>" + wordlist[binary] + "<br><br><b>Decimal:</b><br>" + binary + "<br><br>");
-	}
 }
 
 function isNumberKey(evt, element, max) {
@@ -200,85 +250,14 @@ function isNumberKey(evt, element, max) {
   if (len >= max)
 	return false;
 
-
   if (charCode != 48 && charCode != 49)
     return false;
 }
 
-function hex2bin(hex){
-    return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
-}
-</script>
-
-<header style="background-image: url('images/Mining.jpg')">
-<!--img src=images/Title.png style="width:500px; max-width:95%"-->
-</header>
-<br>
-<div class="container" style="max-width:625px; width:100%;">
-
-<div class="office-banner" style="display:none">
-<h1>
-    &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
-</h1>
-<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
-</div>
-
-<h3><i>Guess the Nonce to Find a Block!</i></h3>
-<center>
-<div style="background-color:black; border:1px solid black;" id="main-div">
-	<div style="color:white; background-color:black; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:left;">
-		<b><u>BLOCK HEADER</u></b><br><br>
-		← previous block hash:<br>
-		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
-		difficulty target:<br>
-		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br><br>
-		timestamp: <span id="epoch" class="code"></span><br>
-		<br>
-		<span id="nonce-stuff" style="display:flex; flex-wrap: wrap">
-		<!-- can be 32 bits, largest unsigned integer is 4,294,967,295, around 4 billion values
-    technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
-	  -->
-		<span style="flex-wrap: wrap">nonce: </span><input type="number" max=4294967295 min=0 id="nonce-input"
-		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295"
-    style="flex-grow: 2; border:1px solid white; height:30px; margin-left:4px; line-height:30px"></input>
-
-		<button onclick="tryNonce()" style="font-weight:bold!important; font-size:14px!important; flex-grow: 1; margin-left:1px; font-size:12px; font-weight:400; text-transform: uppercase; height:30px; line-height:30px; border:0px solid red; padding-top:1px; padding-bottom:12px; color:black; background:#5ddd9d">
-			HASH
-		</button>
-		</span>
-
-
-	</div>
-
-  <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
-  <div class="jagged-border-top"></div>
-  <div style="text-align: left; color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px"><b><u>RESULT</u></b><br><br>
-    block header hash: <span id="hash" class="code"></span><br>
-  	<center>is <span id="result-area"></span> the target of</center>
-  	<span id="target-compare" class="code"></span>
-    <center><b><div id="message" style="color:red; letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b></center>
-  </div>
-  <div class="jagged-border-top-inverse"></div>
-  </div> <!-- closed results-block -->
-
-	<div style="background-color:black; color:white;">
-		<div style="background-color:black; color:white; padding:15px; padding-top:25px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
-    <b><u>TRANSACTIONS</u></b><br><br>
-		Transaction #1<br>
-		Transaction #2<br>
-		Transaction #3<br>
-		...<br>
-		Transaction #n<br><br><br>
-	</div>
-</div>
-<br><br><br><br>
-</div> <!-- end container -->
-<script src="files/footer.js"></script>
-
-
-
-<script>
+// flags
 var confettiOn = false;
+var lineBreaks = false;
+
 var colors = ["#fbf274", "#d2abf8"];
 
 function frame() {
@@ -317,8 +296,8 @@ async function tryNonce() {
 	const difficultyBuffer = hex2buf(difficulty);
 
 	let nonceHash = await shaMe(nonce);
-	console.log("the nonce is: " + nonce);
-	console.log("the hash is: " + nonceHash);
+	// console.log("the nonce is: " + nonce);
+	// console.log("the hash is: " + nonceHash);
 
 	const nonceHashBuffer = binString2buf(nonceHash);
 	nonceHash = buf2hex(nonceHashBuffer);
@@ -335,13 +314,10 @@ async function tryNonce() {
     $('#message').html("<i>TRY AGAIN</i> 🙅‍♀️");
 	}
 
-
-  console.log(compareBig(nonceHashBuffer, difficultyBuffer));
+  // console.log(compareBig(nonceHashBuffer, difficultyBuffer));
 
   $('#results-block').show();
-
-	// if they win, then call goldenNonce();
-	//
+  doLines();
 }
 
 // Try nonce on enter
@@ -361,6 +337,47 @@ function timestamp() {
 }
 
 timestamp();
+
+// on mobile, break lines of hashes exactly halfway through
+function breakLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    if (html.length > 32) {
+      html = html.substring(0, 32) + "<br>" + html.substring(32);
+      $(this).html(html);
+      // console.log("its this: " + $(this).attr('id'));
+    }
+  });
+}
+
+function glueLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    html = html.replace('<br>','');
+    $(this).html(html);
+  });
+}
+
+function doLines() {
+  console.log('sup');
+  var width = $(window).width();
+  if (!lineBreaks) {
+    if (width <= 630) {
+      breakLines();
+      lineBreaks = true;
+    }
+  }
+  else if (width > 630) {
+    glueLines();
+    lineBreaks = false;
+  }
+}
+
+$(window).resize(function() {
+  doLines();
+});
+
+doLines();
 </script>
 </body>
 </html>
