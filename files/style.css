@@ -231,7 +231,8 @@ footer a:hover {
   text-decoration:none;
 }
 .office-banner {
-  background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%);
+  /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
+  background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
   /* background-color: #5ddd9d; */
   z-index:999;
   color:black;
