@@ -1,253 +1,437 @@
-header {
-  background:black;
-  background-image: url("../images/BlackTitle.png");
-  -webkit-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
-  -moz-box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
-  box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-/* DESKTOP VIEW */
-@media (min-width: 600px) {
-  #hide-on-desktop {
-    display:none;
-  }
-  header {
-    /* filter: invert(1); */
-    background-size:480px;
-    height:80px;
-    margin-bottom:30px;
-  }
-}
-/* MOBILE VIEW */
-@media (max-width: 599px) {
-  #hide-on-mobile {
-    display:none;
-  }
-  h3 {
-    font-size: 20px;
-  }
-  header {
-    background-size:90%;
-    height:70px;
-    margin-bottom:15px;
-  }
-  .bip-input, #checksum {
-    width: 80%;
-  }
-  .number {
-    margin-left: -30px!important;
-  }
-  #submit-button {
-    margin-left: -8px;
-  }
-}
-.jagged-border-top {
-  position: relative;
-  color: white;
-  background-color: black;
-  margin-left:-1px;
-  margin-right:-1px;
-}
-.jagged-border-top:after {
-  content: "";
-  position: absolute;
-  display: block;
-  height: 10px;
-  bottom: -10px;
-  /* -height */
-  left: 0;
-  right: 0;
-  background: linear-gradient( 45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%);
-  background-size: 8px 20px;
-  /* toothSize doubleHeight */
-  background-position: 0 -10px;
-  /* horizontalOffset -height */
-}
-.jagged-border-top-inverse {
-  position: relative;
-  color: black;
-  background-color: white;
-}
-.jagged-border-top-inverse:after {
-  content: "";
-  position: absolute;
-  display: block;
-  height: 10px;
-  bottom: -10px;
-  /* -height */
-  left: 0;
-  right: 0;
-  background: linear-gradient( 45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%);
-  background-size: 8px 20px;
-  /* toothSize doubleHeight */
-  background-position: 0 -10px;
-  /* horizontalOffset -height */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Mining Simulator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<link rel="stylesheet" href="files/style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+</style>
+<style>
+body {
+  color:white;
+  font-family: 'Manrope', sans-serif;
+  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 a {
-  color: black;
-  text-decoration: none;
+  text-decoration:underline;
 }
-#avatar {
-  border-radius:50%;
-  border: 2px solid black;
-  width: 90px;
-  height: 90px;
+#close, #showMore {
+  cursor:pointer;
 }
-table {
-  border:1px solid red;
-  border-collapse: collapse;
+.code {
+	font-family: monospace;
 }
-td {
-  border:1px solid black;
-  padding:8px;
+#main-div {
+  background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
+}
+input {
+  -webkit-border-radius:0;
+  border-radius:0;
+  width:150px;
   text-align:center;
 }
-.diagram {
-  width:500px;
-  max-width:95%;
+input, button {
+  border:0px;
+  font-size: inherit;
+  padding: 0.6em;
+  margin: 0.1em 0.2em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
-body, h3, button, input, h4 {
-  /* font-family: 'PT Sans Narrow', sans-serif; */
-  /* font-family: 'Roboto', sans-serif; */
-  /* font-family: monospace; */
-  /* font-weight: 300; */
-}
-#main {
-  padding-top: 40px;
-  text-align: left;
-  width: 300px;
-  margin: 0 auto;
-}
-.text-center {
-    margin: 0 auto;
-}
-.container {
-  width: 100%;
-  max-width: 500px;
-}
-.number {
-  display: inline-block;
-  width:20px;
-  text-align:right;
-  margin-right:4px;
-  margin-left: -14px;
-}
-.col-sm-6 {
-  margin-bottom:14px;
-}
-#checksum-result {
-  margin-top:25px;
-  overflow-wrap: break-word;
-  width:500px;
-  max-width: 80%;
-  margin-left: -12px;
-  font-size:15px;
-}
-
-body {
-  text-align: center;
-}
-
 button {
-  color:white;
-  background:black;
-  border: 1px solid black;
-  padding-top:3px;
-  padding-bottom:3px;
+  margin-left:-7px;
+  font-weight:500;
+  padding-left:20px;
+  padding-right:20px;
+  color:white!important;
+  background: linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%)!important;
+}
+.headers {
+  font-weight:800;
+  text-align:center;
+  margin-bottom:20px;
+  letter-spacing:1px;
+  font-size:20px;
+}
+.green-gradient-text {
+  background: -webkit-linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gradient-text {
+  background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Mobile View */
+@media (max-width:630px) {
+ #main-div {
+    max-width:320px;
+ }
+ h1 {
+   font-size:30px;
+ }
+ h3 {
+   font-size:18px;
+ }
+ input {
+   width:calc(100% - 108px);
+ }
+}
+#logo {
+  width:250px;
+  margin-top:40px;
+  margin-bottom:40px;
+}
+</style>
+</head>
+<body>
+<!--header style="background-image: url('images/Mining.jpg')">
+</header-->
+<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=https://i.imgur.com/jFIpFfR.png></a>
+<br>
+<div class="container" style="max-width:625px; width:100%;">
+
+<div class="office-banner" style="display:none">
+<h1>
+    &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
+</h1>
+<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
+</div>
+<!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
+<div id="main-div">
+	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
+		<div class="headers gradient-text">Bitcoin Block Header</div>
+
+    ← <i>previous block hash</i><br>
+		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
+		<i>difficulty target</i><br>
+		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br><br>
+
+    <div id="more" style="display:none;">
+      <i>merkle root hash</i><br>
+      <span class="code">9d10aa52ee949386ca9385695f04ede270dda20810decd12bc9b048aaab31471</span><br><br>
+      <i>timestamp</i>: <span id="epoch" class="code"></span><br><br>
+      <i>version</i>: <span class="code">294ce004</span><br><br>
+
+    </div>
+    <i><span onclick="$('#more').show(); $(this).hide();" id="showMore">...more block metadata<br><br></span></i>
+		<!-- nonce can be 32 bits, largest unsigned integer is 4,294,967,295, around 4 billion values
+    technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
+	  -->
+		<input type="number" max=4294967295 min=0 id="nonce-input"
+		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
+    <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
+	</div>
+
+  <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
+  <div class="jagged-border-top"></div>
+  <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
+    <div class="headers" style="color:black!important">Hash Result</div>
+    <i>block header hash</i><br><span id="hash" class="code"></span><br>
+  	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area"></span> the target of</i></div>
+  	<span id="target-compare" class="code"></span>
+    <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
+    <img id="celebrate" src=https://c.tenor.com/XspKDzYsphsAAAAC/bitcoin.gif style="max-width:100%; display:none; margin-top:20px;">
+  </div>
+  <div class="jagged-border-top-inverse"></div>
+  </div> <!-- closed results-block -->
+
+	<div style="background-color:black; color:white; padding-bottom:10px; border-radius:50px;">
+		<div style="background-color:black; color:white; padding:15px; padding-top:15px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
+    <div class="headers gradient-text">Transactions</div>
+		Transaction #1<br>
+		Transaction #2<br>
+		Transaction #3<br>
+		...<br>
+		Transaction #n<br><br>
+	</div>
+</div>
+<br><br>
+</div> <!-- end container -->
+
+<footer style="letter-spacing:1.1px; font-weight:500; font-size:15px;">
+  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for<div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
+</footer>
+
+<!--script src="files/footer.js"></script-->
+
+<script>
+function compareBig(hash, target) {
+	// expects two 32 byte buffers
+	// console.log("the hash is " + hash);
+	// console.log("the target is " + target);
+	// if the hash is greater than the target, return false, meaning if the hash equals the target we have found a block
+	for (var i = 0; i < 32; i++) {
+		if (hash[i] > target[i])
+			return false;
+		if (hash[i] < target[i])
+			return true;
+	}
+	return true;
 }
 
-.button {
-  max-width: 400px;
-  padding: 20px;
-  margin: 20px;
-  box-shadow: 5px 5px;
+function hex2buf(string) {
+	// console.log(string);
+	var result = new Uint8Array(32);
+	var hexCounter = 0;
+	for (var i = 0; i < 32; i++) {
+		var hex = string.substring(hexCounter, hexCounter + 2);
+		result[i] = parseInt(Number("0x" + hex), 10);
+		hexCounter += 2;
+	}
+	// console.log("buffer is " + result);
+	return result;
 }
 
-.button:hover {
-  box-shadow: 2px 2px black;
-  transform: translate(3px, 3px);
+function testCompare() {
+	var hash = new Uint8Array(32);
+	var target = new Uint8Array(32);
+	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	console.log(compareBig(hash, target));
+
+	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	target = hex2buf("01bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	console.log(compareBig(hash, target));
+
+	//////////////////////////////////////////////////////////////////.
+	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82842edabb7deb82a1");
+	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	console.log(compareBig(hash, target));
+
+	//////////////////////////////////////////////////////////////////.
+	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
+	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82842edabb7deb82a1");
+	console.log(compareBig(hash, target));
+}
+// testCompare();
+
+function binString2buf(string) {
+	var result = new Uint8Array(32);
+	for (var i = 0; i < 32; i++) {
+		// taking 8 bytes and putting it into 8 bits
+		// console.log("loop #" + i);
+		result[i] = 0;
+		for (var c = 0; c < 8; c++) {
+			if (Number(string[i*8 + c]) === 1) {
+				result[i] |= 1 << (7 - c);
+			}
+		}
+	}
+	return result;
 }
 
-.social {
-  height: 35px;
-  margin-top: 30px;
-  margin-right: 10px;
-  margin-left: 10px;
+function numToArrayBuffer(string) {
+	// candidate block == block in progress being constructed / mined
+	// technically the bitcoin block header is 80 bytes
+	// it contains 6 different data fields in little endian format
+	// bitcoin mostly uses little endian.  networking usually uses big endian
+	// big endian = most significant bytes are first (human readable)
+	// little endian = lest significant bytes are first (not human readable, it's reversed)
+	// we actually want to use double sha
+
+	// extraNonce parameters usually go in the script signature (unlocking script)
+	// of the coinbase transaction. it is not formally defined, however many mining
+	// pools use an extraNonce of 8 bytes, however this can vary from pool to pool.
+
+	// block weight must be under 4 MB
+
+	// ONE S19 can exhaust the entire 32 bit nonce search space in under 1 millisecond!!!
+	/***********************************************************************************/
+
+	// take a string, convert it to binary, then convert it to a 4 byte array buffer
+
+	string = Number(string).toString(2);
+	// make sure it's 32 bits
+	string = "00000000000000000000000000000000".substr(string.length) + string;
+	// console.log("string is " + string);
+
+	var result = new Uint8Array(4);
+	for (var i = 0; i < 4; i++) {
+		// taking 8 bytes and putting it into 8 bits
+		// console.log("loop #" + i);
+		result[i] = 0;
+		for (var c = 0; c < 8; c++) {
+			if (Number(string[i*8 + c]) === 1) {
+				result[i] |= 1 << (7 - c);
+			}
+		}
+	    // console.log("result[" + i + "] is: " + result[i]);
+	}
+	return result;
 }
 
-#result {
-  overflow-wrap: break-word;
-  width:500px;
-  max-width:90%;
-  margin: 0 auto;
-  font-size:14.3px;
+function buf2bin(buffer) {
+	var view = new Uint8Array(buffer);
+	var result = "";
+	for (var i = 0; i < view.length; i++) {
+		var binary = view[i].toString(2);
+		binary = "00000000".substr(binary.length) + binary;
+		result += binary;
+	}
+	return result;
 }
 
-.button-class, table {
-	width:500px;
-	text-align:center;
-	max-width:80%!important;
-	margin-bottom:5px;
+function buf2hex(buffer) {
+	// buffer is an ArrayBuffer
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
 }
 
-.button-class {
-  width:80%%;
+async function shaMe(inputString) {
+	// console.log("inputstring is " + inputString);
+  // let's not convert, this was for the other workshop
+	// need to convert this to binary
+
+	// var inputBytes = binString2buf(inputString);
+	// console.log("inputBytes is " + inputBytes);
+
+	let inputNum = numToArrayBuffer(inputString);
+  // console.log("inputNum is " + inputNum);
+  var hashBytes = await window.crypto.subtle.digest("SHA-256", inputNum);
+
+  // console.log(buf2hex(hashBytes));
+  // console.log(buf2bin(hashBytes));
+	return buf2bin(hashBytes);
 }
 
-tr, td, table {
-	border:0px;
+var confettiOn = false;
+
+//var colors = ["#fbf274", "#d2abf8"];
+var colors = ["#ff6ab4", "#ffd569"];
+
+function frame() {
+  confetti({
+    particleCount: 2,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0 },
+    colors: colors,
+  });
+  confetti({
+    particleCount: 2,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1 },
+    colors: colors,
+  });
+
+  if (Date.now() < Date.now() + 15000) {
+    requestAnimationFrame(frame);
+  }
 }
 
-h2 {
-	margin-bottom:20px;
-}
-/*
-header {
-  color:white;
-  background:#003ff8;
-  font-size:13px;
-  line-height:28px;
-  padding:30px;
-  top:0;
-}
-*/
-footer {
-  color:white;
-  background:black;
-  margin-top:60px;
-  font-size:13px;
-  line-height:28px;
-  padding:15px;
+function playSound() {
+  const audio = new Audio("files/AchievementUnlocked.mp3");
+  audio.play();
 }
 
-footer a {
-  color:white;
+function goldenNonce() {
+	$('.office-banner').show();
+	$('#winner').html($('#nonce-input').val())
+  if (!confettiOn)
+	  frame();
+  confettiOn = true;
+  $('canvas').show();
+  playSound();
 }
 
-footer a:hover {
-  color:white;
-  font-weight:bold;
-  text-decoration:none;
+async function tryNonce() {
+	const difficulty = $('#target').html();
+	const nonce = $('#nonce-input').val();
+	const difficultyBuffer = hex2buf(difficulty);
+
+	let nonceHash = await shaMe(nonce);
+	// console.log("the nonce is: " + nonce);
+	// console.log("the hash is: " + nonceHash);
+
+	const nonceHashBuffer = binString2buf(nonceHash);
+	nonceHash = buf2hex(nonceHashBuffer);
+	$('#hash').html(nonceHash);
+
+  $('#target-compare').html(difficulty);
+	if (compareBig(nonceHashBuffer, difficultyBuffer)) {
+		$('#result-area').html(" <i class='gradient-text'><b>less than</b></i> ");
+    //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
+    $('#celebrate').show();
+    $('#message').hide();
+		goldenNonce();
+	}
+	else {
+		$('#result-area').html(" <i class='gradient-text'><b>not less than</b></i> ");
+    $('#message').html("<i class='gradient-text'>TRY AGAIN</i> 🙅‍♀️");
+    $('#celebrate').hide();
+    $('#message').show();
+	}
+
+  $('#results-block').show();
+  doLines();
 }
-.office-banner {
-  /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
-  background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
-  /* background-color: #5ddd9d; */
-  z-index:999;
-  /* color:black; */
-  opacity: .9;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
-  padding: 0.125em;
-  font-size: 44.5px;
-  text-align: center;
-  white-space: nowrap;
-  transform: rotate(-10deg);
-  position: fixed;
-  top: 40%;
-  left: -5%;
-  right: -5%;
-  z-index: 100;
-  margin-top: 0;
+
+// Try nonce on enter
+var input = document.getElementById("nonce-input");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+		tryNonce();
+  }
+});
+
+// show timestamp couter
+function timestamp() {
+	const d = new Date();
+  let time = d.getTime();
+	$('#epoch').html(parseInt(time/1000))
+	setTimeout(timestamp, 1000);
 }
+
+timestamp();
+
+// on mobile, break lines of hashes exactly halfway through
+function breakLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    if (html.length > 32 && html.includes("<br>") == false) {
+      html = html.substring(0, 32) + "<br>" + html.substring(32);
+      $(this).html(html);
+    }
+  });
+}
+
+function glueLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    html = html.replace('<br>','');
+    $(this).html(html);
+  });
+}
+
+function doLines() {
+  var width = $(window).width();
+  if (width <= 630) {
+      breakLines();
+  }
+  else if (width > 630) {
+    glueLines();
+  }
+}
+
+$(window).resize(function() {
+  doLines();
+});
+
+doLines();
+</script>
+</body>
+</html>
