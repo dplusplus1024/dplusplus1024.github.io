@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>D++</title>
+<title>Mining Simulator</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
@@ -22,6 +22,9 @@ body {
   color:white;
   font-family: 'Manrope', sans-serif;
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
+}
+a {
+  text-decoration:underline;
 }
 #close, #showMore {
   cursor:pointer;
@@ -62,7 +65,11 @@ button {
   letter-spacing:1px;
   font-size:20px;
 }
-
+.green-gradient-text {
+  background: -webkit-linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .gradient-text {
   background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
   -webkit-background-clip: text;
@@ -93,7 +100,7 @@ button {
 <body>
 <!--header style="background-image: url('images/Mining.jpg')">
 </header-->
-<img id="logo" src=https://i.imgur.com/jFIpFfR.png>
+<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=https://i.imgur.com/jFIpFfR.png></a>
 <br>
 <div class="container" style="max-width:625px; width:100%;">
 
@@ -134,26 +141,31 @@ button {
   <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
     <div class="headers" style="color:black!important">Hash Result</div>
     <i>block header hash</i><br><span id="hash" class="code"></span><br>
-  	<i>- is <span id="result-area"></span> the target of -</i>
+  	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area"></span> the target of</i></div>
   	<span id="target-compare" class="code"></span>
     <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
   </div>
   <div class="jagged-border-top-inverse"></div>
   </div> <!-- closed results-block -->
 
-	<div style="background-color:black; color:white;  border-radius:50px;">
-		<div style="background-color:black; color:white; padding:15px; padding-top:25px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
+	<div style="background-color:black; color:white; padding-bottom:10px; border-radius:50px;">
+		<div style="background-color:black; color:white; padding:15px; padding-top:15px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
     <div class="headers gradient-text">Transactions</div>
 		Transaction #1<br>
 		Transaction #2<br>
 		Transaction #3<br>
 		...<br>
-		Transaction #n<br><br><br>
+		Transaction #n<br><br>
 	</div>
 </div>
-<br><br><br><br>
+<br><br>
 </div> <!-- end container -->
-<script src="files/footer.js"></script>
+
+<footer style="letter-spacing:1.1px; font-weight:500; font-size:15px;">
+  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for<div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
+</footer>
+
+<!--script src="files/footer.js"></script-->
 
 <script>
 function compareBig(hash, target) {
@@ -296,7 +308,8 @@ async function shaMe(inputString) {
 
 var confettiOn = false;
 
-var colors = ["#fbf274", "#d2abf8"];
+//var colors = ["#fbf274", "#d2abf8"];
+var colors = ["#ff6ab4", "#ffd569"];
 
 function frame() {
   confetti({
@@ -319,6 +332,11 @@ function frame() {
   }
 }
 
+function playSound() {
+  const audio = new Audio("files/AchievementUnlocked.mp3");
+  audio.play();
+}
+
 function goldenNonce() {
 	$('.office-banner').show();
 	$('#winner').html($('#nonce-input').val())
@@ -326,6 +344,7 @@ function goldenNonce() {
 	  frame();
   confettiOn = true;
   $('canvas').show();
+  playSound();
 }
 
 async function tryNonce() {
@@ -343,8 +362,8 @@ async function tryNonce() {
 
   $('#target-compare').html(difficulty);
 	if (compareBig(nonceHashBuffer, difficultyBuffer)) {
-		$('#result-area').html(" <i style='color:#5ddd9d'><b>less than</b></i> ");
-    $('#message').html("<span style='color:#5ddd9d'><i>YOU WON!</i> 🎉</span>");
+		$('#result-area').html(" <i class='green-gradient-text'><b>less than</b></i> ");
+    $('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
 		goldenNonce();
 	}
 	else {
@@ -394,7 +413,6 @@ function glueLines() {
 }
 
 function doLines() {
-  console.log('sup');
   var width = $(window).width();
   if (width <= 630) {
       breakLines();
