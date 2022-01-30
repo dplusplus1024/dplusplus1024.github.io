@@ -26,21 +26,14 @@ body {
 .code {
 	font-family: monospace;
 }
-@media (max-width:630px) {
- #main-div {
-    max-width:320px;
- }
- h1 {
-   font-size:30px;
- }
- h3 {
-   font-size:18px;
- }
+#main-div {
+  background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
 }
 input {
   -webkit-border-radius:0;
   border-radius:0;
-  width:calc(100% - 108px);
+  width:150px;
+  text-align:center;
 }
 input, button {
     border:0px;
@@ -62,6 +55,21 @@ button {
   margin-bottom:20px;
   letter-spacing:6px;
 }
+/* Mobile View */
+@media (max-width:630px) {
+ #main-div {
+    max-width:320px;
+ }
+ h1 {
+   font-size:30px;
+ }
+ h3 {
+   font-size:18px;
+ }
+ input {
+   width:calc(100% - 108px);
+ }
+}
 </style>
 </head>
 <body>
@@ -78,16 +86,14 @@ button {
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
 <!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
-<center>
-<div style="background-color:black; border:1px solid black; border-radius:50px;" id="main-div">
-	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:left;">
+<div id="main-div">
+	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:center;">
 		<div class="headers">BITCOIN BLOCK HEADER</div>
-    <center><i>timestamp</i>: <span id="epoch" class="code"></span><br><br>
+    <i>timestamp</i>: <span id="epoch" class="code"></span><br><br>
     ← <i>previous block hash</i><br>
 		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
 		<i>difficulty target</i><br>
 		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br><br>
-    <center>
 		<!-- nonce can be 32 bits, largest unsigned integer is 4,294,967,295, around 4 billion values
     technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
 	  -->
@@ -99,12 +105,12 @@ button {
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
   <div class="jagged-border-top"></div>
-  <div style="text-align: left; color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
+  <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
     <div class="headers">RESULT</div>
-    <center><i>the block header hash</i><br><span id="hash" class="code"></span><br>
-  	<center><i>is <span id="result-area"></span> the target of</i></center>
+    <i>block header hash</i><br><span id="hash" class="code"></span><br>
+  	<i>- is <span id="result-area"></span> the target of -</i>
   	<span id="target-compare" class="code"></span>
-    <center><b><div id="message" style="color:red; letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b></center>
+    <b><div id="message" style="color:red; letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
   </div>
   <div class="jagged-border-top-inverse"></div>
   </div> <!-- closed results-block -->
