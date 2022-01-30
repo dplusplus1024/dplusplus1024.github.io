@@ -24,7 +24,7 @@ body {
   background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
 }
 .code {
-	font-family:monospace;
+	font-family: monospace;
 }
 @media (max-width:630px) {
  #main-div {
@@ -39,7 +39,7 @@ body {
 }
 </style>
 </head>
-
+<body>
 <header style="background-image: url('images/Mining.jpg')">
 <!--img src=images/Title.png style="width:500px; max-width:95%"-->
 </header>
@@ -52,8 +52,7 @@ body {
 </h1>
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
-
-<h3><i>Guess the Nonce to Find a Block!</i></h3>
+<h3><i>Guess the Nonce to Mine a Block!</i></h3>
 <center>
 <div style="background-color:black; border:1px solid black;" id="main-div">
 	<div style="color:white; background-color:black; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:left;">
@@ -165,7 +164,6 @@ function binString2buf(string) {
 				result[i] |= 1 << (7 - c);
 			}
 		}
-	    // console.log("result[" + i + "] is: " + result[i]);
 	}
 	return result;
 }
@@ -243,20 +241,7 @@ async function shaMe(inputString) {
 	return buf2bin(hashBytes);
 }
 
-function isNumberKey(evt, element, max) {
-  var charCode = (evt.which) ? evt.which : event.keyCode;
-  var len = $(element).val().length;
-
-  if (len >= max)
-	return false;
-
-  if (charCode != 48 && charCode != 49)
-    return false;
-}
-
-// flags
 var confettiOn = false;
-var lineBreaks = false;
 
 var colors = ["#fbf274", "#d2abf8"];
 
@@ -314,8 +299,6 @@ async function tryNonce() {
     $('#message').html("<i>TRY AGAIN</i> 🙅‍♀️");
 	}
 
-  // console.log(compareBig(nonceHashBuffer, difficultyBuffer));
-
   $('#results-block').show();
   doLines();
 }
@@ -342,10 +325,9 @@ timestamp();
 function breakLines() {
   $('.code').each(function() {
     var html = $(this).html();
-    if (html.length > 32) {
+    if (html.length > 32 && html.includes("<br>") == false) {
       html = html.substring(0, 32) + "<br>" + html.substring(32);
       $(this).html(html);
-      // console.log("its this: " + $(this).attr('id'));
     }
   });
 }
@@ -361,15 +343,11 @@ function glueLines() {
 function doLines() {
   console.log('sup');
   var width = $(window).width();
-  if (!lineBreaks) {
-    if (width <= 630) {
+  if (width <= 630) {
       breakLines();
-      lineBreaks = true;
-    }
   }
   else if (width > 630) {
     glueLines();
-    lineBreaks = false;
   }
 }
 
