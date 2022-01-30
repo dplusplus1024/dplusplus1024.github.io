@@ -235,7 +235,7 @@ footer a:hover {
   background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
   /* background-color: #5ddd9d; */
   z-index:999;
-  color:black;
+  /* color:black; */
   opacity: .9;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
