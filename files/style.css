@@ -7,7 +7,6 @@ header {
   background-repeat: no-repeat;
   background-position: center;
 }
-
 /* DESKTOP VIEW */
 @media (min-width: 600px) {
   #hide-on-desktop {
@@ -42,11 +41,7 @@ header {
   #submit-button {
     margin-left: -8px;
   }
-  #nonce-stuff {
-    display:flex;
-  }
 }
-
 .jagged-border-top {
   position: relative;
   color: white;
@@ -54,7 +49,6 @@ header {
   margin-left:-1px;
   margin-right:-1px;
 }
-
 .jagged-border-top:after {
   content: "";
   position: absolute;
@@ -64,20 +58,17 @@ header {
   /* -height */
   left: 0;
   right: 0;
-  /* TODO Add browser prefixes */
   background: linear-gradient( 45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, black 33.333%, black 66.667%, transparent 66.667%);
   background-size: 8px 20px;
   /* toothSize doubleHeight */
   background-position: 0 -10px;
   /* horizontalOffset -height */
 }
-
 .jagged-border-top-inverse {
   position: relative;
   color: black;
   background-color: white;
 }
-
 .jagged-border-top-inverse:after {
   content: "";
   position: absolute;
@@ -87,65 +78,54 @@ header {
   /* -height */
   left: 0;
   right: 0;
-  /* TODO Add browser prefixes */
   background: linear-gradient( 45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%), linear-gradient( -45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%);
   background-size: 8px 20px;
   /* toothSize doubleHeight */
   background-position: 0 -10px;
   /* horizontalOffset -height */
 }
-
 a {
   color: black;
   text-decoration: none;
 }
-
 #avatar {
   border-radius:50%;
   border: 2px solid black;
   width: 90px;
   height: 90px;
 }
-
 table {
   border:1px solid red;
   border-collapse: collapse;
 }
-
 td {
   border:1px solid black;
   padding:8px;
   text-align:center;
 }
-
 .diagram {
   width:500px;
   max-width:95%;
 }
-
 body, h3, button, input, h4 {
   /* font-family: 'PT Sans Narrow', sans-serif; */
   /* font-family: 'Roboto', sans-serif; */
-  font-family: monospace;
+  /* font-family: monospace; */
   /* font-weight: 300; */
 }
-
 #main {
   padding-top: 40px;
   text-align: left;
   width: 300px;
   margin: 0 auto;
 }
-
 .text-center {
     margin: 0 auto;
 }
-
 .container {
   width: 100%;
   max-width: 500px;
 }
-
 .number {
   display: inline-block;
   width:20px;
@@ -153,11 +133,9 @@ body, h3, button, input, h4 {
   margin-right:4px;
   margin-left: -14px;
 }
-
 .col-sm-6 {
   margin-bottom:14px;
 }
-
 #checksum-result {
   margin-top:25px;
   overflow-wrap: break-word;
@@ -252,9 +230,11 @@ footer a:hover {
   font-weight:bold;
   text-decoration:none;
 }
-
 .office-banner {
-  background-color: #5ddd9d;
+  background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%);
+  /* background-color: #5ddd9d; */
+  z-index:999;
+  color:black;
   opacity: .9;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
