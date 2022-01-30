@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Mining Simulator</title>
+<title>D++</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
@@ -21,7 +21,7 @@
 body {
   color:white;
   font-family: 'Manrope', sans-serif;
-  background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 #close, #showMore {
   cursor:pointer;
@@ -39,24 +39,34 @@ input {
   text-align:center;
 }
 input, button {
-    border:0px;
-    font-size: inherit;
-    padding: 0.6em;
-    margin: 0.1em 0.2em;
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
+  border:0px;
+  font-size: inherit;
+  padding: 0.6em;
+  margin: 0.1em 0.2em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
 button {
   margin-left:-7px;
   font-weight:500;
   padding-left:20px;
   padding-right:20px;
+  color:white!important;
+  background: linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%)!important;
 }
 .headers {
+  font-weight:800;
   text-align:center;
   margin-bottom:20px;
-  letter-spacing:6px;
+  letter-spacing:1px;
+  font-size:20px;
+}
+
+.gradient-text {
+  background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 /* Mobile View */
 @media (max-width:630px) {
@@ -95,8 +105,8 @@ button {
 </div>
 <!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
 <div id="main-div">
-	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; text-align:center;">
-		<div class="headers">BITCOIN BLOCK HEADER</div>
+	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
+		<div class="headers gradient-text">Bitcoin Block Header</div>
 
     ← <i>previous block hash</i><br>
 		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
@@ -117,28 +127,23 @@ button {
 		<input type="number" max=4294967295 min=0 id="nonce-input"
 		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
     <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
-
-
-
-
-
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
   <div class="jagged-border-top"></div>
   <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
-    <div class="headers">RESULT</div>
+    <div class="headers" style="color:black!important">Hash Result</div>
     <i>block header hash</i><br><span id="hash" class="code"></span><br>
   	<i>- is <span id="result-area"></span> the target of -</i>
   	<span id="target-compare" class="code"></span>
-    <b><div id="message" style="color:red; letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
+    <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
   </div>
   <div class="jagged-border-top-inverse"></div>
   </div> <!-- closed results-block -->
 
 	<div style="background-color:black; color:white;  border-radius:50px;">
 		<div style="background-color:black; color:white; padding:15px; padding-top:25px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
-    <div class="headers">TRANSACTIONS</div>
+    <div class="headers gradient-text">Transactions</div>
 		Transaction #1<br>
 		Transaction #2<br>
 		Transaction #3<br>
@@ -343,8 +348,8 @@ async function tryNonce() {
 		goldenNonce();
 	}
 	else {
-		$('#result-area').html(" <i style='color:red'><b>not less than</b></i> ");
-    $('#message').html("<i>TRY AGAIN</i> 🙅‍♀️");
+		$('#result-area').html(" <i class='gradient-text'><b>not less than</b></i> ");
+    $('#message').html("<i class='gradient-text'>TRY AGAIN</i> 🙅‍♀️");
 	}
 
   $('#results-block').show();
