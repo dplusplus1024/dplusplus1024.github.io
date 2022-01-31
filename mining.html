@@ -24,6 +24,7 @@ body {
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 a {
+  font-weight:bold;
   text-decoration:underline;
 }
 #close, #showMore {
@@ -132,9 +133,8 @@ button {
     technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
 	  -->
 		<input type="number" max=4294967295 min=0 id="nonce-input"
-		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
+		oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1'); if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
     <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
-    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');" />
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
@@ -163,8 +163,8 @@ button {
 <br><br>
 </div> <!-- end container -->
 
-<footer style="letter-spacing:1.1px; font-weight:500; font-size:15px;">
-  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for<div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
+<footer style="letter-spacing:1.1px; font-weight:400; font-size:15px;">
+  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for <div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
 </footer>
 
 <!--script src="files/footer.js"></script-->
