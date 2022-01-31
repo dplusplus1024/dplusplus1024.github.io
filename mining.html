@@ -16,6 +16,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 </style>
 <style>
 body {
@@ -31,7 +32,8 @@ a {
   cursor:pointer;
 }
 .code {
-	font-family: monospace;
+	font-family: 'PT Mono', monospace;
+  font-size:14px;
 }
 #main-div {
   background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
@@ -133,7 +135,7 @@ button {
     technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
 	  -->
 		<input type="number" max=4294967295 min=0 id="nonce-input"
-		oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1'); if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
+		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
     <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
 	</div>
 
@@ -141,7 +143,8 @@ button {
   <div class="jagged-border-top"></div>
   <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
     <div class="headers" style="color:black!important">Hash Result</div>
-    <i>block header hash</i><br><span id="hash" class="code"></span><br>
+    <div style="margin-bottom:10px;"><i>block header hash</i></div>
+      <span id="hash" class="code"></span>
   	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area"></span> the target of</i></div>
   	<span id="target-compare" class="code"></span>
     <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:10px"></div></b>
