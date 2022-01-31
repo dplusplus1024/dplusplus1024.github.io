@@ -134,6 +134,7 @@ button {
 		<input type="number" max=4294967295 min=0 id="nonce-input"
 		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
     <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
+    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');" />
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
