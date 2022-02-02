@@ -141,13 +141,14 @@ button {
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
   <div class="jagged-border-top"></div>
-  <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:30px">
+  <div style="color:black; background-color:white; padding:15px; padding-top:35px; padding-bottom:26px">
     <div class="headers" style="color:black!important">Hash Result</div>
     <div style="margin-bottom:10px;"><i>block header hash</i></div>
       <span id="hash" class="code"></span>
   	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area"></span> the target of</i></div>
-  	<span id="target-compare" class="code"></span>
-    <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:30px"></div></b>
+  	<div style=""><span id="target-compare" class="code"></span></div><br>
+    <div style="display:none" id="rate"><i>Your hashrate</i>: <span id="hashrate"></span> hashes per second</div>
+    <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:23px"></div></b>
     <img id="celebrate" src=https://c.tenor.com/XspKDzYsphsAAAAC/bitcoin.gif style="max-width:100%; display:none; margin-top:20px;">
   </div>
   <div class="jagged-border-top-inverse"></div>
@@ -173,6 +174,15 @@ button {
 <!--script src="files/footer.js"></script-->
 
 <script>
+// global variables
+var confettiOn = false;
+//var colors = ["#fbf274", "#d2abf8"];
+var colors = ["#ff6ab4", "#ffd569"];
+var hashRate = false;
+var numWins = 0;
+var startTime;
+var prevNonce;
+
 function compareBig(hash, target) {
 	// expects two 32 byte buffers
 	// console.log("the hash is " + hash);
@@ -311,11 +321,6 @@ async function shaMe(inputString) {
 	return buf2bin(hashBytes);
 }
 
-var confettiOn = false;
-
-//var colors = ["#fbf274", "#d2abf8"];
-var colors = ["#ff6ab4", "#ffd569"];
-
 function frame() {
   confetti({
     particleCount: 2,
@@ -371,6 +376,8 @@ async function tryNonce() {
     //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
+    console.log("you won");
+    console.log("num wins is " + ++numWins);
 		goldenNonce();
 	}
 	else {
@@ -380,9 +387,33 @@ async function tryNonce() {
     $('#message').show();
 	}
 
+  // calculate the hashrate
+  if (!hashRate) {
+    // first time calculating hashrate, so let's set the start time to now
+    startTime = $('#epoch').html();
+    console.log(startTime);
+    hashRate = 1;
+  }
+  else if (nonce != prevNonce){
+    // only increment if current hash is not the same as previous hash
+    var currentTime = $('#epoch').html();
+    hashRate++;
+    $('#hashrate').html((hashRate / (currentTime - startTime)).toFixed(1));
+    $('#rate').show();
+  }
+
+  prevNonce = nonce;
   $('#results-block').show();
   doLines();
 }
+
+function autoNonce() {
+  for (var counter = 0; counter < 2000; counter++) {
+    $('#nonce-input').val(counter);
+    tryNonce();
+  }
+}
+//autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
