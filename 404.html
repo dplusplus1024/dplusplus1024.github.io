@@ -1,37 +1,216 @@
-<script>
-  var path = window.location.pathname; 
-  if (path == "/discord")
-    window.location.replace("https://discord.gg/bKvdZS8DKa");
-	
-  var paths = `
-  sha256
-  words
-  wallet
-  master
-  mining
-  sats
-  hash`;
-  
-  var paths = paths.split("\n");
-  
-  function searchStringInArray (str, strArray) {
-	  str = str.toLowerCase();
-    for (var j = 0; j < strArray.length; j++) {
-        if (strArray[j] == str) {
-			    console.log('we found a match, it is ' + strArray[j]);
-			    return j;
-		    }
-    }
-    return -1;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Mining Simulator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<link rel="stylesheet" href="files/style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+</style>
+<style>
+body {
+  color:white;
+  font-family: 'Manrope', sans-serif;
+  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
+}
+a {
+  font-weight:bold;
+  text-decoration:underline;
+}
+#close, #showMore {
+  cursor:pointer;
+}
+.code {
+	font-family: 'PT Mono', monospace;
+  font-size:14px;
+}
+#main-div {
+  background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
+}
+input {
+  -webkit-border-radius:0;
+  border-radius:0;
+  width:150px;
+  text-align:center;
+}
+input, button {
+  border:0px;
+  font-size: inherit;
+  padding: 0.6em;
+  margin: 0.1em 0.2em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+button {
+  margin-left:-7px;
+  font-weight:500;
+  padding-left:20px;
+  padding-right:20px;
+  color:white!important;
+  background: linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%)!important;
+}
+.headers {
+  font-weight:800;
+  text-align:center;
+  margin-bottom:20px;
+  letter-spacing:1px;
+  font-size:20px;
+}
+.gradient-text {
+  background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+#hash-input {
+  background-color:black;
+  border-bottom:2px solid white;
+  color:white;
+}
+/* Mobile View */
+@media (max-width:630px) {
+  input.middle:focus {
+   outline-width: 0;
   }
+ #hash-input {
+   width:87%!important;
+ }
+ #main-div {
+    max-width:320px;
+ }
+ h1 {
+   font-size:30px;
+ }
+ h3 {
+   font-size:18px;
+ }
+ input {
+   width:calc(100% - 108px);
+ }
+}
+#logo {
+  width:250px;
+  margin-top:40px;
+  margin-bottom:40px;
+}
+</style>
+</head>
+<body>
+<!--header style="background-image: url('images/Mining.jpg')">
+</header-->
+<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=https://i.imgur.com/jFIpFfR.png></a>
+<br>
+<div class="container" style="max-width:625px; width:100%;">
 
-  console.log("Page path is " + window.location.pathname);
-  var result = path.split("/");
-  result = searchStringInArray(result[1], paths);
-  if (result < 0) {
-    window.location.replace("https://dplusplus.me");
-    }
-  else {
-    window.location.replace("https://dplusplus.me" + path + ".html");
+<div class="office-banner" style="display:none">
+
+<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
+</div>
+<!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
+<div id="main-div">
+	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
+		<div class="headers gradient-text">SHA-256 Hash Generator</div>
+
+    <input style="width:90%; padding-right:20px;" placeholder="Input text to be hashed here." id="hash-input"></input>
+    <!--button onclick="sha256();" style="color:black; background:#5ddd9d">HASH</button-->
+
+    <br><br><br>
+    <div class="headers gradient-text">Result</div>
+    <div id="resultz" class="code" style="margin-top:-3px"><span style="font-family:'Manrope'">Hash to find out!</span></div>
+<br>
+</div>
+</div>
+<br><br>
+</div> <!-- end container -->
+
+<footer style="letter-spacing:1.1px; font-weight:400; font-size:15px; position:absolute; width:100%; bottom:0px">
+  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for <div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
+</footer>
+
+<!--script src="files/footer.js"></script-->
+
+<script>
+async function sha256() {
+    var message = $('#hash-input').val();
+    console.log(message);
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(message);
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    console.log(hashHex);
+    console.log('sup');
+    $('#resultz').html(hashHex);
+    doLines();
+}
+
+var input = document.getElementById("hash-input");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+		sha256();
   }
+});
+
+$('#hash-input').bind('keyup', function () {
+		sha256();
+});
+
+function glueLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    html = html.replace('<br>','');
+    $(this).html(html);
+  });
+}
+
+function breakLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    if (html.length > 32 && html.includes("<br>") == false) {
+      html = html.substring(0, 32) + "<br>" + html.substring(32);
+      $(this).html(html);
+    }
+  });
+}
+
+function doLines() {
+  var width = $(window).width();
+  if (width <= 630) {
+      breakLines();
+  }
+  else if (width > 630) {
+    glueLines();
+  }
+}
+
+$(window).resize(function() {
+  doLines();
+});
+
+doLines();
 </script>
+</body>
+</html>
