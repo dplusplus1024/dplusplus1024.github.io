@@ -19,9 +19,10 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 </style>
 <style>
-body {
+body, #find-out {
   color:white;
   font-family: 'Manrope', sans-serif;
+  font-size:16px;
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 a {
@@ -128,12 +129,12 @@ button:focus {
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
 		<div class="headers gradient-text">SHA-256 Hash Generator</div>
 
-    <input style="width:90%; padding-right:20px;" placeholder="Input text to be hashed here." id="hash-input"></input>
+    <input style="width:90%; padding-right:20px;" placeholder="Input text to be hashed here" id="hash-input"></input>
     <!--button onclick="sha256();" style="color:black; background:#5ddd9d">HASH</button-->
 
     <br><br><br>
     <div class="headers gradient-text">Result</div>
-    <div id="resultz" class="code" style="margin-top:-3px"><span style="font-family:'Manrope'; font-size:16px">Hash to find out!</span></div>
+    <div id="resultz" class="code" style="margin-top:-3px"><span id="find-out">Hash around and find out</span></div>
 <br>
 </div>
 </div>
