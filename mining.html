@@ -267,7 +267,6 @@ function numToArrayBuffer(string) {
 	/***********************************************************************************/
 
 	// take a string, convert it to binary, then convert it to a 4 byte array buffer
-
 	string = Number(string).toString(2);
 	// make sure it's 32 bits
 	string = "00000000000000000000000000000000".substr(string.length) + string;
@@ -305,19 +304,8 @@ function buf2hex(buffer) {
 }
 
 async function shaMe(inputString) {
-	// console.log("inputstring is " + inputString);
-  // let's not convert, this was for the other workshop
-	// need to convert this to binary
-
-	// var inputBytes = binString2buf(inputString);
-	// console.log("inputBytes is " + inputBytes);
-
 	let inputNum = numToArrayBuffer(inputString);
-  // console.log("inputNum is " + inputNum);
   var hashBytes = await window.crypto.subtle.digest("SHA-256", inputNum);
-
-  // console.log(buf2hex(hashBytes));
-  // console.log(buf2bin(hashBytes));
 	return buf2bin(hashBytes);
 }
 
