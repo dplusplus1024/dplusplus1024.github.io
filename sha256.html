@@ -134,7 +134,7 @@ button:focus {
 
     <br><br><br>
     <div class="headers gradient-text">Result</div>
-    <div id="resultz" class="code" style="margin-top:-3px"><span id="find-out">Hash around and find out</span></div>
+    <div id="resultz" style="margin-top:-3px">Hash around and find out</div>
 <br>
 </div>
 </div>
@@ -150,7 +150,7 @@ button:focus {
 <script>
 async function sha256() {
     var message = $('#hash-input').val();
-    console.log(message);
+
     // encode as UTF-8
     const msgBuffer = new TextEncoder().encode(message);
 
@@ -162,9 +162,9 @@ async function sha256() {
 
     // convert bytes to hex string
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    console.log(hashHex);
-    console.log('sup');
+
     $('#resultz').html(hashHex);
+    $('#resultz').addClass('code');
     doLines();
 }
 
