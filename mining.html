@@ -198,11 +198,15 @@ var hashRate = false;
 var numWins = 0;
 var startTime;
 var prevNonce;
+var end;
 var URL = location.href.split("?");
 var difficulty = URL[1];
 var salt =       URL[2];
-//console.log("difficulty: " + difficulty);
-//console.log("salt: " + salt);
+
+// one in 16:   0FF00000000404CB000000000000000000000000000000000000000000000000
+// on in 128:   01FF0000000404CB000000000000000000000000000000000000000000000000
+// one in 256:  00FF0000000404CB000000000000000000000000000000000000000000000000
+
 
 if (difficulty == undefined) {
   difficulty = "0FF00000000404CB000000000000000000000000000000000000000000000000";
@@ -378,24 +382,29 @@ function frame() {
     colors: colors,
   });
 
-  if (Date.now() < Date.now() + 15000) {
+  if (Date.now() < end) {
     requestAnimationFrame(frame);
+  }
+  else {
+    confettiOn = false;
   }
 }
 
 function playSound() {
-  const audio = new Audio("files/AchievementUnlocked.mp3");
+  //const audio = new Audio("files/AchievementUnlocked.mp3");
   //audio.play();
 }
 
 function goldenNonce() {
 	$('.office-banner').show();
 	$('#winner').html($('#nonce-input').val())
-  if (!confettiOn)
+  if (!confettiOn) {
+    end = Date.now() + 5000;
 	  frame();
-  confettiOn = true;
-  $('canvas').show();
-  playSound();
+    $('canvas').show();
+    confettiOn = true;
+  }
+  //playSound();
 }
 
 async function tryNonce() {
@@ -416,6 +425,7 @@ async function tryNonce() {
     //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
+    //console.log(nonce);
     console.log(++numWins);
 		goldenNonce();
 	}
