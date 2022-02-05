@@ -232,11 +232,10 @@ footer a:hover {
 }
 .office-banner {
   /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
-  background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  background:linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%);
   /* background-color: #5ddd9d; */
   z-index:999;
   /* color:black; */
-  font-family: 'Roboto', sans-serif;
   font-weight: 300;
   padding: 0.125em;
   font-size: 44.5px;
