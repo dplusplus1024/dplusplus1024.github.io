@@ -133,7 +133,7 @@ button {
 		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br>
     <div class="divider"></div>
 		<i>difficulty target</i><br>
-		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br>
+		<span id="target" class="code"></span><br>
     <div class="divider"></div>
     <div id="more" style="display:none;">
       <i>merkle root hash</i><br>
@@ -198,6 +198,24 @@ var hashRate = false;
 var numWins = 0;
 var startTime;
 var prevNonce;
+var URL = location.href.split("?");
+var difficulty = URL[1];
+var salt =       URL[2];
+console.log("difficulty: " + difficulty);
+console.log("salt: " + salt);
+
+if (difficulty == undefined) {
+  difficulty = "0FF00000000404CB000000000000000000000000000000000000000000000000";
+  console.log('there is no difficulty set');
+}
+$('#target').html(difficulty);
+
+if (salt == undefined) {
+  salt = "";
+}
+
+console.log("difficulty: " + difficulty);
+console.log("salt: " + salt);
 
 function compareBig(hash, target) {
 	// expects two 32 byte buffers
@@ -248,6 +266,25 @@ function testCompare() {
 	console.log(compareBig(hash, target));
 }
 // testCompare();
+
+async function simpleSha(message, salt) {
+  //console.log('message: ' + message);
+  //console.log('salt: ' + salt);
+  //console.log(message + salt);
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(message + salt);
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    return hashHex;
+}
 
 function binString2buf(string) {
 	var result = new Uint8Array(32);
@@ -348,7 +385,7 @@ function frame() {
 
 function playSound() {
   const audio = new Audio("files/AchievementUnlocked.mp3");
-  audio.play();
+  //audio.play();
 }
 
 function goldenNonce() {
@@ -362,26 +399,24 @@ function goldenNonce() {
 }
 
 async function tryNonce() {
-	const difficulty = $('#target').html();
 	const nonce = $('#nonce-input').val();
 	const difficultyBuffer = hex2buf(difficulty);
 
-	let nonceHash = await shaMe(nonce);
+	let nonceHash = await simpleSha(nonce, salt);
 	// console.log("the nonce is: " + nonce);
 	// console.log("the hash is: " + nonceHash);
 
-	const nonceHashBuffer = binString2buf(nonceHash);
-	nonceHash = buf2hex(nonceHashBuffer);
+	// const nonceHashBuffer = binString2buf(nonceHash);
+	// nonceHash = buf2hex(nonceHashBuffer);
 	$('#hash').html(nonceHash);
 
   $('#target-compare').html(difficulty);
-	if (compareBig(nonceHashBuffer, difficultyBuffer)) {
+	if (compareBig(hex2buf(nonceHash), difficultyBuffer)) {
 		$('#result-area').html(" <i class='gradient-text'><b>less than</b></i> ");
     //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
-    console.log("you won");
-    console.log("num wins is " + ++numWins);
+    console.log(++numWins);
 		goldenNonce();
 	}
 	else {
@@ -417,7 +452,7 @@ function autoNonce() {
     tryNonce();
   }
 }
-//autoNonce();
+autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
