@@ -220,7 +220,16 @@ footer {
   line-height:28px;
   padding:15px;
 }
-
+.gradient-text {
+  width:240px;
+  margin:0 auto;
+  margin-bottom:20px;
+  font-family: 'Mulish', sans-serif;
+  font-weight:800;
+  background: -webkit-linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 footer a {
   color:white;
 }
