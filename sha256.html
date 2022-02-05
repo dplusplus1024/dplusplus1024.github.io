@@ -66,13 +66,7 @@ button {
   font-weight:800;
   text-align:center;
   margin-bottom:20px;
-  letter-spacing:1px;
   font-size:20px;
-}
-.gradient-text {
-  background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 input:focus,
 select:focus,
@@ -127,7 +121,7 @@ button:focus {
 <!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
 <div id="main-div">
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
-		<div class="headers gradient-text">SHA-256 Hash Generator</div>
+		<div class="headers gradient-text" style="width:300px">SHA-256 Hash Generator</div>
 
     <input style="width:90%; padding-right:20px;" placeholder="Input text to be hashed here" id="hash-input"></input>
     <!--button onclick="sha256();" style="color:black; background:#5ddd9d">HASH</button-->
