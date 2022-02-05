@@ -201,8 +201,8 @@ var prevNonce;
 var URL = location.href.split("?");
 var difficulty = URL[1];
 var salt =       URL[2];
-console.log("difficulty: " + difficulty);
-console.log("salt: " + salt);
+//console.log("difficulty: " + difficulty);
+//console.log("salt: " + salt);
 
 if (difficulty == undefined) {
   difficulty = "0FF00000000404CB000000000000000000000000000000000000000000000000";
@@ -430,7 +430,7 @@ async function tryNonce() {
   if (!hashRate) {
     // first time calculating hashrate, so let's set the start time to now
     startTime = $('#epoch').html();
-    console.log(startTime);
+    // console.log(startTime);
     hashRate = 1;
   }
   else if (nonce != prevNonce){
@@ -452,7 +452,7 @@ function autoNonce() {
     tryNonce();
   }
 }
-autoNonce();
+//autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
