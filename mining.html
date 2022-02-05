@@ -17,6 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
 </style>
 <style>
 body {
@@ -27,6 +28,21 @@ body {
 a {
   font-weight:bold;
   text-decoration:underline;
+}
+.divider {
+  text-align:center;
+  width:175px;
+  padding-bottom:15px!important;
+  border-bottom:1px solid white;
+  margin-bottom:15px!important;
+
+  margin:0 auto;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
 }
 #close, #showMore {
   cursor:pointer;
@@ -39,12 +55,12 @@ a {
   background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
 }
 input {
-  -webkit-border-radius:0;
-  border-radius:0;
   width:150px;
-  text-align:center;
+  padding-left:20px!important;
 }
 input, button {
+  -webkit-border-radius:999px;
+  border-radius:999px;
   border:0px;
   font-size: inherit;
   padding: 0.6em;
@@ -54,27 +70,26 @@ input, button {
   box-sizing: content-box;
 }
 button {
-  margin-left:-7px;
+  margin-left:-50px;
   font-weight:500;
   padding-left:20px;
   padding-right:20px;
   color:white!important;
-  background: linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%)!important;
+  background: linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%)!important;
 }
 .headers {
   font-weight:800;
   text-align:center;
   margin-bottom:20px;
-  letter-spacing:1px;
   font-size:20px;
 }
-.green-gradient-text {
-  background: -webkit-linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 .gradient-text {
-  background: -webkit-linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%);
+  width:240px;
+  margin:0 auto;
+  margin-bottom:20px;
+  font-family: 'Mulish', sans-serif;
+  font-weight:800;
+  background: -webkit-linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -90,7 +105,7 @@ button {
    font-size:18px;
  }
  input {
-   width:calc(100% - 108px);
+   width:calc(100% - 78px);
  }
 }
 @media (min-width:1500px) {
@@ -102,7 +117,7 @@ button {
 }
 #logo {
   width:250px;
-  margin-top:40px;
+  margin-top:43px;
   margin-bottom:40px;
 }
 </style>
@@ -124,17 +139,20 @@ button {
 <div id="main-div">
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
 		<div class="headers gradient-text">Bitcoin Block Header</div>
-
     ← <i>previous block hash</i><br>
-		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br><br>
+		<span class="code">00000000001b0142eab9e5da7188ef8762c49113b3c988086d54089f826787f9</span><br>
+    <div class="divider"></div>
 		<i>difficulty target</i><br>
-		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br><br>
-
+		<span id="target" class="code">0FF00000000404CB000000000000000000000000000000000000000000000000</span><br>
+    <div class="divider"></div>
     <div id="more" style="display:none;">
       <i>merkle root hash</i><br>
-      <span class="code">9d10aa52ee949386ca9385695f04ede270dda20810decd12bc9b048aaab31471</span><br><br>
-      <i>timestamp</i>: <span id="epoch" class="code"></span><br><br>
-      <i>version</i>: <span class="code">294ce004</span><br><br>
+      <span class="code">9d10aa52ee949386ca9385695f04ede270dda20810decd12bc9b048aaab31471</span><br>
+      <div class="divider"></div>
+      <i>timestamp</i>: <span id="epoch" class="code"></span><br>
+      <div class="divider"></div>
+      <i>version</i>: <span class="code">294ce004</span><br>
+      <div class="divider"></div>
 
     </div>
     <i><span onclick="$('#more').show(); $(this).hide();" id="showMore">...more block metadata<br><br></span></i>
@@ -142,8 +160,8 @@ button {
     technically, once these are quickly exhausted, the coinbase tx can be changed thus changing the merkle root in the block header
 	  -->
 		<input type="number" max=4294967295 min=0 id="nonce-input"
-		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="nonce"></input>
-    <button onclick="tryNonce()" style="color:black; background:#5ddd9d">HASH</button>
+		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="Nonce"></input>
+    <button onclick="tryNonce()" style="color:black; background:#5ddd9d">Hash</button>
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
@@ -152,19 +170,20 @@ button {
     <div class="headers" style="color:black!important">Hash Result</div>
     <div style="margin-bottom:10px;"><i>block header hash</i></div>
       <span id="hash" class="code"></span>
-  	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area"></span> the target of</i></div>
+  	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area" style="font-size:18px"></span> the target of</i></div>
   	<div style=""><span id="target-compare" class="code"></span></div>
     <div style="display:none" id="rate"><br><i>Your hashrate</i>: <span id="hashrate" class="code"></span> hashes / second</div>
-    <b><div id="message" style="letter-spacing:1.5px; font-size:18px; padding-top:23px"></div></b>
-    <img id="celebrate" src=https://c.tenor.com/XspKDzYsphsAAAAC/bitcoin.gif style="max-width:100%; display:none; margin-top:20px;">
+    <b><div id="message" style="font-size:18px; padding-top:23px"></div></b>
+    <img id="celebrate" src=https://c.tenor.com/XspKDzYsphsAAAAC/bitcoin.gif style="max-width:100%; display:none; margin-top:28px;">
   </div>
   <div class="jagged-border-top-inverse"></div>
   </div> <!-- closed results-block -->
 
-	<div style="background-color:black; color:white; padding-bottom:10px; border-radius:50px;">
+	<div style="background-color:black; color:white; padding-bottom:10px; border-radius:50px; text-align:center">
 		<div style="background-color:black; color:white; padding:15px; padding-top:15px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
     <div class="headers gradient-text">Transactions</div>
-		Transaction #1<br>
+    <center>
+    Transaction #1<br>
 		Transaction #2<br>
 		Transaction #3<br>
 		...<br>
@@ -174,7 +193,7 @@ button {
 <br><br>
 </div> <!-- end container -->
 
-<footer style="letter-spacing:1.1px; font-weight:400; font-size:15px;">
+<footer style="font-weight:400; font-size:15px;">
   Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for <div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
 </footer>
 
@@ -184,7 +203,7 @@ button {
 // global variables
 var confettiOn = false;
 //var colors = ["#fbf274", "#d2abf8"];
-var colors = ["#ff6ab4", "#ffd569"];
+var colors = ["#FF5C98", "#FF9C23"];
 var hashRate = false;
 var numWins = 0;
 var startTime;
@@ -377,7 +396,7 @@ async function tryNonce() {
 	}
 	else {
 		$('#result-area').html(" <i class='gradient-text'><b>not less than</b></i> ");
-    $('#message').html("<i class='gradient-text'>TRY AGAIN</i> 🙅‍♀️");
+    $('#message').html("<i class='gradient-text'>TRY AGAIN!</i> 🙅‍♀️");
     $('#celebrate').hide();
     $('#message').show();
 	}
