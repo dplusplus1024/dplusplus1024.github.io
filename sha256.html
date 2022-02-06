@@ -157,8 +157,15 @@ async function sha256() {
     // convert bytes to hex string
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    $('#resultz').html(hashHex);
-    $('#resultz').addClass('code');
+    if (message == "") {
+      $('#resultz').html("Hash around and find out");
+      $('#resultz').removeClass('code');
+    }
+    else {
+      $('#resultz').html(hashHex);
+      $('#resultz').addClass('code');
+    }
+
     doLines();
 }
 
