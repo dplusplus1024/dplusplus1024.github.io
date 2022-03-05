@@ -7,17 +7,25 @@
   if (path == "sha")
     window.location.replace("https://dplusplus.me/sha256")
   // 1 in 64 or 1.6%
-  if (path == "mine")
-    window.location.replace("https://dplusplus.me/mining.html?03FF0000000404CB000000000000000000000000000000000000000000000000?mine222");
+  //if (path == "mine")
+  //  window.location.replace("https://dplusplus.me/mining.html?03FF0000000404CB000000000000000000000000000000000000000000000000?mine222");
   // 1 in 128 or 0.8%
-  if (path == "adjust")
-    window.location.replace("https://dplusplus.me/mining.html?01FF0000000404CB000000000000000000000000000000000000000000000000?angel22");
-  // 1 in 256 chance or .4%
+  // if (path == "adjust")
+  //  window.location.replace("https://dplusplus.me/mining.html?01FF0000000404CB000000000000000000000000000000000000000000000000?angel22");
+  // 1 in 256 chance or .4% -> 8 zeros
   if (path == "epoch")
-    window.location.replace("https://dplusplus.me/mining.html?00F00000000404CB000000000000000000000000000000000000000000000000?love222");
-  // 1 in 512 chance or .2%
+    window.location.replace("https://dplusplus.me/mining.html?00F00000000404CB000000000000000000000000000000000000000000000000?love224");
+  // ___________
+  // ^^^^ we're not going to use those..........
+  // 1 in 512 chance or .2% -> 9 zeros
   if (path == "pow")
-    window.location.replace("https://dplusplus.me/mining.html?006FF000000404CB000000000000000000000000000000000000000000000000?love333");
+    window.location.replace("https://dplusplus.me/mining.html?006FF000000404CB000000000000000000000000000000000000000000000000?love336");
+  // 1 in 1024 or .1% -> 10 zeros
+  if (path == "mine")
+    window.location.replace("https://dplusplus.me/mining.html?003FF000000404CB000000000000000000000000000000000000000000000000?angel336");
+  // 1 in 2048 or .05% -> 11 zeros
+  if (path == "preimage")
+      window.location.replace("https://dplusplus.me/mining.html?001FF000000404CB000000000000000000000000000000000000000000000000?sweet345");
   // catch all case
   //window.location.replace("https://dplusplus.me");
 
