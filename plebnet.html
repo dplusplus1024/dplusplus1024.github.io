@@ -1,0 +1,89 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+input {
+  width:100%;
+  max-width:495px;
+}
+</style>
+</head>
+
+    <body>
+  <h1>Verify PLEBNET Membership</h1>
+  <form action="http://127.0.0.1:8080/checkPlebnet" method="post" id="my-form">
+
+    Node Pubkey<br>
+    <input type="text" id="pubkey" name="pubkey" value="0259724bb62884b06c19063d7e114669b3c334beb93bea51070c5924b42e085c81"></input><br><br>
+
+    Message to sign<br>
+    <input type="text" value="I am the owner of this node, and PLEBNET rocks." readonly="readonly"></input><br><br>
+
+    Signature<br>
+    <input type="text" id="signature" name="signature" value="9c4a5010ddd3527872673731414b363ead396bf71737725b995b683407d199e207d433b1ebb8076ba65d760f8dd593084c6712e83323e20931b87bd93ad36e70"></input><br><br>
+
+
+    <input type="submit">
+  </form>
+
+  <div id="searching" style="display:none">
+  Searching for your node in PLEBNET...<br>
+  <img src=https://furrowpump.com/wp-content/themes/furrowpump-child/img/lg.ajax-spinner-preloader.gif>
+  </div>
+
+  <div id="results">
+  </div>
+
+  <script>
+
+
+  function displayResults(result) {
+    if (result.validSignature && result.inPlebnet) {
+      $('#results').html("Your signature is valid, and you're a proud member of PLEBNET!<br><br>You won this challenge and may proceed to the next round.");
+    }
+    if (result.validSignature && result.inPlebnet == false) {
+      $('#results').html("Your signature is valid, however we did not find your node in PLEBNET.  Please try again.");
+    }
+    if (result.validSignature == false && result.inPlebnet) {
+      $('#results').html("We found your node in PLEBNET, however your digital signature was not valid.  Please try again.");
+    }
+    if (result.validSignature == false && result.inPlebnet == false) {
+      $('#results').html("Oof.  We couldn't find that node in PLEBNET, and the digital signature is invalid.  Please try again.");
+    }
+    $('#searching').hide();
+    $('#results').show();
+  }
+
+  $('#my-form').submit(function() {
+    $('#results').hide();
+    $('#searching').show();
+    $.ajax({
+            data: $(this).serialize(),
+            type: $(this).attr('method'),
+            url:  $(this).attr('action'),
+            success: function(response) {
+              console.log("Are they in PLEBNET? " + response.inPlebnet);
+              console.log("hi little angel");
+              displayResults(response);
+            }
+        });
+        console.log("hi bb");
+        return false;
+    });
+
+    fetch("http://localhost:8080/").then(function(response) {
+      return response.text();
+    }).then(function(text) {
+      console.log(text);
+    }).catch(function(error) {
+      console.log(error);
+    });
+
+    $("input[type='text']").on("click", function () {
+      $(this).select();
+    });
+
+  </script>
+  </body>
+
+<html>
