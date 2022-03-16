@@ -174,7 +174,7 @@ footer a, span {
 
     <div id="searching" style="display:none">
     Searching for your node in PLEBNET...<br>
-    <img src=images/search.gif>
+    <img src=images/search.gif style="width:90px; padding-top:14px">
     </div>
 
     <div id="result-div" style="display:none">
@@ -319,7 +319,7 @@ function displayResults(result) {
     $('#results').html("Your signature is valid, however we did not find your node in PLEBNET.  Please try again.");
   }
   if (result.validSignature == false && result.inPlebnet) {
-    $('#results').html("We found your node in PLEBNET, however your digital signature was not valid.  Please try again.");
+    $('#results').html("We found your node in PLEBNET, however your digital signature is not valid.  Please try again.");
   }
   if (result.validSignature == false && result.inPlebnet == false) {
     $('#results').html("Oof.  We couldn't find that node in PLEBNET, and your digital signature is invalid.  Please try again.");
