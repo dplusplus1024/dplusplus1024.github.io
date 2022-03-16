@@ -159,7 +159,7 @@ footer a, span {
     <form action="https://young-dawn-78254.herokuapp.com/checkPlebnet" method="post" id="my-form" onsubmit="return false">
 
       Message to Sign<br>
-      <input type="text" value="I'm from the Bitcoin 2022 Rogue Signal Pyramid Scheme game, and I'm here to register my node!" readonly="readonly"></input><br><br>
+      <input type="text" value="I'm from the Bitcoin 2022 Rogue Signal Pyramid Scheme game, and I'm here to register my node!" readonly="readonly" id="message"></input><br><br>
 
       Lightning Node Pubkey<br>
       <input type="text" id="pubkey" name="pubkey" value="03eba3295492a69621a2501675b663c7051f6035b52f98f0e911475534f105e670"></input><br><br>
@@ -174,7 +174,7 @@ footer a, span {
 
     <div id="searching" style="display:none">
     Searching for your node in PLEBNET...<br>
-    <img src=https://furrowpump.com/wp-content/themes/furrowpump-child/img/lg.ajax-spinner-preloader.gif>
+    <img src=images/search.gif>
     </div>
 
     <div id="result-div" style="display:none">
@@ -362,6 +362,10 @@ $('#my-form').submit(function() {
 
   $("input[type='text']").on("click", function () {
     $(this).select();
+  });
+
+  $('#message').on("click", function() {
+     navigator.clipboard.writeText($(this).val());
   });
 
   function frame() {
