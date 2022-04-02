@@ -20,7 +20,7 @@
 </style>
 <style>
 body {
-  color:white;
+  color:black;
   font-family: 'Manrope', sans-serif;
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
@@ -132,6 +132,7 @@ footer a:hover {
    width:calc(100% - 78px);
  }
 }
+/*
 @media (min-width:1500px) {
   footer {
     width:100%;
@@ -139,6 +140,7 @@ footer a:hover {
     bottom:0px;
   }
 }
+*/
 #logo {
   width:250px;
   margin-top:43px;
@@ -161,8 +163,17 @@ footer a:hover {
 </h1>
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
-<!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
 
+<div id="instructions">
+  	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
+  		<div class="headers gradient-text" style="width:100%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
+For this challenge, you will manually mine a valid bitcoin block.  But how will you do it?  Just like bitcoin does of course, with proof of work.
+<br><br><br><br><br><br>
+    </div>
+</div>
+
+
+  <div style="display:none" id="contents"> <!--div for the content that will be swapped out -->
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
 		<div class="headers gradient-text">Bitcoin Block Header</div>
     ← <i>previous block hash</i><br>
@@ -215,7 +226,9 @@ footer a:hover {
 		...<br>
 		Transaction #n<br><br>
 	</div>
-  <div style="margin-top:-75px!important; z-index:0; position: relative;">
+</div> <!-- end contents block -->
+
+<div style="margin-top:-75px!important; z-index:0; position: relative;">
 <img src=images/Mountain.png style="width:318px; -webkit-transform: scaleX(-1); transform: scaleX(-1)">
 </div>
 <div style="margin-top:-11px">
