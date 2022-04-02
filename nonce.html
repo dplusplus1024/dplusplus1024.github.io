@@ -20,7 +20,7 @@
 </style>
 <style>
 body {
-  color:black;
+  background-color:black;
   font-family: 'Manrope', sans-serif;
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
@@ -164,7 +164,7 @@ footer a:hover {
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
 
-<div id="instructions">
+<div id="instructions" style="display:none">
   	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
   		<div class="headers gradient-text" style="width:100%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
 For this challenge, you will manually mine a valid bitcoin block.  But how will you do it?  Just like bitcoin does of course, with proof of work.
@@ -173,7 +173,7 @@ For this challenge, you will manually mine a valid bitcoin block.  But how will 
 </div>
 
 
-  <div style="display:none" id="contents"> <!--div for the content that will be swapped out -->
+  <div style="" id="contents"> <!--div for the content that will be swapped out -->
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
 		<div class="headers gradient-text">Bitcoin Block Header</div>
     ← <i>previous block hash</i><br>
