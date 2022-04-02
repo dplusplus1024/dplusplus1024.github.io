@@ -239,8 +239,12 @@ footer a:hover {
   text-decoration:none;
 }
 .office-banner {
+  color:white;
+
   /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
-  background:linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%);
+  background:linear-gradient(68.78deg,#175d6a -5.3%,#ffffff 124.36%);
+  /* for the bitcoin company version: */
+  /* background:linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%); */
   /* background-color: #5ddd9d; */
   z-index:999;
   /* color:black; */
