@@ -20,6 +20,9 @@
 </style>
 <style>
 body {
+  background:url('images/palms.jpg');
+  background-size:cover;
+  background-position:center;
   font-size:14px;
   color:white;
   font-family: 'Manrope', sans-serif;
@@ -83,7 +86,6 @@ input, button {
   box-sizing: content-box;
 }
 .button {
-
   margin-left:-50px;
   font-weight:500;
   padding-left:20px;
@@ -92,12 +94,12 @@ input, button {
 
 }
 .my-button {
-  background-color:#fd9500!important;
+  background-color:#ed1a56!important;
   color:white;
   font-weight:bold;
 }
 .headers {
-  color:#fd9500;
+  color:#f9be00;
   font-weight:800;
   text-align:center;
   margin-bottom:20px;
@@ -118,9 +120,13 @@ input, button {
 }
 footer {
   color:white;
+  line-height:18px;
 }
-footer a, span {
-  color:#fd9500;
+footer a {
+  text-decoration:none;
+}
+footer span {
+  color:#ed1a56;
 }
 /* sticky footer?
 @media (max-width:630px) {
@@ -141,7 +147,7 @@ footer a, span {
 <body>
 <!--header style="background-image: url('images/Mining.jpg')">
 </header-->
-<a href=http://plebnet.org target="_blank"><img id="logo" src=images/PLEBNET.jpg></a>
+<a href=http://plebnet.org target="_blank"><img id="logo" src=images/plebnet-black.png></a>
 <br>
 <div class="container" style="max-width:525px; width:100%;">
 
@@ -185,8 +191,9 @@ footer a, span {
 </div> <!-- end main-div -->
 </div> <!-- end container -->
 
-<footer style="font-weight:400; font-size:14px; letter-spacing:1.1px">
-  Made with <!--♥--><span>❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for PLEBNET
+<footer style="font-weight:400; font-size:16px; letter-spacing:1.1px; padding-bottom:24px; padding-top:20px">
+  <div style="margin-bottom:14px;" id="made-with">Made with <!--♥--><span>❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a><br></div>
+  <div style="font-size:11px"><script src="files/my-footer.js"></script></div>
 </footer>
 
 <script>
