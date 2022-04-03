@@ -17,6 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
 </style>
 <style>
 body {
@@ -114,10 +115,13 @@ footer a:hover {
   font-weight:500!important;
   text-decoration:underline;
 }
+h1 {
+  text-shadow: 4px 4px 6px #4b4b4b;
+}
 /* Desktop View */
 @media (min-width:631px) {
   #made-with {
-    margin-top:60px!important;
+    margin-top:80px!important;
   }
 }
 /* Mobile View */
@@ -128,8 +132,8 @@ footer a:hover {
  #main-div {
     max-width:320px;
  }
- h1 {
-   font-size:30px;
+ h1 span {
+   font-size:42px!important;
  }
  h3 {
    font-size:18px;
@@ -165,9 +169,9 @@ footer a:hover {
 
 <div class="office-banner" style="display:none">
 <h1>
-    &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
+    &nbsp; <span style="font-family: 'Mr Dafoe', cursive; color:#e71325; font-size:45px">You found the nonce!<span> <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
 </h1>
-<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
+<div style="font-size:25px; margin-top:-15px; letter-spacing:2px">LUCKY NUMBER <span id="winner"></span></div>
 </div>
 
 <div id="instructions" style="display:none">
