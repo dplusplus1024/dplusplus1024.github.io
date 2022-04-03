@@ -32,6 +32,9 @@ td {
 
 body {
   background-color:black;
+  background-position:center!important;
+  background-attachment:fixed!important;
+  background-size:cover!important;
   color:white;
   font-family: monospace;
   text-transform: uppercase;
@@ -73,24 +76,21 @@ body {
 }
 
 /* Background medium view */
-@media (min-width:631px) and (max-width: 985px) {
+@media (max-width: 899px) {
   body {
+    background:url('images/background-medium.jpg');
   }
 }
 /* Desktop View */
-@media (min-width:1250px) {
+@media (min-width:900px) {
   body {
-    background-attachment:fixed;
     background:url('images/dplusplussmaller.jpg');
-    background-size:cover;
   }
 }
 /* Mobile View */
 @media (max-width:535px) {
  body {
-   background:url('images/mobile.jpg');
-   background-position:center;
-   background-size:auto 100%;
+   /* background:url('images/mobile.jpg'); */
  }
 }
 
