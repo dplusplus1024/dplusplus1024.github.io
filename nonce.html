@@ -217,7 +217,7 @@ For this challenge, you will manually mine a valid bitcoin block.  But how will 
     <div class="headers" style="color:black!important">Hash Result</div>
     <i><div style="margin-bottom:10px;" id="hash-header"></div></i>
       <span id="hash" class="code"></span>
-  	<div style="margin-top:10px; margin-bottom:10px;"><i>is <span id="result-area" style="font-size:18px"></span> the target of</i></div>
+  	<div style="margin-top:10px; margin-bottom:10px;"><i>is<span id="result-area" style="font-size:18px"></span> the target of</i></div>
   	<div style=""><span id="target-compare" class="code"></span></div>
     <div style="display:none" id="rate"><br><i>Your hashrate</i>: <span id="hashrate" class="code"></span> hashes / second</div>
     <b><div id="message" style="font-size:18px; padding-top:23px"></div></b>
@@ -489,7 +489,7 @@ async function tryNonce() {
   $('#nonce-input').val("");
 
 	if (compareBig(hex2buf(nonceHash), difficultyBuffer)) {
-		$('#result-area').html(" <i class='gradient-text'><b>less than</b></i> ");
+		$('#result-area').html("<i class='gradient-text'><b>&nbsp;less than</b></i> ");
     //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
@@ -499,7 +499,7 @@ async function tryNonce() {
 		goldenNonce();
 	}
 	else {
-		$('#result-area').html(" <i class='gradient-text'><b>not less than</b></i> ");
+		$('#result-area').html("<i class='gradient-text'><b>&nbsp;not less than</b></i> ");
     $('#message').html("<i class='gradient-text'>TRY AGAIN!</i> 🙅‍♀️");
     $('#celebrate').hide();
     $('#message').show();
