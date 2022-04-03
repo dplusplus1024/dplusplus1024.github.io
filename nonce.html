@@ -265,7 +265,6 @@ var end;
 var URL = location.href.split("?");
 var difficulty = URL[1];
 var salt =       URL[2];
-var winners = [];
 
 if (difficulty == undefined) {
   difficulty = "001FF000000404CB000000000000000000000000000000000000000000000000";
@@ -490,10 +489,9 @@ async function tryNonce() {
     //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
-    console.log(nonce);
-    console.log(++numWins);
-    winners[winners.length] = nonce;
-    $('#winner').html("4294967295");
+    // console.log(nonce);
+    // console.log(++numWins);
+    $('#winner').html(nonce);
 		goldenNonce();
 	}
 	else {
@@ -531,7 +529,7 @@ function autoNonce() {
   }
   console.log("AND THE WINNERS ARE: " + winners.length);
 }
-autoNonce();
+//autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
