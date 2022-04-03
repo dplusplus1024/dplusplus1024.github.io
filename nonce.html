@@ -21,7 +21,7 @@
 </style>
 <style>
 body {
-  background-color:black;
+  /* background-color:black; */
   font-family: 'Manrope', sans-serif;
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
@@ -54,6 +54,7 @@ button:focus {
   font-weight:bold;
 }
 #main-div {
+  /* border-radius:50px; */
   background-color:black; border:1px solid black; text-align:center; margin:0 auto;
 }
 input {
@@ -118,16 +119,27 @@ footer a:hover {
 h1 {
   text-shadow: 4px 4px 6px #4b4b4b;
 }
+/* Background medium view */
+@media (min-width:631px) and (max-width: 985px) {
+  body {
+    background-size:cover!important;
+  }
+}
 /* Desktop View */
 @media (min-width:631px) {
+  body {
+    background:url('images/grid-background-sm.png');
+    background-size:120% auto;
+    background-attachment:fixed;
+  }
   #made-with {
-    margin-top:80px!important;
+    margin-top:100px!important;
   }
 }
 /* Mobile View */
 @media (max-width:630px) {
  body {
-      background-color:black;
+   background-color:black;
  }
  #main-div {
     max-width:320px;
@@ -247,7 +259,7 @@ For this challenge, you will manually mine a valid bitcoin block.  But how will 
 </div>
 
 <footer style="font-weight:400; font-size:16px; letter-spacing:1.1px; padding-bottom:24px">
-  <div style="margin-bottom:14px; margin-top:45px" id="made-with">Made with <!--♥--><span style="color:#e8000d">❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a></div>
+  <div style="margin-bottom:14px; margin-top:70px" id="made-with">Made with <!--♥--><span style="color:#e8000d">❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a></div>
   <div style="font-size:11px"><script src="files/my-footer.js"></script></div>
 </footer>
 </div> <!-- end container -->
