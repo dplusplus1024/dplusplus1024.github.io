@@ -122,9 +122,9 @@ button {
 <br>
 <div class="container" style="max-width:625px; width:100%;">
 
-<div class="office-banner" style="display:none">
+<div class="office-banner-tbc" style="display:none">
 <h1>
-    &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner').hide(); $('canvas').hide()">
+    &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner-tbc').hide(); $('canvas').hide()">
 </h1>
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
@@ -400,7 +400,7 @@ function playSound() {
 }
 
 function goldenNonce() {
-	$('.office-banner').show();
+	$('.office-banner-tbc').show();
   if (!confettiOn) {
     end = Date.now() + 5000;
 	  frame();
