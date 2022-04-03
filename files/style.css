@@ -240,11 +240,33 @@ footer a:hover {
 }
 .office-banner {
   color:white;
-
   /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
   background:linear-gradient(68.78deg,#175d6a -5.3%,#ffffff 124.36%);
   /* for the bitcoin company version: */
   /* background:linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%); */
+  /* background-color: #5ddd9d; */
+  z-index:999;
+  /* color:black; */
+  font-weight: 300;
+  padding: 0.125em;
+  font-size: 44.5px;
+  text-align: center;
+  white-space: nowrap;
+  transform: rotate(-10deg);
+  position: fixed;
+  top: 40%;
+  left: -5%;
+  right: -5%;
+  z-index: 100;
+  margin-top: 0;
+}
+
+.office-banner-tbc {
+  color:white;
+  /* background:linear-gradient(68.78deg,#5ddd9d -5.3%,#ffd569 124.36%); */
+
+  /* for the bitcoin company version: */
+  background:linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%);
   /* background-color: #5ddd9d; */
   z-index:999;
   /* color:black; */
