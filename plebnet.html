@@ -17,9 +17,10 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
 </style>
 <style>
-#instructions span {
+#my-list span {
   color:#ed1a56;
   font-weight:bold;
 }
@@ -108,15 +109,20 @@ input, button {
   font-weight:bold;
 }
 .headers {
+  font-family: 'Mr Dafoe', cursive;
+  font-size:32px;
+  letter-spacing:1px;
   color:#f9be00;
-  font-weight:800;
+  /* font-weight:800; */
   text-align:center;
-  margin-bottom:20px;
-  font-size:20px;
+  margin-bottom:14px;
 }
 
 /* Mobile View */
 @media (max-width:630px) {
+ #my-list {
+    padding-left:6px!important;
+ }
  #main-div {
     max-width:320px;
  }
@@ -208,14 +214,14 @@ footer span {
 	</div>  <!-- game div -->
 
   <div id="instructions">
-    <div class="headers">Lightning Node Challenge</div>
+    <div class="headers">Node Challenge</div>
 
     Your task is to spin up a Lightning node and join <a href=https://t.me/plebnet target="_blank">PLEBNET</a>, a rad community of Lightning lovers ‘n node runners.
 <br><br>
-<div style="text-align:left; padding-left:6px; margin-right:-6px">
-<span>Step 1:</span> Get goin' with a Lightning node. Learn more about that <a href=https://plebnet.wiki/wiki/Getting_started target="_blank">here</a>.<br><br>
-<span>Step 2:</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
-<span>Step 3:</span> Sign a message with your node proving that you're you!<br><br>
+<div id="my-list" style="padding-left:30px; text-align:left; margin-right:-6px">
+<span>1)</span> Get goin' with a Lightning node. Learn more about that <a href=https://plebnet.wiki/wiki/Getting_started target="_blank">here</a>.<br><br>
+<span>2)</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
+<span>3)</span> Sign a message with your node proving that you're you!<br><br>
 </div>
       <button class="my-button" value="Verify My Node" id="next-page">Verify My Node</button>
 
