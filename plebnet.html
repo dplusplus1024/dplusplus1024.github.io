@@ -19,10 +19,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
 </style>
 <style>
+#instructions span {
+  color:#ed1a56;
+  font-weight:bold;
+}
 body {
   background:url('images/palms.jpg');
   background-size:cover;
-  background-attachment:fixed!important;
+  background-attachment:fixed;
   background-position:center;
   font-size:14px;
   color:white;
@@ -30,8 +34,12 @@ body {
   /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 a {
+  color:white;
   font-weight:bold;
   text-decoration:underline;
+}
+a:hover {
+  color:#ed1a56;
 }
 .divider {
   text-align:center;
@@ -67,7 +75,7 @@ button:focus {
   width:calc(100% - 50px);
   margin-top:30px;
 }
-input {
+input, button {
   margin-top:6px!important;
   width:calc(100% - 50px);
   padding-left:8px!important;
@@ -126,6 +134,9 @@ footer {
 footer a {
   text-decoration:none;
 }
+footer a:hover {
+  color:#ed1a56;
+}
 footer span {
   color:#ed1a56;
 }
@@ -148,7 +159,7 @@ footer span {
 <body>
 <!--header style="background-image: url('images/Mining.jpg')">
 </header-->
-<a href=http://plebnet.org target="_blank"><img id="logo" src=images/plebnet-black.png></a>
+<a href=https://t.me/plebnet target="_blank"><img id="logo" src=images/plebnet-black.png></a>
 <br>
 <div class="container" style="max-width:525px; width:100%;">
 
@@ -160,8 +171,10 @@ footer span {
 </div>
 <!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
 <div id="main-div">
+
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
-		<div class="headers">Verify Node Ownership<!-- & Membership--></div>
+    <div id="game-div" style="display:none;">
+		<div class="headers">Verify My Node</div>
 
     <form action="https://young-dawn-78254.herokuapp.com/checkPlebnet" method="post" id="my-form" onsubmit="return false">
 
@@ -176,11 +189,15 @@ footer span {
 
       <input type="hidden" id="signatureHex" name="signatureHex" value="">
 
-      <input type="submit" class="my-button">
+      <input type="submit" class="my-button" value="Submit">
     </form>
 
+    <div id="back" style="padding-top:30px; cursor:pointer;">
+    ← Back to Instructions
+    </div>
+
     <div id="searching" style="display:none">
-    Searching for your node in PLEBNET...<br>
+    Searching for your node...<br>
     <img src=images/search.gif style="width:90px; padding-top:14px">
     </div>
 
@@ -188,7 +205,25 @@ footer span {
       <span id="results"></span>
     </div>
     <br>
-	</div>
+	</div>  <!-- game div -->
+
+  <div id="instructions">
+    <div class="headers">Lightning Node Challenge</div>
+
+    Your task is to spin up a Lightning node and join <a href=https://t.me/plebnet target="_blank">PLEBNET</a>, a rad community of Lightning lovers ‘n node runners.
+<br><br>
+<div style="text-align:left; padding-left:6px; margin-right:-6px">
+<span>Step 1:</span> Get goin' with a Lightning node. Learn more about that <a href=https://plebnet.wiki/wiki/Getting_started target="_blank">here</a>.<br><br>
+<span>Step 2:</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
+<span>Step 3:</span> Sign a message with your node proving that you're you!<br><br>
+</div>
+      <button class="my-button" value="Verify My Node" id="next-page">Verify My Node</button>
+
+
+<br><br>
+  </div>
+</div>
+
 </div> <!-- end main-div -->
 </div> <!-- end container -->
 
@@ -198,9 +233,6 @@ footer span {
 </footer>
 
 <script>
-// to do:
-// heroku
-// make instruction page
 var colors = ["#FF5C98", "#FF9C23"];
 var end;
 const lookupTable = {
@@ -318,7 +350,7 @@ function validateInput() {
 function displayResults(result) {
   if (result.validSignature && result.inPlebnet) {
     $('#results').html("Your signature is valid, and you're a proud member of PLEBNET!");
-    $('#results').append("<br><br>The secret password is:<br><b style='color:white'>" + result.password + "</b>");
+    $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56;'>" + result.password + "</b>");
     end = Date.now() + 5000;
     frame();
     // display secret password
@@ -335,14 +367,16 @@ function displayResults(result) {
   if (result.inPlebnet == false) {
     $('#results').append("<br><br><i>If you recently joined PLEBNET, please wait an hour or more to be added to the database.</i>");
   }
+  $('#back').hide();
   $('#searching').hide();
   $('#result-div').show();
 }
 
 $('#my-form').submit(function() {
-      if (validateInput()) {
+  if (validateInput()) {
   $('#result-div').hide();
   $('#searching').show();
+  $('#back').hide();
   $.ajax({
         data: $(this).serialize(),
         type: $(this).attr('method'),
@@ -396,6 +430,16 @@ $('#my-form').submit(function() {
       requestAnimationFrame(frame);
     }
   }
+
+$('#next-page').click(function() {
+  $('#instructions').hide();
+  $('#game-div').show();
+});
+
+$('#back').click(function() {
+  $('#instructions').show();
+  $('#game-div').hide();
+});
 
 </script>
 </body>
