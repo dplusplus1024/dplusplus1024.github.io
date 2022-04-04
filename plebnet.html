@@ -356,7 +356,7 @@ function validateInput() {
 function displayResults(result) {
   if (result.validSignature && result.inPlebnet) {
     $('#results').html("Your signature is valid, and you're a proud member of PLEBNET!");
-    $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56;'>" + result.password + "</b>");
+    $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56; font-size:18px'>" + result.password + "</b></span>");
     end = Date.now() + 5000;
     frame();
     // display secret password
