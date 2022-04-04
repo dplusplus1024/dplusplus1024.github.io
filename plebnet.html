@@ -67,7 +67,8 @@ button:focus {
   font-weight:bold;
 }
 #main-div {
-  background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
+  box-shadow: rgb(242 178 71 / 50%) 0px 10px 40px -10px;
+  background-color:#110b15; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
 }
 #result-div, #searching {
   padding-left:8px!important;
@@ -157,7 +158,7 @@ footer span {
 */
 #logo {
   width:140px;
-  margin-top:14px;
+  margin-top:16px;
   margin-bottom:14px;
 }
 </style>
@@ -204,7 +205,7 @@ footer span {
 
     <div id="searching" style="display:none">
     Searching for your node...<br>
-    <img src=images/search.gif style="width:90px; padding-top:14px">
+    <img src=images/output-onlinegiftools.gif style="width:90px; padding-top:14px">
     </div>
 
     <div id="result-div" style="display:none">
@@ -233,7 +234,7 @@ footer span {
 </div> <!-- end main-div -->
 </div> <!-- end container -->
 
-<footer style="font-weight:400; font-size:16px; letter-spacing:1.1px; padding-bottom:24px; padding-top:20px; margin-top:120px;">
+<footer style="font-weight:400; font-size:16px; letter-spacing:1.1px; padding-bottom:24px; padding-top:20px; margin-top:120px; background-color:#100b15;">
   <div style="margin-bottom:14px;" id="made-with">Made with <!--♥--><span>❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a><br></div>
   <div style="font-size:11px"><script src="files/my-footer.js"></script></div>
 </footer>
@@ -355,7 +356,7 @@ function validateInput() {
 
 function displayResults(result) {
   if (result.validSignature && result.inPlebnet) {
-    $('#results').html("Your signature is valid, and you're a proud member of PLEBNET!");
+    $('#results').html("<i>Your signature is valid, and you're a proud member of PLEBNET!</i>");
     $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56; font-size:18px'>" + result.password + "</b></span>");
     end = Date.now() + 5000;
     frame();
