@@ -37,12 +37,18 @@ a {
   margin-bottom:15px!important;
   margin:0 auto;
 }
+.gradient {
+  -webkit-background-clip: text;
+  background: linear-gradient(68.78deg,#175d6a -5.3%,#ffffff 124.36%)!important;
+  font-weight:600!important;
+}
 .my-button {
   color:black;
-  background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%)!important;
+  background-color:#9dcdd6;
   -webkit-background-clip: text;
+  background: linear-gradient(68.78deg,#175d6a -5.3%,#ffffff 124.36%)!important;
+  /* background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%)!important; */
   font-weight:600!important;
-  color:white;
   margin-top:6px!important;
   width:calc(100% - 50px);
   padding-left:8px!important;
@@ -131,7 +137,7 @@ footer a:hover {
 h1 {
   text-shadow: 4px 4px 6px #4b4b4b;
 }
-#instructions-text span {
+#instructions-text b {
   background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -158,8 +164,6 @@ h1 {
     padding-right:45px!important;
   }
   .my-button {
-    background-color:#ed1a56!important;
-    color:white;
     font-weight:bold;
     margin-top:6px!important;
     width:300px;
@@ -212,11 +216,11 @@ h1 {
 <div id="instructions" style="position:relative; z-index:1;">
   	<div id="instructions-text" style="position:relative; z-index:1; color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center; text-align:justify">
   		<div class="headers gradient-text" style="width:110%; margin-left:-5%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
-Bitcoin mining is easier than you'd think! It's a simple guess and check game of searching for a magic number that when plugged into a block produces a valid <span>proof of work</span>.
+Bitcoin mining is easier than you'd think! It's a simple guess and check game of searching for a magic number that when plugged into a block produces a valid <b>proof of work</b>.
 <br><br>
-  The block goes through a <span>hash function</span> that reduces it into a small fingerprint or summary. If that fingerprint (a number) is less than another number (called a <span>difficulty target</span>), our block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
+  The block goes through a <b>hash function</b> that reduces it into a small fingerprint or summary. If that fingerprint (a number) is less than another number (called a <b>difficulty target</b>), our block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
 <br><br>
-For this challenge, we're going to manually brute force that random number, which has a special name: a <span>nonce</span>.  If you're guessing numbers on your own, it could take you up to 10 minutes or more of grinding, just like on bitcoin mainnet!  For this reason, feel free to grab some friends and guess together!
+For this challenge, we're going to manually brute force that magic number, which has a special name: a <b>nonce</b>.  If you're guessing numbers on your own, it could take you up to 10 minutes or more of grinding, just like on bitcoin mainnet!  For this reason, feel free to grab some friends and guess together!
 <br>
 </div>
 <center><br>
@@ -248,7 +252,7 @@ For this challenge, we're going to manually brute force that random number, whic
 	  -->
 		<input type="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" max=4294967295 min=0 id="nonce-input"
 		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="Nonce"></input>
-    <button onclick="tryNonce()" style="color:black; background:#5ddd9d">Hash</button>
+    <button onclick="tryNonce()" style="color:black; background:#5ddd9d" class="gradient">Hash</button>
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
