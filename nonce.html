@@ -37,6 +37,20 @@ a {
   margin-bottom:15px!important;
   margin:0 auto;
 }
+.my-button {
+  color:black;
+  background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%)!important;
+  -webkit-background-clip: text;
+  font-weight:600!important;
+
+
+  color:white;
+  margin-top:6px!important;
+  width:calc(100% - 50px);
+  padding-left:8px!important;
+  margin-right:20px!important;
+  margin-left:11px!important;
+}
 input:focus,
 select:focus,
 textarea:focus,
@@ -110,7 +124,6 @@ footer a {
   font-weight:500!important;
   text-decoration:none;
 }
-
 footer a:hover {
   color:white;
   font-weight:500!important;
@@ -118,6 +131,12 @@ footer a:hover {
 }
 h1 {
   text-shadow: 4px 4px 6px #4b4b4b;
+}
+#instructions-text span {
+  background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight:800;
 }
 /* Background medium view */
 @media (min-width:631px) and (max-width: 985px) {
@@ -134,6 +153,20 @@ h1 {
   }
   #made-with {
     margin-top:100px!important;
+  }
+  #instructions-text {
+    padding-left: 45px!important;
+    padding-right:45px!important;
+  }
+  .my-button {
+    background-color:#ed1a56!important;
+    color:white;
+    font-weight:bold;
+    margin-top:6px!important;
+    width:300px;
+    padding-left:8px!important;
+    margin-right:20px!important;
+    margin-left:20px!important;
   }
 }
 /* Mobile View */
@@ -154,15 +187,6 @@ h1 {
    width:calc(100% - 78px);
  }
 }
-/*
-@media (min-width:1500px) {
-  footer {
-    width:100%;
-    position:absolute;
-    bottom:0px;
-  }
-}
-*/
 #logo {
   width:250px;
   margin-top:43px;
@@ -186,16 +210,21 @@ h1 {
 <div style="font-size:25px; margin-top:-15px; letter-spacing:2px">LUCKY NUMBER <span id="winner"></span></div>
 </div>
 
-<div id="instructions" style="display:none">
-  	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
-  		<div class="headers gradient-text" style="width:100%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
-For this challenge, you will manually mine a valid bitcoin block.  But how will you do it?  Just like bitcoin does of course, with proof of work.
-<br><br><br><br><br><br>
-    </div>
+<div id="instructions" style="position:relative; z-index:1;">
+  	<div id="instructions-text" style="position:relative; z-index:1; color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center; text-align:justify">
+  		<div class="headers gradient-text" style="width:110%; margin-left:-5%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
+Bitcoin mining is easier than you'd think! It's a simple guess and check game of searching for a magic number that when plugged into a block produces a valid <span>proof of work</span>.
+<br><br>
+  The block goes through a <span>hash function</span> that reduces it into a small fingerprint or summary. If that fingerprint - a number - is less than another number (called a <span>difficulty target</span>), our block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
+<br><br>
+For this challenge, we're going to manually brute force that random number, which has a special name: a <span>nonce</span>.  If you're guessing numbers on your own, it could take you up to 10 minutes or more of grinding, just like on bitcoin mainnet!  For this reason, feel free to grab some friends and guess together!
+<br>
+</div>
+<center><br>
+<button class="my-button" value="Verify My Node" id="next-page" style="letter-spacing:1.2px">LET'S MINE BITCOIN</button>
 </div>
 
-
-  <div style="" id="contents"> <!--div for the content that will be swapped out -->
+  <div style="display:none" id="contents"> <!--div for the content that will be swapped out -->
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
 		<div class="headers gradient-text">Bitcoin Block Header</div>
     ← <i>previous block hash</i><br>
@@ -248,18 +277,22 @@ For this challenge, you will manually mine a valid bitcoin block.  But how will 
 		...<br>
 		Transaction #n<br><br>
 	</div>
-</div> <!-- end contents block -->
 
-<div style="margin-top:-75px!important; z-index:0; position: relative;">
+</div> <!-- end main div -->
+
+<br><br><br>
+<div style="margin-top:0px!important; z-index:0; position: relative;">
 <img src=images/Mountain.png style="width:318px; -webkit-transform: scaleX(-1); transform: scaleX(-1)">
 </div>
 <div style="margin-top:-11px">
   <img src=images/White-line.png style="width:400px; max-width:100%">
 </div>
-</div>
+</div> <!-- end contents block -->
 
-<footer style="font-weight:400; font-size:16px; padding-bottom:24px">
-  <div style="margin-bottom:14px; margin-top:70px" id="made-with">Made with <!--♥--><span style="color:#e8000d">❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a></div>
+
+
+<footer style="font-weight:400; font-size:16px; padding-bottom:23px">
+  <div style="margin-bottom:4px; margin-top:10px!important" id="made-with">Made with <!--♥--><span style="color:#e8000d">❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a></div>
   <div style="font-size:12.5px"><script src="files/my-footer.js"></script></div>
 </footer>
 </div> <!-- end container -->
@@ -599,6 +632,19 @@ $(window).resize(function() {
 });
 
 doLines();
+
+$('#next-page').click(function() {
+  $('#instructions').hide();
+  $('#contents').show();
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+  //$('#made-with').css('margin-top', '70px');
+});
+/*
+$('#back').click(function() {
+  $('#instructions').show();
+  $('#game-div').hide();
+});
+*/
 </script>
 </body>
 </html>
