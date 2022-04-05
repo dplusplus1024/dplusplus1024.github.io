@@ -47,7 +47,6 @@ a {
   background-color:#9dcdd6;
   -webkit-background-clip: text;
   background: linear-gradient(68.78deg,#175d6a -5.3%,#ffffff 124.36%)!important;
-  /* background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%)!important; */
   font-weight:600!important;
   margin-top:6px!important;
   width:calc(100% - 50px);
@@ -62,7 +61,7 @@ textarea:focus,
 button:focus {
     outline: none;
 }
-#close, #showMore {
+#close, #showMore, #my-logo {
   cursor:pointer;
 }
 .code {
@@ -73,7 +72,6 @@ button:focus {
   font-weight:bold;
 }
 #main-div {
-  /* border-radius:50px; */
   background-color:black; border:1px solid black; text-align:center; margin:0 auto;
 }
 input {
@@ -97,8 +95,6 @@ button {
   padding-left:20px;
   padding-right:20px;
   background-color:#9dcdd6!important;
-  /* color:white!important;
-  background: linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%)!important; */
 }
 .headers {
   font-weight:800;
@@ -138,7 +134,6 @@ h1 {
   text-shadow: 4px 4px 6px #4b4b4b;
 }
 #instructions-text b {
-  /* color:#9dcdd6!important; */
    background: -webkit-linear-gradient(68.78deg,#b1000b -5.3%,#91c1ca 124.36%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -199,9 +194,8 @@ h1 {
 }
 </style>
 </head>
+
 <body>
-<!--header style="background-image: url('images/Mining.jpg')">
-</header-->
 <div class="container" style="max-width:625px; width:100%; margin-top:0px">
 <div id="main-div">
 <div>
@@ -218,11 +212,11 @@ h1 {
 <div id="instructions" style="position:relative; z-index:1;">
   	<div id="instructions-text" style="position:relative; z-index:1; color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:justify;">
   		<div class="headers gradient-text" style="width:110%; margin-left:-5%">YOUR MISSION, SHOULD YOU CHOOSE TO ACCEPT IT</div>
-Bitcoin mining is simpler than you'd think! It's really just a guess and check game of searching for a magic number that when plugged into a block produces a valid <b>proof of work</b>.
+Bitcoin mining is simpler than you'd think! It's a guess and check game of searching for a magic number that when plugged into a block produces a valid &nbsp;<b>proof of work</b>.
 <br><br>
-  The block goes through a <b>hash function</b> that reduces it into a small fingerprint or summary. If that fingerprint (a number) is less than another number (called a <b>difficulty target</b>), our block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
+The block goes through a <b>hash function</b>, reducing it into a fingerprint or summary. If that fingerprint (a number) is less than another number (called a <b>difficulty target</b>), the block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
 <br><br>
-For this challenge, we're going to manually brute force that magic number, which has a special name: a <b>nonce</b>.  If you're guessing numbers on your own, it could take up to 10 minutes or more of grinding, just like on bitcoin mainnet!  For this reason, feel free to make some friends and guess together!
+For this challenge, we're going to brute force that magic number, which has a special name: a <b>nonce</b>.  If you're guessing numbers on your own, it could take up to 10 minutes or more of grinding, just like on bitcoin mainnet.  The more people guessing together, the faster the block will be found!
 <br>
 </div>
 <center><br>
@@ -296,39 +290,24 @@ For this challenge, we're going to manually brute force that magic number, which
 
 <footer style="font-weight:400; font-size:16px; padding-bottom:23px">
   <div style="margin-bottom:14px; margin-top:14px!important" id="made-with">Made with <!--♥--><span style="color:#e8000d">❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a></div>
-  <div style="font-size:12.5px"><script src="files/my-footer.js"></script></div>
+  <div style="font-size:13px"><script src="files/my-footer.js"></script></div>
 </footer>
 </div> <!-- end container -->
-
-<!--script src="files/footer.js"></script-->
 
 <script>
 // global variables
 var confettiOn = false;
 var colors = ["#b1000b", "#91c1ca"];
-// var colors = ["#FF5C98", "#FF9C23"];
 var hashRate = false;
-var numWins = 0;
 var startTime;
 var prevNonce;
 var end;
-var URL = location.href.split("?");
-var difficulty = URL[1];
-var salt =       URL[2];
-
-if (difficulty == undefined) {
-  difficulty = "001FF000000404CB000000000000000000000000000000000000000000000000";
-}
+var salt = "scavenge22";
+var difficulty = "001FF000000404CB000000000000000000000000000000000000000000000000";
 $('#target').html(difficulty);
-
-if (salt == undefined) {
-  salt = "scavenge22";
-}
 
 function compareBig(hash, target) {
 	// expects two 32 byte buffers
-	// console.log("the hash is " + hash);
-	// console.log("the target is " + target);
 	// if the hash is greater than the target, return false, meaning if the hash equals the target we have found a block
 	for (var i = 0; i < 32; i++) {
 		if (hash[i] > target[i])
@@ -340,7 +319,6 @@ function compareBig(hash, target) {
 }
 
 function hex2buf(string) {
-	// console.log(string);
 	var result = new Uint8Array(32);
 	var hexCounter = 0;
 	for (var i = 0; i < 32; i++) {
@@ -348,33 +326,26 @@ function hex2buf(string) {
 		result[i] = parseInt(Number("0x" + hex), 10);
 		hexCounter += 2;
 	}
-	// console.log("buffer is " + result);
 	return result;
 }
 
-function testCompare() {
-	var hash = new Uint8Array(32);
-	var target = new Uint8Array(32);
-	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	console.log(compareBig(hash, target));
+/*************************************************************************************/
+// candidate block == block in progress being constructed / mined
+// technically the bitcoin block header is 80 bytes
+// it contains 6 different data fields in little endian format
+// bitcoin mostly uses little endian. networking usually uses big endian
+// big endian = most significant bytes are first (human readable)
+// little endian = lest significant bytes are first (not human readable, it's reversed)
+// mining actually uses double sha!
 
-	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	target = hex2buf("01bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	console.log(compareBig(hash, target));
+// extraNonce parameters usually go in the script signature (unlocking script)
+// of the coinbase transaction. it is not formally defined, however many mining
+// pools use an extraNonce of 8 bytes. this can vary from pool to pool.
 
-	//////////////////////////////////////////////////////////////////.
-	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82842edabb7deb82a1");
-	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	console.log(compareBig(hash, target));
+// block weight must be under 4 MB
 
-	//////////////////////////////////////////////////////////////////.
-	hash =   hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82942edabb7deb82a1");
-	target = hex2buf("d1bc8d3ba4afc7e109612cb73acbdddac052c93025aa1f82842edabb7deb82a1");
-	console.log(compareBig(hash, target));
-}
-// testCompare();
-
+// ONE S19 can exhaust the entire 32 bit nonce search space in under 1 millisecond!!!
+/*************************************************************************************/
 async function simpleSha(message, salt) {
     // encode as UTF-8
     const msgBuffer = new TextEncoder().encode(message + salt);
@@ -389,82 +360,6 @@ async function simpleSha(message, salt) {
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
     return hashHex;
-}
-
-function binString2buf(string) {
-	var result = new Uint8Array(32);
-	for (var i = 0; i < 32; i++) {
-		// taking 8 bytes and putting it into 8 bits
-		// console.log("loop #" + i);
-		result[i] = 0;
-		for (var c = 0; c < 8; c++) {
-			if (Number(string[i*8 + c]) === 1) {
-				result[i] |= 1 << (7 - c);
-			}
-		}
-	}
-	return result;
-}
-
-function numToArrayBuffer(string) {
-	// candidate block == block in progress being constructed / mined
-	// technically the bitcoin block header is 80 bytes
-	// it contains 6 different data fields in little endian format
-	// bitcoin mostly uses little endian.  networking usually uses big endian
-	// big endian = most significant bytes are first (human readable)
-	// little endian = lest significant bytes are first (not human readable, it's reversed)
-	// we actually want to use double sha
-
-	// extraNonce parameters usually go in the script signature (unlocking script)
-	// of the coinbase transaction. it is not formally defined, however many mining
-	// pools use an extraNonce of 8 bytes, however this can vary from pool to pool.
-
-	// block weight must be under 4 MB
-
-	// ONE S19 can exhaust the entire 32 bit nonce search space in under 1 millisecond!!!
-	/***********************************************************************************/
-
-	// take a string, convert it to binary, then convert it to a 4 byte array buffer
-	string = Number(string).toString(2);
-	// make sure it's 32 bits
-	string = "00000000000000000000000000000000".substr(string.length) + string;
-	// console.log("string is " + string);
-
-	var result = new Uint8Array(4);
-	for (var i = 0; i < 4; i++) {
-		// taking 8 bytes and putting it into 8 bits
-		// console.log("loop #" + i);
-		result[i] = 0;
-		for (var c = 0; c < 8; c++) {
-			if (Number(string[i*8 + c]) === 1) {
-				result[i] |= 1 << (7 - c);
-			}
-		}
-	    // console.log("result[" + i + "] is: " + result[i]);
-	}
-	return result;
-}
-
-function buf2bin(buffer) {
-	var view = new Uint8Array(buffer);
-	var result = "";
-	for (var i = 0; i < view.length; i++) {
-		var binary = view[i].toString(2);
-		binary = "00000000".substr(binary.length) + binary;
-		result += binary;
-	}
-	return result;
-}
-
-function buf2hex(buffer) {
-	// buffer is an ArrayBuffer
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-}
-
-async function shaMe(inputString) {
-	let inputNum = numToArrayBuffer(inputString);
-  var hashBytes = await window.crypto.subtle.digest("SHA-256", inputNum);
-	return buf2bin(hashBytes);
 }
 
 function frame() {
@@ -491,11 +386,6 @@ function frame() {
   }
 }
 
-function playSound() {
-  //const audio = new Audio("files/AchievementUnlocked.mp3");
-  //audio.play();
-}
-
 function goldenNonce() {
 	$('.office-banner').show();
   if (!confettiOn) {
@@ -504,7 +394,6 @@ function goldenNonce() {
     $('canvas').show();
     confettiOn = true;
   }
-  //playSound();
 }
 
 async function tryNonce() {
@@ -512,11 +401,7 @@ async function tryNonce() {
 	const difficultyBuffer = hex2buf(difficulty);
 
 	let nonceHash = await simpleSha(nonce, salt);
-	// console.log("the nonce is: " + nonce);
-	// console.log("the hash is: " + nonceHash);
 
-	// const nonceHashBuffer = binString2buf(nonceHash);
-	// nonceHash = buf2hex(nonceHashBuffer);
 	$('#hash').html(nonceHash);
 
   $('#target-compare').html(difficulty);
@@ -536,11 +421,8 @@ async function tryNonce() {
 
 	if (compareBig(hex2buf(nonceHash), difficultyBuffer)) {
 		$('#result-area').html("<i class='gradient-text'><b>&nbsp;less than</b></i> ");
-    //$('#message').html("<span class='green-gradient-text'><i>YOU WON!</i></span> 🎉");
     $('#celebrate').show();
     $('#message').hide();
-    // console.log(nonce);
-    // console.log(++numWins);
     $('#winner').html(nonce);
 		goldenNonce();
 	}
@@ -555,7 +437,6 @@ async function tryNonce() {
   if (!hashRate) {
     // first time calculating hashrate, so let's set the start time to now
     startTime = $('#epoch').html();
-    // console.log(startTime);
     hashRate = 1;
   }
   else if (nonce != prevNonce){
@@ -565,21 +446,10 @@ async function tryNonce() {
     $('#hashrate').html((hashRate / (currentTime - startTime)).toFixed(2));
     $('#rate').show();
   }
-
   prevNonce = nonce;
   $('#results-block').show();
   doLines();
 }
-
-function autoNonce() {
-  for (var counter = 0; counter <= 4000; counter++) {
-  //for (var counter = 0; counter <= 4294967295; counter++) {
-    $('#nonce-input').val(counter);
-    tryNonce();
-  }
-  console.log("AND THE WINNERS ARE: " + winners.length);
-}
-//autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
@@ -589,7 +459,19 @@ input.addEventListener("keyup", function(event) {
   }
 });
 
-// show timestamp couter
+$('#next-page').click(function() {
+  $('#instructions').hide();
+  $('#contents').show();
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+});
+
+$('#my-logo').click(function() {
+  $('#instructions').show();
+  $('#contents').hide();
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+});
+
+// Show timestamp couter
 function timestamp() {
 	const d = new Date();
   let time = d.getTime();
@@ -599,7 +481,7 @@ function timestamp() {
 
 timestamp();
 
-// on mobile, break lines of hashes exactly halfway through
+// On mobile, break lines of hashes exactly halfway through
 function breakLines() {
   $('.code').each(function() {
     var html = $(this).html();
@@ -633,19 +515,6 @@ $(window).resize(function() {
 });
 
 doLines();
-
-$('#next-page').click(function() {
-  $('#instructions').hide();
-  $('#contents').show();
-  document.body.scrollTop = document.documentElement.scrollTop = 0;
-  //$('#made-with').css('margin-top', '70px');
-});
-/*
-$('#back').click(function() {
-  $('#instructions').show();
-  $('#game-div').hide();
-});
-*/
 </script>
 </body>
 </html>
