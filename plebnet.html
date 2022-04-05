@@ -32,7 +32,6 @@ body {
   font-size:14px;
   color:white;
   font-family: 'Manrope', sans-serif;
-  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
 }
 a {
   color:white;
@@ -83,7 +82,6 @@ input, button {
   padding-left:8px!important;
   margin-right:20px!important;
   margin-left:16px!important;
-  /* padding-left:20px!important; */
 }
 input, button {
   -webkit-border-radius:999px;
@@ -113,7 +111,6 @@ input, button {
   font-size:32px;
   letter-spacing:1px;
   color:#f9be00;
-  /* font-weight:800; */
   text-align:center;
   margin-bottom:14px;
 }
@@ -148,15 +145,16 @@ footer a:hover {
 footer span {
   color:#ed1a56;
 }
-/* sticky footer?
-@media (max-width:630px) {
+/* sticky footer */
+/* need to remove stickiness when page height changes... */
+@media (min-width:630px) {
   footer {
-    width:100%;
+    /* width:100%;
     position:absolute;
-    bottom:0px;
+    bottom:0px; */
   }
 }
-*/
+
 #logo {
   width:140px;
   margin-top:16px;
@@ -165,8 +163,7 @@ footer span {
 </style>
 </head>
 <body>
-<!--header style="background-image: url('images/Mining.jpg')">
-</header-->
+
 <a href=https://t.me/plebnet target="_blank"><img id="logo" src=images/plebnet-black.png></a>
 <br>
 <div class="container" style="max-width:525px; width:100%;">
@@ -177,7 +174,7 @@ footer span {
 </h1>
 <div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
 </div>
-<!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
+
 <div id="main-div">
 
 	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
@@ -222,13 +219,15 @@ footer span {
 <br><br>
 <div id="my-list" style="padding-left:30px; text-align:left; margin-right:-6px">
 <span>1)</span> Get goin' with a Lightning node. Learn more about that <a href=https://plebnet.wiki/wiki/Getting_started target="_blank">here</a>.<br><br>
-<span>2)</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
-<span>3)</span> Sign a message with your node proving that you're you!<br><br>
+
+<span>2)</span> Open at least one public channel to another node<!--PLEBNET pleb-->.<br><br>
+
+<span>3)</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
+
+<span>4)</span> Sign a message with your node proving that you're you!<br><br>
 </div>
       <button class="my-button" value="Verify My Node" id="next-page">Verify My Node</button>
-
-
-<br><br>
+      <br><br>
   </div>
 </div>
 
@@ -237,7 +236,7 @@ footer span {
 
 <footer style="font-weight:400; font-size:16px; padding-bottom:23px; padding-top:20px; margin-top:120px; background-color:#100b15;">
   <div style="margin-bottom:14px;" id="made-with">Made with <!--♥--><span>❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a><br></div>
-  <div style="font-size:12.5px"><script src="files/my-footer.js"></script></div>
+  <div style="font-size:13px"><script src="files/my-footer.js"></script></div>
 </footer>
 
 <script>
@@ -319,9 +318,6 @@ function validateInput() {
   $('#signature').val(signedMessage);
   $('#pubkey').val(pubkey);
 
-  console.log("pubkey is: " + pubkey);
-  console.log("length of pubkey is: " + pubkey.length);
-
   // check signature first
   if (signedMessage.length == 104) {
     // zbase format
@@ -357,11 +353,11 @@ function validateInput() {
 
 function displayResults(result) {
   if (result.validSignature && result.inPlebnet) {
+    // They win! Display secret password
     $('#results').html("<i>Your signature is valid, and you're a proud member of PLEBNET!</i>");
     $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56; font-size:18px'>" + result.password + "</b></span>");
     end = Date.now() + 5000;
     frame();
-    // display secret password
   }
   if (result.validSignature && result.inPlebnet == false) {
     $('#results').html("Your signature is valid, however we did not find your node in PLEBNET.  Please try again.");
@@ -390,32 +386,20 @@ $('#my-form').submit(function() {
         type: $(this).attr('method'),
         url:  $(this).attr('action'),
         success: function(response) {
-          console.log("Are they in PLEBNET? " + response.inPlebnet);
-          console.log("hi little angel");
           displayResults(response);
         }
       });
-      console.log("hi bb");
       return false;
     }
   });
-
-  /*
-  fetch("http://localhost:8080/").then(function(response) {
-    return response.text();
-  }).then(function(text) {
-    console.log(text);
-  }).catch(function(error) {
-    console.log(error);
-  });
-  */
 
   $("input[type='text']").on("click", function () {
     $(this).select();
   });
 
   $('#message').on("click", function() {
-     navigator.clipboard.writeText($(this).val());
+    // Copy the message to sign to the clipboard on click
+    navigator.clipboard.writeText($(this).val());
   });
 
   function frame() {
