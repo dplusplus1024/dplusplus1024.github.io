@@ -187,10 +187,10 @@ footer span {
       <input type="text" value="I'm from the Bitcoin 2022 Rogue Signal Pyramid Scheme game, and I'm here to register my node!" readonly="readonly" id="message"></input><br><br>
 
       Lightning Node Pubkey<br>
-      <input type="text" id="pubkey" name="pubkey" value="03eba3295492a69621a2501675b663c7051f6035b52f98f0e911475534f105e670"></input><br><br>
+      <input type="text" id="pubkey" name="pubkey"></input><br><br>
 
       Signature<br>
-      <input type="text" id="signature" name="signature" value="d7oxcsoo88zarszpghgukjk5g4hwxfdq7wsqzeig6gahuddzy6xt6qewcx69nybwuf7x8zwbn3m5jejmyhqnjx3focwk44sxc5pcszmd"></input><br><br>
+      <input type="text" id="signature" name="signature"></input><br><br>
 
       <input type="hidden" id="signatureHex" name="signatureHex" value="">
 
@@ -330,6 +330,7 @@ function validateInput() {
   else {
     // problem with signature, not the correct length
     $('#result-div').show();
+    $('#back').hide();
     $('#results').html("There's an issue with your signature. We're looking for a signed message in hex or zbase32 format.")
     return false;
   }
@@ -338,6 +339,7 @@ function validateInput() {
   if (pubkey.length < 66) {
     // pubkey is too short
     $('#result-div').show();
+    $('#back').hide();
     $('#results').html("Please enter a valid lightning node public key (node ID).");
     return false;
   }
