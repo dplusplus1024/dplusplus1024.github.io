@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="files/confetti.browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap');
+
+html {
+  /* border:20px solid #11131f; */
+  border-top:10px solid #11131f;
+  border-left:5px solid #11131f;
+}
+body {
+  background-color:#11131f;
+  margin-left:-2px;
+  margin-top:-67px;
+  margin-right:0px;
+  margin-bottom:-70px;
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  color:white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size:14px;
+  line-height:26px;
+}
+#my-frame {
+  margin-top:-310px;
+  -webkit-transform: scale(.89);
+  transform: scale(.89);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+#sup {
+  padding-top:70px;
+}
+#stuff-inner {
+  padding-left:20px;
+}
+h2 {
+  font-size:26px;
+}
+.monospace {
+  font-family:monospace;
+}
+#tx-area {
+  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 15;
+  -webkit-box-orient: vertical;
+}
+}
+</style>
+</head>
+<!-- chill here until we get a txid -->
+<div>
+  <div style="float:left; width:67%;">
+  <div style="margin-top:35px">&nbsp;</div>
+  <div style="height:90%; margin-left:10px; margin-top:10px; overflow:hidden">
+    <div id="loading" style="font-size:40px; text-align:center; display:none; margin-top:30%">
+    <h3><span id="winning-team"></span></h3>
+    <div id="winning-inner" style="font-size:22px; margin-top:-32px">
+    <i>TOOK CONTROL OF THE UTXO!</i>
+    <br><br><br>
+    <div style="font-size:16px">
+    New Transaction ID:<br><span id="txid"></span>
+    </div>
+
+    <!--, & it's headed to <span id="recipient"></span>!<br><br>
+    <table style="width:178px;">
+    <tr><td style="text-align:right">Amount:</td><td class="right"><span id="amount">1,500,000</span></td><td>sats</td></tr>
+    <tr><td style="text-align:right"><span id="fee-label">Fee</span>:</td><td class="right"><span id="rbf">4,564</span></td><td>sats</td></tr>
+    </table-->
+    </div>
+  </div>
+  <!-- spinner -->
+  <!--img src=https://dplusplus.me/images/output-onlinegiftools.gif-->
+</div> <!-- loading -->
+
+<div style="width:100%; height:20px; background-color:#11131f; position:absolute; top:0; z-index:100"></div> <!-- cover top of mempool.space -->
+<!-- cover bottom of mempool.space, 100px for tx with no anchor outputs -->
+<!--div style="width:100%; height:100px; background-color:#11131f; position:absolute; bottom:0; z-index:100; display:none" id="bottom-cover"></div-->
+<iframe id="my-frame" style="z-index:1" frameBorder=0 width=100% height=2000 scrolling="no" src=http://136.49.248.230:3006/></iframe> <!-- palais d'amour mempool -->
+</div>
+</div>
+
+<div style="float:left; width:calc(33% + 1px); margin-left:2px; background-color:#11131f; height:100%; margin-right:-3px; display:none" id="sup">
+  <div id="stuff-inner" style="margin-top:-4px; margin-left:-100px" >
+     <h2>RBF Transaction History</h2>
+     <div style="background-color:#24273e; width:85%; margin-top:-10px; padding:20px;">
+       <div id="tx-area">
+       </div> <!-- tx-area -->
+       </div>
+       </div>
+    </div>
+  </div>
+
+  <div style="position:absolute; right:110px; bottom:20px; z-index:200">
+  <img src="images/Bitcoin-Ball-Dark.jpg" width=250>
+  </div>
+
+<script>
+var dustinsBoat =  "http://173.239.71.226:3006";
+var palaisDamour = "http://136.49.248.230:3006";
+// palaisDamour = dustinsBoat;
+var txid = 0; // current txid of RBF transaction
+var prevTxid; // previous txid before our most current RBF
+
+window.addEventListener('storage', (event) => {
+ if (event.storageArea != localStorage) return;
+ if (event.key === 'txid') {
+   prevTxid = txid; // in case
+   txid = event.newValue;
+   updateRBF();
+ }
+});
+
+async function checkMempool() {
+  await $.getJSON(palaisDamour + '/api/tx/' + txid, function(data) {
+     console.log("info about tx in mempool:");
+     console.log(data);
+     setTimeout(function(){
+       stopLoading();
+     }, 2000); // wait two seconds then stop loading
+  }).fail(function() {
+    console.log("error, tx not found");
+    setTimeout(function(){
+    checkMempool()
+  }, 1000); // wait one second
+  });
+}
+
+function updateRBF() {
+  doConfetti();
+  $('iframe').attr('src', palaisDamour + '/tx/' + txid);
+  doLoading();
+  $('#bottom-cover').show();
+  $('#txid').html(txid);
+  $('#sup').show();
+  $('#tx-area').html('<s>' + $('#tx-area').html() + '</s>');
+  // $('#tx-area').prepend("<span class='monospace'>" + txid + "</span> &nbsp;  ← &nbsp; " + truncateTeam(localStorage.getItem("winning")) + "<br>");
+  $('#tx-area').prepend("<span class='monospace'>" + truncate(txid) + "</span> &nbsp;  ← &nbsp; " + truncateTeam(localStorage.getItem("winning")) + "<br>");
+  $('#winning-team').html(localStorage.getItem("winning"));
+  checkMempool(txid);
+}
+
+function truncateTeam(input) {
+   if (input.length > 21) {
+      return input.substring(0, 20) + '...';
+   }
+   return input;
+}
+
+function truncate(input) {
+   if (input.length > 25) {
+      return input.substring(0, 12) + '...' + input.substring(input.length-12, input.length);
+   }
+   return input;
+}
+
+function doLoading() {
+  $('#loading').show();
+  $('#my-frame').hide();
+}
+
+function stopLoading() {
+  $('#loading').hide();
+  $('#my-frame').show();
+}
+
+/* confetti stuff ****************/
+var confettiOn = false;
+var colors = ["#0616ff", "#f30000"]; // confetti default
+
+function doConfetti() {
+  if (!confettiOn) {
+    end = Date.now() + 1000;
+    // end = Date.now() + 5000;
+    frame();
+    // $('canvas').show(); // banner
+    confettiOn = true;
+  }
+}
+function frame() {
+  confetti({
+    particleCount: 2,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0 },
+    colors: colors,
+  });
+  confetti({
+    particleCount: 2,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1 },
+    colors: colors,
+  });
+
+  if (Date.now() < end) {
+    requestAnimationFrame(frame);
+  }
+  else {
+    confettiOn = false;
+  }
+}
+/* end confetti stuff ************/
+</script>
