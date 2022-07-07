@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Bitcoin Ball</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="shortcut icon" type="image/jpg" href="https://i.imgur.com/MkJ6oDe.png"/>
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="files/confetti.browser.min.js"></script>
+<!-- super's library suggestions -->
+<script src="https://bitcoincore.tech/apps/bitcoinjs-ui/lib/bitcoinjs-lib.js"></script>
+<script src="https://bundle.run/noble-secp256k1@1.2.14"></script>
+<script src="https://bundle.run/ecies-lite@1.1.3"></script>
+<script src="https://bundle.run/bip39@3.0.4"></script>
+<script src="https://bundle.run/bip32@2.0.6"></script>
+<script src="https://bundle.run/buffer@6.0.3"></script>
+<script src="files/transactions.js"></script>
+<link rel="stylesheet" href="files/style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
+
+@font-face {
+		font-family: 'danbury_small_personal_use';
+		src: url('files/danburysmall_personal_use_only-webfont.woff2') format('woff2');
+		font-weight: normal;
+		font-style: normal;
+}
+@font-face {
+    font-family: 'cocogooseregular';
+    src: url('files/cocogoose_pro-trial-webfont.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+	font-family: 'Nunito', sans-serif;
+	font-weight:bold;
+	font-size:18px;
+	overflow: hidden; /* Hide scrollbars */
+	background-color: white;
+	/* for desktop screen */
+	margin-left: 15px;
+	/* bitcoin++ room */
+	margin-top: 15px;
+	/* for laptop
+	margin-left:50px;
+	margin-top:40px; */
+}
+.gradient-red {
+	background: linear-gradient(68.78deg, #ff101f -5.3%, #781a22 124.36%);
+	/* background: linear-gradient(68.78deg, #ff5b5b -5.3%, #8e0000 124.36%); */
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+.gradient-blue {
+	background: linear-gradient(68.78deg, #6b8cf5 -5.3%, #010450 124.36%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+.gradient-border-red {
+	/* border-width: 10px;
+	border-style: solid;
+	background: linear-gradient(68.78deg, #ff101f -5.3%, #781a22 124.36%); */
+		background: linear-gradient(68.78deg, #ff101f -5.3%, #781a22 124.36%);
+	border-image: linear-gradient(to right, #ff101f, #781a22) 1;
+	box-shadow: 10px 10px black;
+}
+.gradient-border-blue {
+	/* border-width: 10px;
+	border-style: solid;
+	border-image: linear-gradient(to right, #6b8cf5, #010450) 1; */
+	background: linear-gradient(68.78deg, #6b8cf5 -5.3%, #010450 124.36%);
+	box-shadow: 10px 10px black;
+}
+#setup, input {
+	font-weight:normal;
+}
+select, input {
+	width:200px;
+}
+
+#canvas{
+	background-color: white;
+}
+td {
+	text-align:left;
+	padding:0px;
+	padding-right:5px;
+	white-space: nowrap;
+}
+.right {
+	text-align:right;
+}
+.shadow-outline {
+	color:black;
+	text-shadow:
+  -1.5px -1.5px 0 #fff,
+   1.5px -1.5px 0 #fff,
+  -1.5px 1.5px 0 #fff,
+   1.5px 1.5px 0 #fff;
+}
+h3 {
+	margin-left:-2px;
+	margin-bottom:0px;
+	font-size:26px;
+	font-family: 'cocogooseregular';
+}
+#bitcoin-ball {
+	margin-left:223px; font-size:38px;
+	margin-top:-5px;
+	margin-bottom:5px;
+	font-family: 'danbury_small_personal_use';
+}
+#winning-team, #recipient {
+	text-transform:capitalize;
+}
+#splash {
+	margin-left:-50px;
+	margin-top:-80px;
+}
+#setup {
+	margin-left:-50px;
+	margin-top:100px;
+}
+</style>
+</head>
+
+<div class="office-banner" style="display:none; cursor:pointer; line-height:30px;" onclick="$('.office-banner').hide();">
+   <div style="font-weight:bold; color:white; font-size:20px; line-height:30px; padding-top:4px;" id="won-the-game"></div>
+	 <!--img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" style="cursor:pointer" onclick="$('.office-banner').hide();"-->
+	 <div style="font-weight:bold; font-size:20px; text-transform:uppercase; margin-top:2px"><span id="won-amount"></span> SATS WENT TO <span id="won-charity"></span></div>
+</div>
+
+<!-- Soccer game code -->
+		<div id="splash" onclick="$(this).hide()" style="cursor:pointer"> <!-- Splash screen -->
+			<img src="images/Bitcoin Ball Logo.jpg" width=100%>
+		</div>
+
+		<div id="splash-instructions" onclick="$(this).hide()" style="cursor:pointer; height:1000px; padding-left:30px; padding-right:60px; line-height:70px;"> <!-- Instructions screen -->
+			<h3 style="padding-top:15px">Easy Instructions</h3>
+			<div style="font-size:20px;">
+			1) Divide into two teams<br>
+			2) Pick your team names<br>
+			3) Pick your charity<br>
+			<div id="charities" style="background-color:black; color:white; padding:30px; line-height:60px;"></div>
+			4) Have fun scoring points
+			</div>
+		</div> <!-- instructions -->
+
+		<div id="setup">
+			<br>
+			<h3>Choose Your Fighters</h3><br>
+			<center>
+			<table width=100 style="border:0px solid red; width:100px">
+			<tr><td>Red Team Name:</td><td><input id="red-name-init"></td></tr>
+			<tr><td style="padding-top:6px">Red Team Charity:</td><td style="padding-top:6px">
+	<select name="red-charity-select" id="red-charity-select">
+	<option value="" disabled selected>Select your option</option>
+	</select>
+</td></tr>
+
+<tr><td><br>Blue Team Name:</td><td><br><input id="blue-name-init"></td></tr>
+<tr><td style="padding-top:6px">Blue Team Charity:</td><td style="padding-top:6px">
+	<select name="blue-charity-select" id="blue-charity-select">
+	<option value="" disabled selected>Select your option</option>
+	</select>
+</td></tr>
+<tr><td><br>Funding Address Index:</td><td><br><input type="number" id="funding-address-index"></td></tr>
+</table>
+<br>Test Mode: <input type="checkbox" id="test-mode" style="width:20px"> <!-- CHANGE THIS BEFORE REAL GAME!! -->
+<br>Pause Game: <input type="checkbox" id="two-player-mode" style="width:20px">  <!-- CHANGE THIS BEFORE REAL GAME!! -->
+<br><br>
+		<button onclick="saveAndContinue()">Save and Continue</button>
+		</div> <!-- Setup div -->
+
+		<div id="game" style="display:none; margin-top: 70px; margin-left: 30px"> <!-- Game area, margins for bitcoin++ -->
+		<div style="text-align:left"> <!-- Game canvas -->
+		<div id="bitcoin-ball"><!--Bitcoin Ball--><img src="images/Ball.png" width=260><br></div>
+		<canvas id="canvas" width="700" height="500" style="float:left; margin-left: 0px "></canvas>
+		</div>
+		<!-- Results area -->
+		<div style="float:left; margin-left:20px; text-align:left; height:500px; position:relative;">
+		<div style="text-transform:capitalize; padding:10px;">
+		<h3 style="color:#f3000f; padding-top:0px;"><span id="red-name" class="gradient-red">Red Team<span></h2>
+		Donation: <span id="red-charity"></span><br>
+		<br><br>
+		<h3 style="color:#25368d"><span id="blue-name" class="gradient-blue">Blue Team</span></h2>
+		Donation: <span id="blue-charity"></span>
+		<br><br>
+		</div>
+
+		<div id="winning-stats" style="bottom:0px; position:absolute; padding:15px; padding-right:12px; margin-top:0px; background-color:black; color:white; width:320px;">
+
+			<div id="winner-display" style="display:none">
+			<h3 class="shadow-outlines" style="margin-top:5px">#WINNING</h3>
+			<div id="winning-inner" style="font-size:17px; margin-top:5px">
+			<span id="winning-team"></span> took control of the UTXO, & it's headed to <span id="recipient"></span>!<br><br>
+			<table style="width:178px;">
+			<tr><td style="text-align:right">Amount:</td><td class="right"><span id="amount">1,500,000</span></td><td>sats</td></tr>
+			<tr><td style="text-align:right"><span id="fee-label">Fee</span>:</td><td class="right"><span id="rbf">4,564</span></td><td>sats</td></tr>
+			</table>
+			<!--TXID: <span id="txid" style="white-space:wrap">a461603120c280973413712a48d502840a2af279475b342fe5a834d51d607030</span-->
+			</div> <!-- winning-inner -->
+			</div> <!-- winner display -->
+
+		<div id="instructions" style="letter-spacing:1px; font-size:16px">
+			Score a goal to send the UTXO to your team's charity of choice!
+		</div>
+		</div>
+		</div> <!-- winning stats -->
+
+		</div> <!-- Game area -->
+    </body>
+</html>
+<!-- end soccer game code -->
+<script>
+/* possible games?
+https://codepen.io/Eika/pen/abdYXY soccer game
+https://codepen.io/gdube/pen/JybxxZ pong
+https://mk.mgechev.com/ mortal combat server side
+https://codepen.io/JoaoAntonioMaruti/pen/jqpQPj?editors=1111 mortal kombat browser side
+*/
+var haveWinner = false;
+var testMode;
+var twoPlayerMode;
+var gameStart;
+var gameStop = false;
+var winningTeam;
+var winningCharity;
+var redName;
+var blueName;
+var redCharity;
+var blueCharity;
+var redCharityAddress;
+var blueCharityAddress;
+var exchangeRate;
+var balance;
+/*
+
+*/
+var charities = {
+	// the following does not have a donation address - i emailed them to check!!
+	// amboss.space - no donation address
+	// Ride the Lightning
+	// BTCPay Server
+
+	// ----------------------- //
+	// Galoy (Bitcoin Beach) <-- noor responded by she's still looking into it
+
+	// Ben Arc
+	// Randy
+	// ThunderHub
+	//  "": "Open Sats",
+
+	// 	hey there! do you have a bc1 donate address? i'm making a list for a project i'm working on :)  it's a bitcoin game :D
+
+	// the following are actual addresses:
+	"1andreas3batLhQa2FawWjeyjCqyBzypd": "Andreas Antonopoulos",
+	"bc1qtsfhj6t4kffgf3actyf46m86rqccyjzj0w0t6r": "Base58",
+	"bc1q0t7rmka2ejsfectrv4ckzmrs4hyj55zf9dgpl3": "Ben Kaufman", // copied from BTCPay server
+	"38Co3GWCVgJd5m2ZeNToMN9Qg75uM2Erd7": "Brink", // copied from opennode
+	"3Bxruu8oW2EMxYvZsR2XNeXacXHpkwwkb3": "Car",
+	"bc1qgrz7u96he4pf2jw494jc8kkk3efermvnl20vwn": "D++",
+	"bc1qj8az3507sry5wk4f9v5m7ywamewxvnc5qj3qsj": "Dusty",
+	"bc1qgxy60kl357ng6xpevwkm08veltz6akxphwgalr": "Fiatjaf",
+	"bc1qn8rfh6k9p429de3fsj680tuu88j9chrf9tu03g": "Gigi", // copied from his BTCPay Server
+	"3MwpWPd2dGzTK55AmzRuwbE7Knyqxs7ZU7": "Human Rights Foundation", // copied from their BTCPay server
+	"1Lv2GTFw8hMnpdtf4varhrhGwRSZSEthZp": "Jc Crown",
+	"3QTz9BMtWgM7CFXpnv63FicVBcKt4W4qV7": "Jeremy Rubin",
+	"3Beer3irc1vgs76ENA4coqsEQpGZeM5CTd": "Learn Me A Bitcoin", // from his website
+	"1Cyc4X8ES9Qvsqc8FBupLdTLKnbxo6wmUj": "Luke Dashjr", // from a blog post I found
+	"bc1qgsd03gr6tyj3q4u4zlncg0wp8juryplexgmapz44nd5a57apvvvq02puqs": "mempool.space", // generated from their sponsor page -- adds 12 more bytes - bc it's p2wsh
+	"bc1qedzxpk9zhf4t83z4u3es5kyf4jz709sfudu7ne": "Michael Folkson",
+	"bc1qpc8fa090n4gnujq0asnql97azehy4y4ytqqr0q": "Pleb Lab", // TEMPORARY! This is D's address *****************************
+	"bc1qntd5nseudey6u9lf3kl4lw05q2ta0ds4r4nfne": "RaspiBlitz",
+	"bc1qw8220g7wwv7y0kr0chfmgp9shkkqz7kutlnzyf": "Rene Pickhardt", // sent it to him previously to this address
+	"3L9YApEmcGTKKaFmZuRcGPGQuz3bsVjNvW": "Samourai", // from their website
+	"bc1qlrvykvefw05dphzjxk372pjp9qhh8pc7uaqc70": "SeedSigner", // copied from their BTCPay Server
+	"bc1qwmtfnastq8qpmqjqwghthxkgh7g5xw8aj8vl5u": "Sparrow Wallet",
+	"bc1qzsg4wg5xyt02xjgwdsktcl4vqd95k4jmkjx93m": "Super Testnet"
+};
+
+$(document).ready(function() {
+	var selectRed  = document.getElementById("red-charity-select");
+	var selectBlue = document.getElementById("blue-charity-select");
+
+	for (const charity in charities) {
+	  // charity: charities[charity]
+		var optionRed =  document.createElement("option");
+		var optionBlue = document.createElement("option");
+		optionRed.value  = charity;
+		optionRed.text   = charities[charity];
+		optionBlue.value = charity;
+		optionBlue.text  = charities[charity];
+		selectRed.appendChild(optionRed);
+		selectBlue.appendChild(optionBlue);
+		$('#charities').append(charities[charity] + "<img src=https://img.spacergif.org/v1/spacer.gif style='width:50px; height:0px'>");
+	}
+});
+
+// on start, scroll to top
+window.scrollTo(0, 0);
+$("#funding-address-index").attr("placeholder", index);
+
+// start game on enter
+$(document).on('keypress',function(e) {
+    if(e.which == 13) {
+				if (!gameStop) // don't continue if game is over...
+					gameStart = true;
+    }
+});
+
+function saveAndContinue() {
+	redName = $('#red-name-init').val();
+	blueName = $('#blue-name-init').val();
+	redCharity = $('#red-charity-select option:selected').text();
+	blueCharity = $('#blue-charity-select option:selected').text();
+	redCharityAddress = $('#red-charity-select').val();
+	blueCharityAddress = $('#blue-charity-select').val();
+	console.log("redCharityAddress " + redCharityAddress);
+	console.log("blueCharityAddress " + blueCharityAddress);
+
+	testMode = $('#test-mode').is(":checked");
+	twoPlayerMode = $('#two-player-mode').is(":checked");
+
+	console.log("Test mode is: " + testMode);
+	console.log("Pause game mode is: " + twoPlayerMode);
+
+	if(!twoPlayerMode)
+		gameStart = true;
+	else
+		gamestart = false;
+
+	// first, validate input before continuing
+	if (redName == "")
+		redName = "Red Team";
+
+	if (blueName == "")
+		blueName = "Blue Team";
+
+		console.log("redCharity: " + redCharity);
+	if (redCharity == "Select your option") // displays first charity if empty
+		redCharity = "Red Donation";
+
+	if (blueCharity == "Select your option") // displays second charity if empty
+		blueCharity = "Blue Donation";
+
+	$('#red-name').html(redName);
+	$('#blue-name').html(blueName);
+	$('#red-charity').html(redCharity);
+	$('#blue-charity').html(blueCharity);
+
+	if ($('#funding-address-index').val() != "") {
+		index = $('#funding-address-index').val();
+	}
+
+	$('#setup').hide();
+	$('#game').show();
+
+	doMain();
+}
+
+// we're not using this function currently
+function displayCurrentWinner(currentWinner) {
+  var winnerFound = false;
+  for (let j = 0; j < currentWinner.vout.length; j++) {
+    console.log("my output addresses: " + currentWinner.vout[j].scriptpubkey_address);
+    if (currentWinner.vout[j].scriptpubkey_address in charities) {
+      // charity was found
+      winnerFound = true;
+      console.log("The current winner is: " + charities[currentWinner.vout[j].scriptpubkey_address]);
+    }
+  }
+  if (winnerFound == false) {
+    console.log("winner not found THEYRE STEALING THE bITCOINS!!!");
+  }
+}
+
+function getMempool(address) {
+  // testnet addresses start m, 2, tb1q
+  console.log("Searching for outputs from " + address);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            //$('#spinner').hide();
+            var txList = JSON.parse(xhttp.responseText);
+            //balance = (json.chain_stats.funded_txo_sum - json.chain_stats.spent_txo_sum)/100000000;
+            //var myTx = json['0'].vout['1'].scriptpubkey_address;
+            var currentWinner = 0; // store the index of the current winner
+            var highestFee = 0;    // used to commpare highest fee
+            for (let i = 0; i < txList.length; i++) {
+              // check to see that the origin address is the input to the tx, not the output
+              for (let c = 0; c < txList[i].vin.length; c++) {
+                if (txList[i].vin[c].prevout.scriptpubkey_address == address) {
+                  console.log("we found it!!!")
+                  if (txList[i].fee > highestFee) {
+                    hihgestFee = txList[i].fee;
+                    currentWinner = i;
+                  }
+                }
+              }
+            }
+
+            displayCurrentWinner(txList[currentWinner]);
+
+            console.log(txList);
+            /*
+            $('#error').hide();
+            $('#results').show();
+            $('#balance').html(balance);
+            $('#usd').html((balance * exchangeRate).toLocaleString(undefined, {'minimumFractionDigits':2,'maximumFractionDigits':2}));
+            */
+        }
+        if (this.status == 400) {
+          /* $('#error').show();
+          $('#results').hide(); */
+          console.log('got 400');
+        }
+    };
+    xhttp.open("GET", "https://blockstream.info/api/address/" + address + "/txs", true);
+    xhttp.send();
+}
+
+// getMempool("bc1qactuugshl9m6fus8p8sle37vz73lnvpez4dx6d");
+
+function getBlockstream(address) {
+  // testnet addresses start m, 2, tb1q
+  console.log(address);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            //$('#spinner').hide();
+            var json = JSON.parse( xhttp.responseText );
+            balance = (json.chain_stats.funded_txo_sum - json.chain_stats.spent_txo_sum)/100000000;
+            console.log(balance);
+            $('#error').hide();
+            $('#results').show();
+            $('#balance').html(balance);
+            $('#usd').html((balance * exchangeRate).toLocaleString(undefined, {'minimumFractionDigits':2,'maximumFractionDigits':2}));
+        }
+        if (this.status == 400) {
+          $('#error').show();
+          $('#results').hide();
+          console.log('got 400');
+        }
+    };
+    xhttp.open("GET", "https://blockstream.info/api/address/" + address, true);
+    xhttp.send();
+}
+
+function updateExchangeRate() {
+  const d = new Date();
+  let time = d.getTime();
+  $.getJSON("https://api.coindesk.com/v1/bpi/currentprice/usd.json", function(data) {
+     exchangeRate = Number(data.bpi.USD.rate_float);
+     console.log(exchangeRate);
+  });
+  setTimeout(updateExchangeRate, 1000 * 100);
+}
+
+function startHere() {
+    $.getJSON("https://api.coindesk.com/v1/bpi/currentprice/usd.json", function(data) {
+       exchangeRate = Number(data.bpi.USD.rate_float);
+       console.log(exchangeRate);
+    });
+    // updates the exchange rate every 100 seconds
+    setTimeout(updateExchangeRate, 1000 * 100);
+}
+
+// global variables
+var confettiOn = false;
+var colors = ["#0616ff", "#f30000"]; // confetti default
+var colorsBanner = []; // display for winner
+var redColor = "#f3000f";
+var teams = {
+	red:{
+		name:"",
+		charity:""
+	},
+	blue:{
+		name:"",
+		charity:""
+	}
+};
+
+function showFinalWinner(winningBlock) {
+	if (!confettiOn) {
+		end = Date.now() + 1000;
+		// end = Date.now() + 5000;
+		frame();
+		$('canvas').show();
+		confettiOn = true;
+	}
+	$('.office-banner').css('background', 'linear-gradient(68.78deg,' + colorsBanner[0] + ' -5.3%,' + colorsBanner[1] + ' 124.36%)');
+	$('.office-banner').show();
+	// set winning team to display
+	$('#won-the-game').html("BLOCK " + winningBlock.toLocaleString("en-US") + " WAS FOUND<br>" + "<div style='font-family:cocogooseregular; font-size:25px; margin-top:5px;'>"+ winningTeam + " won the game!</div>");
+	$('#won-amount').html(donation);
+	$('#won-charity').html(winningCharity);
+}
+
+function doWinner(team) {
+	haveWinner = true;
+	$('#winner-display').show();
+	$('#instructions').hide();
+
+	if (team == "blue") {
+		winningTeam = blueName;
+		winningCharity = blueCharity;
+		$('#winning-stats').removeClass('gradient-border-red');
+		$('#winning-stats').addClass('gradient-border-blue');
+		//$('#winning-stats').css('border', '10px solid #25368d');
+		colors = ["#4040fd", "#000086"];
+		// more extreme blue gradient
+		colorsBanner = ['#6b8cf5', '#010450'];
+		$('#winning-team').html(blueName);
+		letsRBF(blueCharityAddress);
+	}
+	if (team == "red") {
+		winningTeam = redName;
+		winningCharity = redCharity;
+		$('#winning-stats').removeClass('gradient-border-blue');
+		$('#winning-stats').addClass('gradient-border-red');
+		//$('#winning-stats').css('border', '10px solid ' + redColor);
+		colorsBanner = colors = ["#ff3e3e", "#8e0000"];
+		$('#winning-team').html(redName);
+		letsRBF(redCharityAddress);
+	}
+	if (donation) {
+		$('#amount').html(donation.toLocaleString("en-US"));
+	}
+	if (rbf) {
+		$('#rbf').html(rbf.toLocaleString("en-US"));
+	}
+	$('#recipient').html(winningCharity);
+	// tell stuff to mempool page
+	localStorage.setItem("winning", winningTeam);
+
+  if (!confettiOn) {
+    end = Date.now() + 1000;
+    // end = Date.now() + 5000;
+    frame();
+    $('canvas').show();
+    confettiOn = true;
+  }
+	if (twoPlayerMode) {
+		// Pause game between rounds?
+		// When each team has multiple players, pause game until we're ready for the next round
+		gameStart = false;
+	}
+}
+
+function frame() {
+  confetti({
+    particleCount: 2,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0 },
+    colors: colors,
+  });
+  confetti({
+    particleCount: 2,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1 },
+    colors: colors,
+  });
+
+  if (Date.now() < end) {
+    requestAnimationFrame(frame);
+  }
+  else {
+    confettiOn = false;
+  }
+}
+/* JavaScript game ****************************************/
+var canvas = document.getElementById("canvas");
+var c = canvas.getContext("2d");
+var blueOut = $('#blue-score');
+var redOut =  $('#red-score');
+window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+var init = requestAnimationFrame(start);
+var player1 = new Player(100,250);
+var player2 = new Player(600,250);
+var ball = new Ball(350,250);
+var wDown = false;
+var sDown = false;
+var aDown = false;
+var dDown = false;
+var upDown = false;
+var downDown = false;
+var leftDown = false;
+var rightDown = false;
+
+function delay(delayInms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(2);
+    }, delayInms);
+  });
+}
+
+async function start(){
+	clear();
+	renderBackground();
+	renderGates();
+	checkKeyboardStatus();
+	checkPlayersBounds();
+	checkBallBounds();
+	checkPlayers_BallCollision();
+	movePlayers();
+	moveBall();
+	renderPlayers();
+	renderBall();
+	redOut.html(player1.score);
+	blueOut.html(player2.score);
+	// waiting 10 milliseconds
+	// maybe put a delay in the game loop here to reduce cpu load???
+	// start with 100 ms and then go from there????
+	let delayres = await delay(10);
+	requestAnimationFrame(start);
+}
+
+function Ball(x,y){
+	this.x = x;
+	this.y = y;
+	this.xVel = 0;
+	this.yVel = 0;
+	this.decel = 0.1;
+  this.size = 10;
+	// this.size = 5;
+}
+
+function Player(x,y){
+	this.x = x;
+	this.y = y;
+	this.size = 20;
+	this.xVel = 0;
+	this.yVel = 0;
+	this.score = 0;
+	this.accel = 0.55;
+	this.decel = 0.55;
+	this.maxSpeed = 3;
+}
+
+function reset(){
+	var score1 = player1.score;
+	var score2 = player2.score;
+	player1 = new Player(100,250);
+	player1.score = score1;
+	player2 = new Player(600,250);
+	player2.score = score2;
+	ball = new Ball(350,250);
+	wDown = false;
+	sDown = false;
+	aDown = false;
+	dDown = false;
+	upDown = false;
+	downDown = false;
+	leftDown = false;
+	rightDown = false;
+}
+
+function movePlayers(){
+	player1.x += player1.xVel;
+	player1.y += player1.yVel;
+	player2.x += player2.xVel;
+	player2.y += player2.yVel;
+}
+
+function checkPlayers_BallCollision(){
+	var p1_ball_distance = getDistance(player1.x,player1.y,ball.x,ball.y) - player1.size - ball.size;
+	if(p1_ball_distance < 0){
+		collide(ball,player1,1.3);
+	}
+	var p2_ball_distance = getDistance(player2.x,player2.y,ball.x,ball.y) - player2.size - ball.size;
+	if(p2_ball_distance < 0){
+		collide(ball,player2,1.3);
+	}
+	/*
+	// move this to a separate function and find out what the collide function does
+	var p1_p2_distance = getDistance(player2.x,player2.y,player1.x,player1.y) - player2.size - player1.size;
+	if(p1_p2_distance < 0){
+		collide(player1,player2, 2);
+	}
+*/
+
+}
+
+function collide(cir1,cir2, amount) { // reverses velocity
+  // changed from cir1.size without divide by 1.3
+	var dx = (cir1.x - cir2.x) / (cir1.size/amount);
+	var dy = (cir1.y - cir2.y) / (cir1.size/amount);
+	cir2.xVel = -dx;
+	cir2.yVel = -dy;
+	cir1.xVel = dx;
+	cir1.yVel = dy;
+}
+
+function getDistance(x1, y1, x2, y2) {
+	return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
+}
+
+function moveBall(){
+	if(ball.xVel !== 0){
+		if(ball.xVel > 0){
+			ball.xVel -= ball.decel;
+			if(ball.xVel < 0) ball.xVel = 0;
+		} else {
+			ball.xVel += ball.decel;
+			if(ball.xVel > 0) ball.xVel = 0;
+		}
+	}
+	if(ball.yVel !== 0){
+		if(ball.yVel > 0){
+			ball.yVel -= ball.decel;
+			if(ball.yVel < 0) ball.yVel = 0;
+		} else {
+			ball.yVel += ball.decel;
+			if(ball.yVel > 0) ball.yVel = 0;
+		}
+	}
+	ball.x += ball.xVel;
+	ball.y += ball.yVel;
+}
+
+function checkBallBounds() {
+	if(ball.x + ball.size > canvas.width){
+		if(ball.y > 150 && ball.y < 350){
+      // Player 1 wins
+      doWinner("red");
+			player1.score++;
+			reset();
+			return;
+		}
+		ball.x = canvas.width - ball.size;
+		ball.xVel *= -1.5;
+	}
+	if(ball.x - ball.size < 0) {
+		if(ball.y > 150 && ball.y < 350){
+      // Player 2 wins
+      doWinner("blue");
+			player2.score++;
+			reset();
+			return;
+		}
+		ball.x = 0 + ball.size;
+		ball.xVel *= -1.5;
+	}
+	if(ball.y + ball.size > canvas.height){
+		ball.y = canvas.height - ball.size;
+		ball.yVel *= -1.5;
+	}
+	if(ball.y - ball.size < 0){
+		ball.y = 0 + ball.size;
+		ball.yVel *= -1.5;
+	}
+}
+
+function checkPlayersBounds(){
+	if(player1.x + player1.size > canvas.width){
+		player1.x = canvas.width - player1.size;
+		player1.xVel *= -0.5;
+	}
+	if(player1.x - player1.size < 0){
+		player1.x = 0 + player1.size;
+		player1.xVel *= -0.5;
+	}
+	if(player1.y + player1.size > canvas.height){
+		player1.y = canvas.height - player1.size;
+		player1.yVel *= -0.5;
+	}
+	if(player1.y - player1.size < 0){
+		player1.y = 0 + player1.size;
+		player1.yVel *= -0.5;
+	}
+	if(player2.x + player2.size > canvas.width){
+		player2.x = canvas.width - player2.size;
+		player2.xVel *= -0.5;
+	}
+	if(player2.x - player2.size < 0){
+		player2.x = 0 + player2.size;
+		player2.xVel *= -0.5;
+	}
+	if(player2.y + player2.size > canvas.height){
+		player2.y = canvas.height - player2.size;
+		player2.yVel *= -0.5;
+	}
+	if(player2.y - player2.size < 0){
+		player2.y = 0 + player2.size;
+		player2.yVel *= -0.5;
+	}
+}
+
+function checkKeyboardStatus(){
+	if(wDown){
+		if(player1.yVel > -player1.maxSpeed){
+			player1.yVel -= player1.accel;
+		} else {
+			player1.yVel = -player1.maxSpeed;
+		}
+	} else {
+		if(player1.yVel < 0){
+			player1.yVel += player1.decel;
+			if(player1.yVel > 0) player1.yVel = 0;
+		}
+	}
+	if(sDown){
+		if(player1.yVel < player1.maxSpeed){
+			player1.yVel += player1.accel;
+		} else {
+			player1.yVel = player1.maxSpeed;
+		}
+	} else {
+		if(player1.yVel > 0){
+			player1.yVel -= player1.decel;
+			if(player1.yVel < 0) player1.yVel = 0;
+		}
+	}
+	if(aDown){
+		if(player1.xVel > -player1.maxSpeed){
+			player1.xVel -= player1.accel;
+		} else {
+			player1.xVel = -player1.maxSpeed;
+		}
+	} else {
+		if(player1.xVel < 0){
+			player1.xVel += player1.decel;
+			if(player1.xVel > 0) player1.xVel = 0;
+		}
+	}
+	if(dDown){
+		if(player1.xVel < player1.maxSpeed){
+			player1.xVel += player1.accel;
+		} else {
+			player1.xVel = player1.maxSpeed;
+		}
+	} else {
+		if(player1.xVel > 0){
+			player1.xVel -= player1.decel;
+			if(player1.xVel < 0) player1.xVel = 0;
+		}
+	}
+
+	//PLAYER 2
+
+	if(upDown){
+		if(player2.yVel > -player2.maxSpeed){
+			player2.yVel -= player2.accel;
+		} else {
+			player2.yVel = -player2.maxSpeed;
+		}
+	} else {
+		if(player2.yVel < 0){
+			player2.yVel += player2.decel;
+			if(player2.yVel > 0) player2.yVel = 0;
+		}
+	}
+	if(downDown){
+		if(player2.yVel < player2.maxSpeed){
+			player2.yVel += player2.accel;
+		} else {
+			player2.yVel = player2.maxSpeed;
+		}
+	} else {
+		if(player2.yVel > 0){
+			player2.yVel -= player2.decel;
+			if(player2.yVel < 0) player2.yVel = 0;
+		}
+	}
+	if(leftDown){
+		if(player2.xVel > -player2.maxSpeed){
+			player2.xVel -= player2.accel;
+		} else {
+			player2.xVel = -player2.maxSpeed;
+		}
+	} else {
+		if(player2.xVel < 0){
+			player2.xVel += player2.decel;
+			if(player2.xVel > 0) player2.xVel = 0;
+		}
+	}
+	if(rightDown){
+		if(player2.xVel < player2.maxSpeed){
+			player2.xVel += player2.accel;
+		} else {
+			player2.xVel = player2.maxSpeed;
+		}
+	} else {
+		if(player2.xVel > 0){
+			player2.xVel -= player2.decel;
+			if(player2.xVel < 0) player2.xVel = 0;
+		}
+	}
+}
+
+document.onkeyup = function(e){
+	if(e.keyCode === 87){
+		wDown = false;
+	}
+	if(e.keyCode === 65){
+		aDown = false;
+	}
+	if(e.keyCode === 68){
+		dDown = false;
+	}
+	if(e.keyCode === 83){
+		sDown = false;
+	}
+	if(e.keyCode === 38){
+		upDown = false;
+	}
+	if(e.keyCode === 37){
+		leftDown = false;
+	}
+	if(e.keyCode === 40){
+		downDown = false;
+	}
+	if(e.keyCode === 39){
+		rightDown = false;
+	}
+}
+
+document.onkeydown = function(e) {
+	if (gameStart) {
+		if(e.keyCode === 87){
+			wDown = true;
+		}
+		if(e.keyCode === 65){
+			aDown = true;
+		}
+		if(e.keyCode === 68){
+			dDown = true;
+		}
+		if(e.keyCode === 83){
+			sDown = true;
+		}
+		if(e.keyCode === 38){
+			upDown = true;
+		}
+		if(e.keyCode === 37){
+			leftDown = true;
+		}
+		if(e.keyCode === 40){
+			downDown = true;
+		}
+		if(e.keyCode === 39){
+			rightDown = true;
+		}
+	}
+}
+
+let boulePat = new Image();
+boulePat.src = "https://i.imgur.com/MkJ6oDe.png";
+
+function renderBall(){
+	c.save();
+	c.beginPath();
+	// c.fillStyle = "#f2a900";
+  var pattern = c.createPattern(boulePat, "no-repeat");
+  c.fillStyle = pattern;
+
+	//c.arc(ball.x,ball.y,ball.size,0,Math.PI*2);
+      //c.translate(50, 50);
+/** our code */
+
+var radius = ball.size;
+var diameter = radius*2;
+
+c.drawImage(boulePat, ball.x-radius, ball.y-radius, diameter, diameter);
+
+
+	c.fill();
+	c.closePath();
+	c.restore();
+}
+
+function renderPlayers(){
+	c.save();
+	c.fillStyle = redColor;
+	c.beginPath();
+	c.arc(player1.x,player1.y,player1.size,0,Math.PI*2);
+	c.fill();
+	c.closePath();
+	c.beginPath();
+	c.fillStyle = "#25368d";
+	c.arc(player2.x,player2.y,player2.size,0,Math.PI*2);
+	c.fill();
+	c.closePath();
+	c.restore();
+}
+
+function renderGates(){
+	c.save();
+	c.beginPath();
+	c.moveTo(0,150);
+	c.lineTo(0,350);
+	c.strokeStyle = redColor; // red
+	c.lineWidth = 10;
+	c.stroke();
+	c.closePath();
+	c.beginPath();
+	c.moveTo(canvas.width,150);
+	c.lineTo(canvas.width,350);
+	c.strokeStyle = "#25368d"; // blue
+	c.lineWidth = 10;
+	c.stroke();
+	c.closePath();
+	c.restore();
+}
+
+function renderBackground(){
+	c.save();
+	c.fillStyle = "#66aa66";
+	c.fillRect(0,0,canvas.width,canvas.height);
+	c.strokeStyle = "rgba(255,255,255,0.6)";
+	c.beginPath();
+	c.arc(canvas.width/2,canvas.height/2,150,0,Math.PI*2);
+	c.closePath();
+	c.lineWidth = 10;
+	c.stroke();
+	c.restore();
+}
+
+function clear(){
+	c.clearRect(0,0,canvas.width,canvas.height);
+}
+</script>
+</html>
