@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>PLEBNET Challenge</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base target="_blank"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="files/confetti.browser.min.js"></script>
+<link rel="stylesheet" href="files/style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
+</style>
+<style>
+#my-list span {
+  color:#ed1a56;
+  font-weight:bold;
+}
+body {
+  background:url('images/palms.jpg');
+  background-size:cover;
+  background-attachment:fixed;
+  background-position:center;
+  font-size:14px;
+  color:white;
+  font-family: 'Manrope', sans-serif;
+}
+a {
+  color:white;
+  font-weight:bold;
+  text-decoration:underline;
+}
+a:hover {
+  color:#ed1a56;
+}
+.divider {
+  text-align:center;
+  width:175px;
+  padding-bottom:15px!important;
+  border-bottom:1px solid white;
+  margin-bottom:15px!important;
+  margin:0 auto;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+#close, #showMore {
+  cursor:pointer;
+}
+.code {
+	font-family: 'PT Mono', monospace;
+  font-size:14px;
+}
+#my-nonce {
+  font-weight:bold;
+}
+#main-div {
+  box-shadow: rgb(242 178 71 / 50%) 0px 10px 40px -10px;
+  background-color:#110b15; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
+}
+#result-div, #searching {
+  padding-left:8px!important;
+  margin-right:20px!important;
+  margin-left:16px!important;
+  width:calc(100% - 50px);
+  margin-top:30px;
+}
+input, button {
+  margin-top:6px!important;
+  width:calc(100% - 50px);
+  padding-left:8px!important;
+  margin-right:20px!important;
+  margin-left:16px!important;
+}
+input, button {
+  -webkit-border-radius:999px;
+  border-radius:999px;
+  border:0px;
+  font-size: inherit;
+  padding: 0.6em;
+  margin: 0.1em 0.2em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+.button {
+  margin-left:-50px;
+  font-weight:500;
+  padding-left:20px;
+  padding-right:20px;
+  color:white!important;
+}
+.my-button {
+  background-color:#ed1a56!important;
+  color:white;
+  font-weight:bold;
+}
+.headers {
+  font-family: 'Mr Dafoe', cursive;
+  font-size:32px;
+  letter-spacing:1px;
+  color:#f9be00;
+  text-align:center;
+  margin-bottom:14px;
+}
+
+/* Mobile View */
+@media (max-width:630px) {
+ #my-list {
+    padding-left:6px!important;
+ }
+ #main-div {
+    max-width:320px;
+ }
+ h1 {
+   font-size:30px;
+ }
+ h3 {
+   font-size:18px;
+ }
+}
+footer {
+  color:white;
+  line-height:18px;
+}
+footer a {
+  text-decoration:none;
+  font-weight:normal;
+}
+footer a:hover {
+  text-decoration: underline;
+  color:#ed1a56;
+}
+footer span {
+  color:#ed1a56;
+}
+/* sticky footer */
+/* todo: need to remove stickiness when page height changes... */
+@media (min-width:630px) {
+  footer {
+    /* width:100%;
+    position:absolute;
+    bottom:0px; */
+  }
+}
+
+#logo {
+  width:140px;
+  margin-top:16px;
+  margin-bottom:14px;
+}
+</style>
+</head>
+<body>
+
+<a href=https://t.me/plebnet target="_blank"><img id="logo" src=images/plebnet-black.png></a>
+<br>
+<div class="container" style="max-width:525px; width:100%;">
+
+<div id="main-div">
+
+	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
+    <div id="game-div" style="display:none;">
+		<div class="headers">Verify My Node</div>
+
+    <form action="https://young-dawn-78254.herokuapp.com/checkPlebnet" method="post" id="my-form" onsubmit="return false">
+
+      Message to Sign<br>
+      <input type="text" value="I'm from the DEF CON 2022 Hac-Man game, and I'm here to register my node!" readonly="readonly" id="message"></input><br><br>
+
+      Lightning Node Pubkey<br>
+      <input type="text" id="pubkey" name="pubkey"></input><br><br>
+
+      Signature<br>
+      <input type="text" id="signature" name="signature"></input><br><br>
+
+      <input type="hidden" id="signatureHex" name="signatureHex" value="">
+
+      <input type="submit" class="my-button" value="Submit">
+    </form>
+
+    <div id="back" style="padding-top:30px; cursor:pointer;">
+    ← <i>Back to Instructions</i>
+    </div>
+
+    <div id="searching" style="display:none">
+    Searching for your node...<br>
+    <img src=images/output-onlinegiftools.gif style="width:90px; padding-top:14px">
+    </div>
+
+    <div id="result-div" style="display:none">
+      <span id="results"></span>
+    </div>
+    <br>
+	</div>  <!-- game div -->
+
+  <div id="instructions">
+    <div class="headers">Bitcoin Node Challenge</div>
+
+    Your task is to spin up a Lightning node and join <a href=https://t.me/plebnet target="_blank">PLEBNET</a>, a rad community of Lightning lovers ‘n node runners.
+<br><br>
+<div id="my-list" style="padding-left:30px; text-align:left; margin-right:-6px">
+<span>1)</span> Get goin' with a Lightning node. Learn more about that <a href=https://plebnet.wiki/wiki/Getting_started target="_blank">here</a>.<br><br>
+
+<span>2)</span> Open at least one public channel to another node<!--PLEBNET pleb-->.<br><br>
+
+<span>3)</span> Claim your node using <a href=https://plebnet.wiki/wiki/Main_Page#Claim_your_node_[optional] target="_blank">CheeseRobot</a> on Telegram.<br><br>
+
+<span>4)</span> Sign a message with your node proving that you're you!<br><br>
+</div>
+      <button class="my-button" value="Verify My Node" id="next-page">Verify My Node</button>
+      <br><br>
+  </div>
+</div>
+
+</div> <!-- end main-div -->
+</div> <!-- end container -->
+
+<footer style="font-weight:400; font-size:16px; padding-bottom:23px; padding-top:20px; margin-top:120px; background-color:#100b15;">
+  <div style="margin-bottom:14px;" id="made-with">Made with <!--♥--><span>❤</span> by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a><br></div>
+  <div style="font-size:13px"><script src="files/my-footer.js"></script></div>
+</footer>
+
+<script>
+var colors = ["#FF5C98", "#FF9C23"];
+var end;
+const lookupTable = {
+  y: "00000",
+  b: "00001",
+  n: "00010",
+  d: "00011",
+  r: "00100",
+  f: "00101",
+  g: "00110",
+  8: "00111",
+  e: "01000",
+  j: "01001",
+  k: "01010",
+  m: "01011",
+  c: "01100",
+  p: "01101",
+  q: "01110",
+  x: "01111",
+  o: "10000",
+  t: "10001",
+  1: "10010",
+  u: "10011",
+  w: "10100",
+  i: "10101",
+  s: "10110",
+  z: "10111",
+  a: "11000",
+  3: "11001",
+  4: "11010",
+  5: "11011",
+  h: "11100",
+  7: "11101",
+  6: "11110",
+  9: "11111" };
+
+function buf2hex(buffer) {
+  // buffer is an ArrayBuffer
+  return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
+function binString2buf(string) {
+  var result = new Uint8Array(65);
+  for (var i = 0; i < 65; i++) {
+    // taking 8 bytes and putting them into 8 bits
+    result[i] = 0;
+    for (var c = 0; c < 8; c++) {
+      if (Number(string[i*8 + c]) === 1) {
+        result[i] |= 1 << (7 - c);
+      }
+    }
+  }
+  return result;
+}
+
+function decodeZBase32(zbase) {
+  // convert zbase32 to hex...
+  var result = "";
+  for (var i = 0; i < zbase.length; i++)
+    result += lookupTable[zbase[i]];
+  var buffer = binString2buf(result);
+  var hexResult = buf2hex(buffer);
+  hexResult = hexResult.substring(2, 130);
+  return hexResult;
+}
+
+function validateInput() {
+  // zbase signature is 104 characters long
+  // hex signature is 128 characters long
+  // if it's zbase, convert it to hex
+
+  var signedMessage = $('#signature').val().toLowerCase();
+  var pubkey = $('#pubkey').val().toLowerCase();
+
+  // first, make everything lowercase
+  $('#signature').val(signedMessage);
+  $('#pubkey').val(pubkey);
+
+  // check signature first
+  if (signedMessage.length == 104) {
+    // zbase format
+    $('#signatureHex').val(decodeZBase32(signedMessage));
+  }
+  else if (signedMessage.length == 128) {
+    // hex format
+    $('#signatureHex').val(signedMessage);
+  }
+  else {
+    // problem with signature, not the correct length
+    $('#result-div').show();
+    $('#back').hide();
+    $('#results').html("There's an issue with your signature. We're looking for a signed message in hex or zbase32 format.")
+    return false;
+  }
+
+  // now check pubKey, should be 66 characters
+  if (pubkey.length < 66) {
+    // pubkey is too short
+    $('#result-div').show();
+    $('#back').hide();
+    $('#results').html("Please enter a valid lightning node public key (node ID).");
+    return false;
+  }
+  else if (pubkey.length > 66) {
+    // if they included the whole tor or IP address, chop it off
+    pubkey = pubkey.substring(0, 66);
+    console.log(pubkey);
+    $('#pubkey').val(pubkey);
+  }
+
+  return true;
+}
+
+function displayResults(result) {
+  if (result.validSignature && result.inPlebnet) {
+    // They win! Display secret password
+    $('#results').html("<i>Your signature is valid, and you're a proud member of PLEBNET!</i>");
+    $('#results').append("<br><br>The secret password is:<br><b style='color:#ed1a56; font-size:18px'>" + result.password + "</b></span>");
+    end = Date.now() + 5000;
+    frame();
+  }
+  if (result.validSignature && result.inPlebnet == false) {
+    $('#results').html("Your signature is valid, however we did not find your node in PLEBNET.  Please try again.");
+  }
+  if (result.validSignature == false && result.inPlebnet) {
+    $('#results').html("We found your node in PLEBNET, however your digital signature is not valid.  Please try again.");
+  }
+  if (result.validSignature == false && result.inPlebnet == false) {
+    $('#results').html("Oof.  We couldn't find that node in PLEBNET, and your digital signature is invalid.  Please try again.");
+  }
+  if (result.inPlebnet == false) {
+    $('#results').append("<br><br><i>If you recently joined PLEBNET, please wait an hour or more to be added to the database.</i>");
+  }
+  $('#back').hide();
+  $('#searching').hide();
+  $('#result-div').show();
+}
+
+$('#my-form').submit(function() {
+  if (validateInput()) {
+  $('#result-div').hide();
+  $('#searching').show();
+  $('#back').hide();
+  $.ajax({
+        data: $(this).serialize(),
+        type: $(this).attr('method'),
+        url:  $(this).attr('action'),
+        success: function(response) {
+          displayResults(response);
+        }
+      });
+      return false;
+    }
+  });
+
+  $("input[type='text']").on("click", function () {
+    $(this).select();
+  });
+
+  $('#message').on("click", function() {
+    // Copy the message to sign to the clipboard on click
+    navigator.clipboard.writeText($(this).val());
+  });
+
+  function frame() {
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors,
+    });
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }
+
+$('#next-page').click(function() {
+  $('#instructions').hide();
+  $('#game-div').show();
+});
+
+$('#back').click(function() {
+  $('#instructions').show();
+  $('#game-div').hide();
+});
+
+</script>
+</body>
+</html>
