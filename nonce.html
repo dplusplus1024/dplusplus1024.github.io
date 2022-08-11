@@ -215,7 +215,7 @@ Bitcoin mining is simpler than you'd think! It's a guess and check game of searc
 <br><br>
 The block goes through a <b>hash function</b>, reducing it into a fingerprint or summary. If that fingerprint (a number) is less than another number (called a <b>difficulty target</b>), the block is valid and we get rewarded with the glorious privilege of writing it to the immutable bitcoin blockchain. <!--This process can't be faked, keeping bitcoin honest forever, Laura!--> <!--Oh yeah, we also get 6.25 BTC!-->
 <br><br>
-For this challenge, we're going to brute force that magic number, which has a special name: a <b>nonce</b>.  If you're guessing numbers on your own, it could take up to 10 minutes or more of grinding, just like on bitcoin mainnet.  The more people guessing together, the faster the block will be found!
+For this challenge, we're going to guess that magic number, which has a special name: a <b>nonce</b>, or a number use once.
 <br>
 </div>
 <center><br>
@@ -301,8 +301,8 @@ var hashRate = false;
 var startTime;
 var prevNonce;
 var end;
-var salt = "scavenge22";
-var difficulty = "001FF000000404CB000000000000000000000000000000000000000000000000";
+var salt = "pacman";
+var difficulty = "0000001FF000000404CB00000000000000000000000000000000000000000000";
 $('#target').html(difficulty);
 
 function compareBig(hash, target) {
