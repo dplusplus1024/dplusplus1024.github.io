@@ -1,0 +1,7 @@
+Name: D++
+Company: Entropy
+Title: Bitcoin Educator
+Bio:
+D++ is a bitcoin educator known for her work in pioneering PLEBNET, a community furthering bitcoin's Lightning Network adoption worldwide. In 2022, she taught and built the cirriculum for a bitcoin graduate-level engineering course at the University of Texas at Austin. This year, she's focused on the Entropy Bitcoin Bootcamp at Pleb Lab, in addition to her independent research and bitcoin #building.
+
+In bitcoin since 2013, her laser focus is on translating complex, technical concepts into simple language that anyone can understand.
