@@ -21,6 +21,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
 </style>
 <style>
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.container {
+  flex-grow: 1;
+}
+#absolute {
+  position: static;
+  width: 100%;
+}
 a {
   font-weight:bold;
   text-decoration:underline;
@@ -119,12 +131,9 @@ button {
 </style>
 </head>
 <body>
-<!--header style="background-image: url('images/Mining.jpg')">
-</header-->
-<img id="logo" src=logo.png>
-<br>
 <div class="container" style="max-width:625px; width:100%;">
-
+  <img id="logo" src=logo.png>
+  <br>
 <div class="office-banner-tbc" style="display:none">
 <h1>
     &nbsp; You found the nonce! <img src=https://i.imgur.com/kFfPU9D.png width=20 id="close" onclick="$('.office-banner-tbc').hide(); $('canvas').hide()">
@@ -208,7 +217,7 @@ button {
 </div> <!-- end container -->
 
 <br><br><br>
-<footer style="margin-top:20px">
+<footer>
 <a id="back" style="display:none; font-size:16.5px" onclick="goHome()" class="accent"><br>
   <i class="icon-left fas fa-long-arrow-alt-left"></i>Back to Home</a>
 <div id="made-with" style="letter-spacing:1.1px; font-weight:400; font-size:14px; margin-bottom:5px; margin-top:5px">
@@ -260,10 +269,17 @@ if (URL[1] == "test") {
 // difficulty = URL[1];
 // salt =       URL[2];
 
-// one in 16:   0F
-// one in 64:   03
-// on in 128:   01
-// one in 256:  00F
+// 1 in 16:   0F
+// 1 in 64:   03
+// 1 in 128:   01
+// 1 in 256:  00F
+
+// 1 in 512:  007F - 17 seconds on average for 100 people
+// 1 in 1024: 003F - 35 seconds for 100 people, still pretty hard!
+// 1 in 2048: 001F - 68 seconds for 100 people, too hard!
+
+
+// 1 in 4096: 000F <- the difficulty is too damn high!
 
 /* 100 people at .3 hashes per second, 1800 guesses per minute
    150 people at .3 hashes per second, 2700 guesses per minute

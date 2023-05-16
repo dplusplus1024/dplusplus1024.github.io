@@ -21,10 +21,17 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 </style>
 <style>
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 body, #find-out {
   font-family: 'Manrope', sans-serif;
   font-size:16px;
-  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
+}
+.container {
+  flex-grow: 1;
 }
 a {
   font-weight:bold;
@@ -90,7 +97,7 @@ button:focus {
  #hash-input {
    width:87%!important;
  }
- #main-div {
+ #main-div, footer {
     max-width:320px;
  }
  h1 {
@@ -108,20 +115,14 @@ button:focus {
   margin-top:0px;
   margin-bottom:10px;
 }
-@media screen and (min-height: 500px) {
-    #absolute {
-        position:absolute; width:100%; bottom:0px;
-    }
-}
 
 </style>
 </head>
 <body>
-<!--header style="background-image: url('images/Mining.jpg')">
-</header-->
-<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=logo.png width=350></a>
-<br>
+
 <div class="container" style="max-width:625px; width:100%;">
+  <img id="logo" src=logo.png width=350>
+  <br>
 
 <div class="office-banner" style="display:none">
 
@@ -144,7 +145,6 @@ button:focus {
 <br><br>
 </div> <!-- end container -->
 
-<div id="absolute">
 <footer style="letter-spacing:1.1px; font-weight:400; font-size:14px; bottom:0px">
   <div id="made-with" style="margin-bottom:5px; margin-top:5px">
     <a href=https://twitter.com/d_plus__plus target="_blank" class="accent" style="font-size:16px">
@@ -172,7 +172,7 @@ button:focus {
    </div>
 
 </footer>
-</div>
+
 
 <!--script src="files/footer.js"></script-->
 
