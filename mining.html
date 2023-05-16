@@ -4,7 +4,7 @@
 <title>Mining Simulator</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="icon" type="image/x-icon" href="https://thebitcoincompany.com/favicon.ico">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <base target="_blank"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
@@ -12,7 +12,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-<link rel="stylesheet" href="files/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
@@ -20,20 +21,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
 </style>
 <style>
-body {
-  color:white;
-  font-family: 'Manrope', sans-serif;
-  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
-}
 a {
   font-weight:bold;
   text-decoration:underline;
+}
+#my-target {
+  width:calc(100% - 100px);
+  max-width:210px;
 }
 .divider {
   text-align:center;
   width:175px;
   padding-bottom:15px!important;
-  border-bottom:1px solid white;
+  border-bottom:1px solid #939598;
   margin-bottom:15px!important;
   margin:0 auto;
 }
@@ -53,9 +53,7 @@ button:focus {
 #my-nonce {
   font-weight:bold;
 }
-#main-div {
-  background-color:black; border:1px solid black; border-radius:50px; text-align:center; margin:0 auto;
-}
+
 input {
   width:150px;
   padding-left:20px!important;
@@ -77,7 +75,7 @@ button {
   padding-left:20px;
   padding-right:20px;
   color:white!important;
-  background: linear-gradient(68.78deg,#FF5C98 -5.3%,#FF9C23 124.36%)!important;
+  background: linear-gradient(68.78deg,#fb895e -5.3%,#bb51ca 124.36%)!important;
 }
 .headers {
   font-weight:800;
@@ -88,7 +86,19 @@ button {
 
 /* Mobile View */
 @media (max-width:630px) {
- #main-div {
+ #difficulty {
+   font-size:14px;
+   padding-bottom:30px!important;
+ }
+ #gear {
+  margin-top:-21px!important;
+  margin-right:7px!important;
+  font-size:25px!important;
+ }
+ #block-header {
+   margin-top:-10px!important;
+ }
+ #main-div, footer {
     max-width:320px;
  }
  h1 {
@@ -101,24 +111,17 @@ button {
    width:calc(100% - 78px);
  }
 }
-@media (min-width:1500px) {
-  footer {
-    width:100%;
-    position:absolute;
-    bottom:0px;
-  }
-}
 #logo {
-  width:250px;
-  margin-top:43px;
-  margin-bottom:40px;
+  width:350px;
+  margin-top:0px;
+  margin-bottom:-40px;
 }
 </style>
 </head>
 <body>
 <!--header style="background-image: url('images/Mining.jpg')">
 </header-->
-<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=files/color-logo.png></a>
+<img id="logo" src=logo.png>
 <br>
 <div class="container" style="max-width:625px; width:100%;">
 
@@ -130,8 +133,25 @@ button {
 </div>
 <!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
 <div id="main-div">
-	<div style="color:white; margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:30px; text-align:center;">
-		<div class="headers gradient-text">Bitcoin Block Header</div>
+
+  <div id="difficulty" style="margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:46px; padding-bottom:45px; text-align:center;">
+        <div class="headers gradient-text">Let's Mine Bitcoin!</div>
+        Enter the given difficulty target prefix:<br><br>
+        <input id="my-target"
+        placeholder="Target"></input>
+        <button onclick="difficultyAdjustment()">
+          Submit</button>
+        <br><br>
+        <div id="error" style="color:red; font-weight:bold; display:none"></div>
+  </div>
+
+  <div id="game" style="display:none">
+
+  <!-- top portion of game -->
+	<div style="margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:40px; text-align:center;">
+    <div id="gear" onclick="$('#difficulty').show(); $('#game').hide()"
+    style="cursor:pointer; top:0px; color:#1e1e1e; text-align:right; margin-top:-19px; margin-right:12px; font-size:30px;"><i class="fa-solid fa-gear"></i></div>
+    <div class="headers gradient-text" id="block-header" style="margin-top:-20px;">Bitcoin Block Header</div>
     ← <i>previous block hash</i><br>
 		<span class="code">00000000000000000007a63643ce3b8d0b9a28fde9084f99af08a9b8637cf16f</span><br>
     <div class="divider"></div>
@@ -154,7 +174,7 @@ button {
 	  -->
 		<input type="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" max=4294967295 min=0 id="nonce-input"
 		oninput="if (this.value < 0) this.value = 0; if (this.value > 4294967295) this.value = 4294967295" placeholder="Nonce"></input>
-    <button onclick="tryNonce()" style="color:black; background:#5ddd9d">Hash</button>
+    <button onclick="tryNonce()" style="color:black; background:#5ddd9d;">Hash</button>
 	</div>
 
   <div id="results-block" style="display:none; padding-top: 20px; padding-bottom: 20px">
@@ -172,58 +192,135 @@ button {
   <div class="jagged-border-top-inverse"></div>
   </div> <!-- closed results-block -->
 
-	<div style="background-color:black; color:white; padding-bottom:10px; border-radius:50px; text-align:center">
-		<div style="background-color:black; color:white; padding:15px; padding-top:15px; padding-bottom:5px; padding-right:5px; border:1px solid black;"></div>
+	<div style="background-color:#d1d3d4; padding-bottom:10px; border-radius:50px; text-align:center">
+		<div style="background-color:#d1d3d4; padding:15px; padding-top:15px; padding-bottom:5px; padding-right:5px;"></div>
     <div class="headers gradient-text">Transactions</div>
     <center>
     Transaction #1<br>
 		Transaction #2<br>
 		Transaction #3<br>
 		...<br>
-		Transaction #n<br><br>
+		Transaction #n<br><br><br>
 	</div>
-</div>
+  </div> <!-- end game div -->
+</div> <!-- end main div -->
 <br><br>
 </div> <!-- end container -->
 
-<footer style="font-weight:400; font-size:14px; letter-spacing:1.1px">
-  Made with <!--♥-->❤ by <a href=https://twitter.com/d_plus__plus target="_blank">D++</a> for <div id="hide-on-desktop"></div><a href=https://thebitcoincompany.com target="_blank">The Bitcoin Company</a>.
+<br><br><br>
+<footer style="margin-top:20px">
+<a id="back" style="display:none; font-size:16.5px" onclick="goHome()" class="accent"><br>
+  <i class="icon-left fas fa-long-arrow-alt-left"></i>Back to Home</a>
+<div id="made-with" style="letter-spacing:1.1px; font-weight:400; font-size:14px; margin-bottom:5px; margin-top:5px">
+  <a href=https://twitter.com/d_plus__plus target="_blank" class="accent" style="font-size:16px">
+    Made with <span class="gradient-text">❤</span> by D++</a><br>
+</div>
+<div class="icon-container">
+   <a target="_blank" href="https://dplusplus.me"><div class="circle">
+     <i class="fas fa-link icon smaller"></i>
+   </div></a>
+   <a target="_blank" href="https://twitter.com/d_plus__plus"><div class="circle">
+     <i class="fab fa-twitter icon"></i>
+   </div></a>
+   <a target="_blank" href="https://instagram.com/d_plus_plus"><div class="circle">
+     <i class="fab fa-instagram icon bigger"></i>
+   </div></a>
+   <a target="_blank" href="https://dplus.plus/discord"><div class="circle">
+     <i class="fab fa-discord icon smaller"></i>
+   </div></a>
+   <a target="_blank" href="https://dplus.plus/telegram"><div class="circle">
+     <i class="fab fa-telegram-plane icon"></i>
+   </div></a>
+   <a target="_blank" href="https://dplus.plus/nostr"><div class="circle">
+     <i class="fas fa-feather icon slightly-smaller"></i>
+   </div></a>
+ </div>
 </footer>
-
-<!--script src="files/footer.js"></script-->
 
 <script>
 // global variables
 var confettiOn = false;
-//var colors = ["#fbf274", "#d2abf8"];
-var colors = ["#FF5C98", "#FF9C23"];
+var colors = ["#fb895e", "#bb51ca"];
 var hashRate = false;
 var numWins = 0;
 var startTime;
 var prevNonce;
 var end;
+var difficulty;
+var salt;
 var URL = location.href.split("?");
-var difficulty = URL[1];
-var salt =       URL[2];
-
-// one in 16:   0FF00000000404CB000000000000000000000000000000000000000000000000
-// one in 64:   03FF0000000404CB000000000000000000000000000000000000000000000000
-// on in 128:   01FF0000000404CB000000000000000000000000000000000000000000000000
-// one in 256:  00FF0000000404CB000000000000000000000000000000000000000000000000
-
-if (difficulty == undefined) {
-  //difficulty = "03FF0000000404CB000000000000000000000000000000000000000000000000";
-  difficulty = "0FF00000000404CB000000000000000000000000000000000000000000000000";
-  console.log('there is no difficulty set');
-}
-$('#target').html(difficulty);
-
-if (salt == undefined) {
+if (URL[1] == "test") {
+  difficulty = "03FF0000000404CB000000000000000000000000000000000000000000000000";
   salt = "";
+  $('#difficulty').hide();
+  $('#game').show();
+  $('#target').html(difficulty);
+  doLines();
+}
+// difficulty = URL[1];
+// salt =       URL[2];
+
+// one in 16:   0F
+// one in 64:   03
+// on in 128:   01
+// one in 256:  00F
+
+/* 100 people at .3 hashes per second, 1800 guesses per minute
+   150 people at .3 hashes per second, 2700 guesses per minute
+   200 people at .3 hashes per second, 3600 guesses per minute
+
+
+
+*/
+
+// if (difficulty == undefined) {
+//   //difficulty = "03FF0000000404CB000000000000000000000000000000000000000000000000";
+//   difficulty = "0FF00000000404CB000000000000000000000000000000000000000000000000";
+//   console.log('there is no difficulty set');
+// }
+
+// if (salt == undefined) {
+//   salt = "";
+// }
+
+function difficultyAdjustment() {
+  console.log("hi bb!!");
+  $('#results-block').hide();
+  difficulty = $('#my-target').val().toLowerCase().trim();
+  console.log("the difficulty is: " + difficulty);
+  if (difficulty == "") {
+    $('#error').html("Error: please input a difficulty prefix.");
+    $('#error').show();
+    return;
+  }
+  if (!/^[0-9a-fA-F]*$/.test(difficulty)) {
+    $('#error').html("Error: please enter only hexadecimal characters.");
+    $('#error').show();
+    return;
+  }
+  $('#error').hide();
+  salt = difficulty = padString(difficulty);
+  $('#difficulty').hide();
+  $('#game').show();
+  $('#target').html(difficulty);
+  doLines();
 }
 
-console.log("difficulty: " + difficulty);
-console.log("salt: " + salt);
+function padString(inputString) {
+  if (inputString.length >= 64)
+    return inputString.substring(0, 64);
+  var paddingLength = 64 - inputString.length;
+  var padding = '9'.repeat(paddingLength);
+  return inputString + padding;
+}
+
+$('#my-target').on('input', function() {
+  var currentValue = $(this).val();
+  var isValidHex = /^[0-9a-fA-F]*$/.test(currentValue);
+  if (!isValidHex) {
+      $(this).val(currentValue.slice(0, -1));
+    }
+});
 
 function compareBig(hash, target) {
 	// expects two 32 byte buffers
@@ -497,7 +594,6 @@ function timestamp() {
 	$('#epoch').html(parseInt(time/1000))
 	setTimeout(timestamp, 1000);
 }
-
 timestamp();
 
 // on mobile, break lines of hashes exactly halfway through
@@ -532,8 +628,6 @@ function doLines() {
 $(window).resize(function() {
   doLines();
 });
-
-doLines();
 </script>
 </body>
 </html>

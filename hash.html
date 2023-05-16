@@ -1,284 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>D++</title>
+<title>SHA-256</title>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <base target="_blank"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 </style>
-<script src="files/words.js"></script>
-<link rel="stylesheet" href="files/style.css">
+<style>
+body, #find-out {
+  font-family: 'Manrope', sans-serif;
+  font-size:16px;
+  /* background:linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%); */
+}
+a {
+  font-weight:bold;
+  text-decoration:underline;
+}
+#close, #showMore {
+  cursor:pointer;
+}
+.code {
+	font-family: 'PT Mono', monospace;
+  font-size:14px;
+}
+#main-div {
+  text-align:center; margin:0 auto;
+}
+input {
+  -webkit-border-radius:0;
+  border-radius:0;
+  width:150px;
+  text-align:center;
+}
+input, button {
+  border:0px;
+  font-size: inherit;
+  padding: 0.6em;
+  margin: 0.1em 0.2em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+button {
+  margin-left:-7px;
+  font-weight:500;
+  padding-left:20px;
+  padding-right:20px;
+  color:white!important;
+  background: linear-gradient(68.78deg,#ff6ab4 -5.3%,#ffd569 124.36%)!important;
+}
+.headers {
+  font-weight:800;
+  text-align:center;
+  margin-bottom:20px;
+  font-size:20px;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+#hash-input {
+  background:transparent;
+  border-bottom:2px solid black;
+}
+::placeholder {
+  color:#8f8f8f;
+}
+/* Mobile View */
+@media (max-width:630px) {
+  input.middle:focus {
+   outline-width: 0;
+  }
+ #hash-input {
+   width:87%!important;
+ }
+ #main-div {
+    max-width:320px;
+ }
+ h1 {
+   font-size:30px;
+ }
+ h3 {
+   font-size:18px;
+ }
+ input {
+   width:calc(100% - 108px);
+ }
+}
+#logo {
+  width:350px;
+  margin-top:0px;
+  margin-bottom:10px;
+}
+@media screen and (min-height: 500px) {
+    #absolute {
+        position:absolute; width:100%; bottom:0px;
+    }
+}
+
+</style>
 </head>
+<body>
+<!--header style="background-image: url('images/Mining.jpg')">
+</header-->
+<a href=https://thebitcoincompany.com target="_blank"><img id="logo" src=logo.png width=350></a>
+<br>
+<div class="container" style="max-width:625px; width:100%;">
+
+<div class="office-banner" style="display:none">
+
+<div style="font-size:30px; margin-top:-15px">Lucky Number <span id="winner"></span></div>
+</div>
+<!--h3><i>Guess the Nonce to Mine a Block!</i></h3-->
+<div id="main-div" style="margin-top:-50px">
+	<div style="margin-left: -1px; margin-right: -1px; margin-top: -1px; padding:15px; padding-top:50px; text-align:center;">
+		<div class="headers gradient-text" style="width:300px">SHA-256 Hash Generator</div>
+
+    <input style="width:90%; padding-right:20px;" placeholder="Input text to be hashed here" id="hash-input"></input>
+    <!--button onclick="sha256();" style="color:black; background:#5ddd9d">HASH</button-->
+
+    <br><br><br>
+    <div class="headers gradient-text">Result</div>
+    <div id="resultz" style="margin-top:-3px; line-height:24px">Hash around and find out</div>
+<br>
+</div>
+</div>
+<br><br>
+</div> <!-- end container -->
+
+<div id="absolute">
+<footer style="letter-spacing:1.1px; font-weight:400; font-size:14px; bottom:0px">
+  <div id="made-with" style="margin-bottom:5px; margin-top:5px">
+    <a href=https://twitter.com/d_plus__plus target="_blank" class="accent" style="font-size:16px">
+      Made with <span class="gradient-text">❤</span> by D++</a><br>
+  </div>
+  <div class="icon-container">
+     <a target="_blank" href="https://dplusplus.me"><div class="circle">
+       <i class="fas fa-link icon smaller"></i>
+     </div></a>
+     <a target="_blank" href="https://twitter.com/d_plus__plus"><div class="circle">
+       <i class="fab fa-twitter icon"></i>
+     </div></a>
+     <a target="_blank" href="https://instagram.com/d_plus_plus"><div class="circle">
+       <i class="fab fa-instagram icon bigger"></i>
+     </div></a>
+     <a target="_blank" href="https://dplus.plus/discord"><div class="circle">
+       <i class="fab fa-discord icon smaller"></i>
+     </div></a>
+     <a target="_blank" href="https://dplus.plus/telegram"><div class="circle">
+       <i class="fab fa-telegram-plane icon"></i>
+     </div></a>
+     <a target="_blank" href="https://dplus.plus/nostr"><div class="circle">
+       <i class="fas fa-feather icon slightly-smaller"></i>
+     </div></a>
+   </div>
+
+</footer>
+</div>
+
+<!--script src="files/footer.js"></script-->
 
 <script>
-function binString2buf(string) {
-	var result = new Uint8Array(32);
-	for (var i = 0; i < 32; i++) {
-		// taking 8 bytes and putting it into 8 bits
-		// console.log("loop #" + i);
-		result[i] = 0;
-		for (var c = 0; c < 8; c++) {
-			if (Number(string[i*8 + c]) === 1) {
-				result[i] |= 1 << (7 - c);
-			}
-		}
-	    // console.log("result[" + i + "] is: " + result[i]);
-	}
-	return result;
-}
+async function sha256() {
+    var message = $('#hash-input').val();
 
-function buf2bin(buffer) {
-	var view = new Uint8Array(buffer);
-	var result = "";
-	for (var i = 0; i < view.length; i++) {
-		var binary = view[i].toString(2);
-		binary = "00000000".substr(binary.length) + binary;
-		result += binary;
-	}
-	return result;
-}
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(message);
 
-function buf2hex(buffer) {
-	// buffer is an ArrayBuffer
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-}
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
 
-async function shaMe(inputString) {
-	console.log("inputstring is " + inputString);
-	var inputBytes = binString2buf(inputString);
-	console.log("inputBytes is " + inputBytes);
-    var hashBytes = await window.crypto.subtle.digest("SHA-256", inputBytes);
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
 
-    // console.log(buf2hex(hashBytes));
-    // console.log(buf2bin(hashBytes));
-	return buf2bin(hashBytes);
-}
+    // convert bytes to hex string
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-function convertBin() {
-	var binary = document.getElementById("binary").value;
-	if (binary == "")
-		$("#result").html("Please input a binary number.");
-	else {
-		binary = parseInt(binary, 2);
-		console.log(binary);
-		console.log();
-		$("#result").html("<center><b>Result:</b><br>" + wordlist[binary] + "<br><br><b>Decimal:</b><br>" + binary + "<br><br>");
-	}
-}
-
-function isNumberKey(evt, element, max) {
-  var charCode = (evt.which) ? evt.which : event.keyCode;
-  var len = $(element).val().length;
-
-  if (len >= max)
-	return false;
-
-
-  if (charCode != 48 && charCode != 49)
-    return false;
-}
-
-function searchStringInArray (str, strArray) {
-	str = str.toLowerCase();
-    for (var j = 0; j < strArray.length; j++) {
-        if (strArray[j] == str) {
-			console.log('we found a match, it is ' + strArray[j]);
-			return j;
-		}
+    if (message == "") {
+      $('#resultz').html("Hash around and find out");
+      $('#resultz').removeClass('code');
     }
-    return -1;
+    else {
+      $('#resultz').html(hashHex);
+      $('#resultz').addClass('code');
+    }
+
+    doLines();
 }
 
-function hex2bin(hex){
-    return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
+var input = document.getElementById("hash-input");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+		sha256();
+  }
+});
+
+$('#hash-input').bind('keyup', function () {
+		sha256();
+});
+
+function glueLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    html = html.replace('<br>','');
+    $(this).html(html);
+  });
 }
 
-async function checksum() {
-	var key = "";
-	var wallet = "";
-
-	var words = document.getElementsByClassName("bip-input");
-	for (var i = 0; i < words.length; i++) {
-		var binary = words[i].value;
-		if (binary == "") {
-			$("#checksum-result").html("Please enter valid seed words.");
-			document.getElementById("qrcode-container").style.display = "none";
-			return false;
-		}
-
-		wallet = wallet + binary + " ";
-
-		binary = searchStringInArray(binary, wordlist);
-		if (binary < 0) {
-			$("#checksum-result").html("Invalid seed words.");
-			document.getElementById("qrcode-container").style.display = "none";
-			return false;
-		}
-		binary = binary.toString(2)
-		binary = "00000000000".substr(binary.length) + binary;
-
-		key += binary;
-	}
-	console.log("wallet is " + wallet);
-	if ($('#checksum').val() == "") {
-			$("#checksum-result").html("Please enter the first three bits of the checksum.");
-			document.getElementById("qrcode-container").style.display = "none";
-			return false;
-	}
-
-	// for fun, show all 8 possible checksum words
-	validChecksums(key);
-
-	key += $("#checksum").val();
-	console.log("key is " + key);
-	console.log("key length is " + key.length);
-	var result = await shaMe(key);
-
-	var hash = result.substring(0, 8);
-	hash = Number($('#checksum').val() + hash);
-
-	var twentyFour = wordlist[parseInt(hash, 2)];
-	wallet += twentyFour;
-
-	// generateQRCode(wallet);
-
-	console.log(wallet);
-	$("#checksum-result").html("<b>Seed Words in Binary:</b><br>" + key + "<br><br><b>SHA-256 Hash of Seed Words:</b><br>" + result);
-	// $("#checksum-result").html("<b>Checksum:</b><br>" + twentyFour + "<br><br><b>Binary:</b><br>" + key + "<br><br><b>Hash:</b><br>" + result + "<br><br><b>Mnemonic:</b><br>" + wallet);
+function breakLines() {
+  $('.code').each(function() {
+    var html = $(this).html();
+    if (html.length > 32 && html.includes("<br>") == false) {
+      html = html.substring(0, 32) + "<br>" + html.substring(32);
+      $(this).html(html);
+    }
+  });
 }
 
-async function validChecksums(key) {
-	var results = "";
-
-	// document.getElementById("possible-checksums-result").innerHTML = "<br><b>All Possible Checksums:</b><br>";
-	for (var i = 0; i < 8; i++) {
-		var myKey = key;
-		var binary = i.toString(2);
-		binary = "000".substr(binary.length) + binary;
-		console.log("binary for checksum is: " + binary);
-
-		myKey += binary;
-
-		let result = await shaMe(myKey);
-
-		var hash = result.substring(0, 8);
-		console.log("binary(blurg) here is " + binary);
-		hash = binary + hash;
-		console.log("last 11 bits are now: " + hash);
-
-		var twentyFour = wordlist[parseInt(hash, 2)];
-		console.log("possible checksum is " + twentyFour);
-		results += twentyFour + " ";
-		console.log("results is now " + results);
-	}
-	console.log("all the results are " + results);
-	// document.getElementById("possible-checksums-result").innerHTML += results;
+function doLines() {
+  var width = $(window).width();
+  if (width <= 630) {
+      breakLines();
+  }
+  else if (width > 630) {
+    glueLines();
+  }
 }
 
-function autofill(word, checksum) {
-	$(".bip-input").val(word);
-	$('#checksum').val(checksum);
-}
+$(window).resize(function() {
+  doLines();
+});
 
-function generateQRCode(string) {
-	let qrcodeContainer = document.getElementById("qrcode");
-	qrcodeContainer.innerHTML = "";
-	new QRCode(qrcodeContainer, string);
-	document.getElementById("qrcode-container").style.display = "block";
-}
+doLines();
 </script>
-<header>
-<!--img src=images/Title.png style="width:500px; max-width:95%"-->
-</header>
-<br>
-<div class="container">
-<h3>Convert Binary to BIP 39 word</h3>
-
-<input class="button-class" placeholder="11 Bit Binary Number" id="binary" onkeypress="return isNumberKey(event,this, 11)"><br>
-<button class="button-class" onclick="convertBin()">Convert</button>
-<br><br>
-
-<div id="result" style="font-size:17px;"></div>
-
-<br>
-
-<h3>Calculate Hash of Seed Phrase</h3>
-
-<center>
-<!--button onclick="autofill('abandon', '000')">Autofill (All Zeros)</button>
-<button onclick="autofill('zoo', '111')">Autofill (All Ones)</button><br>
-<button onclick="autofill('bacon', '000')" style="margin-top:5px">Autofill (All Bacons)</button>
-<br><br-->
-
-	<div class="row" style="margin-top:10px">
-		<div class="col-sm-6 text-center"><span class="number">1.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">2.</span><input class="bip-input"></div>
-  </div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">3.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">4.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">5.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">6.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">7.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">8.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">9.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">10.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">11.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">12.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">13.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">14.</span><input class="bip-input"></div>
-  </div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">15.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">16.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">17.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">18.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">19.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">20.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">21.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">22.</span><input class="bip-input"></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 text-center"><span class="number">23.</span><input class="bip-input"></div>
-		<div class="col-sm-6 text-center"><span class="number">24.</span><input id="checksum" class="input" placeholder="First 3 bits of checksum" onkeypress="return isNumberKey(event,this, 3)"></div>
-	</div>
-
-<button onclick="checksum()" class="button-class" id="submit-button">Submit</button>
-
-
-
-<div id="possible-checksums-result"></div>
-
-<div id="checksum-result"></div>
-
-<div id="qrcode-container" style="margin-top:25px;">
-  <div id="qrcode" class="qrcode"></div>
-</div>
-</div> <!-- end container -->
-<script src="files/footer.js"></script>
-
+</body>
 </html>
