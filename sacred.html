@@ -111,6 +111,7 @@ function hex2bin(hex){
 async function checksum() {
 	var key = "";
 	var wallet = "";
+	fullWords = "";
 
 	var words = document.getElementsByClassName("bip-input");
 	for (var i = 0; i < words.length; i++) {
@@ -163,33 +164,34 @@ async function checksum() {
 	$("#checksum-result").html("<b>Checksum:</b><br>" + twentyFour + "<br><br><b>Binary:</b><br>" + key + "<br><br><b>Hash:</b><br>" + result + "<br><br><b>Seed Phrase:</b><br>" + fullWords);
 }
 
-async function validChecksums(key) {
-	var results = "";
-
-	document.getElementById("possible-checksums-result").innerHTML = "<br><b>All Possible Checksums:</b><br>";
-	for (var i = 0; i < 8; i++) {
-		var myKey = key;
-		var binary = i.toString(2);
-		binary = "0000000".substr(binary.length) + binary;
-		console.log("binary for checksum is: " + binary);
-
-		myKey += binary;
-
-		let result = await shaMe(myKey);
-
-		var hash = result.substring(0, 4);
-		console.log("binary(blurg) here is " + binary);
-		hash = binary + hash;
-		console.log("last 11 bits are now: " + hash);
-
-		var twentyFour = wordlist[parseInt(hash, 2)];
-		console.log("possible checksum is " + twentyFour);
-		results += twentyFour + " ";
-		console.log("results is now " + results);
-	}
-	console.log("all the results are " + results);
-	document.getElementById("possible-checksums-result").innerHTML += results;
-}
+// // this is not yet set up to work for 12 word seed phrases
+// async function validChecksums(key) {
+// 	var results = "";
+//
+// 	document.getElementById("possible-checksums-result").innerHTML = "<br><b>All Possible Checksums:</b><br>";
+// 	for (var i = 0; i < 8; i++) {
+// 		var myKey = key;
+// 		var binary = i.toString(2);
+// 		binary = "0000000".substr(binary.length) + binary;
+// 		console.log("binary for checksum is: " + binary);
+//
+// 		myKey += binary;
+//
+// 		let result = await shaMe(myKey);
+//
+// 		var hash = result.substring(0, 4);
+// 		console.log("binary(blurg) here is " + binary);
+// 		hash = binary + hash;
+// 		console.log("last 11 bits are now: " + hash);
+//
+// 		var twentyFour = wordlist[parseInt(hash, 2)];
+// 		console.log("possible checksum is " + twentyFour);
+// 		results += twentyFour + " ";
+// 		console.log("results is now " + results);
+// 	}
+// 	console.log("all the results are " + results);
+// 	document.getElementById("possible-checksums-result").innerHTML += results;
+// }
 
 function autofill(word, checksum) {
 	$(".bip-input").val(word);
