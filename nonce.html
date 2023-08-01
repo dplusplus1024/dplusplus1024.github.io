@@ -301,8 +301,15 @@ var hashRate = false;
 var startTime;
 var prevNonce;
 var end;
-var salt = "bird is the word";
-var difficulty = "01FFFFF000000404CB000000000000000000000000000000000000000000";
+var salt = "pacman!!!";
+var difficulty;
+
+var URL = location.href.split("?");
+difficulty = URL[1];
+
+if (!URL[1]) {
+  difficulty = "Error: No Difficulty Target is Set";
+}
 $('#target').html(difficulty);
 
 function compareBig(hash, target) {
@@ -449,6 +456,14 @@ async function tryNonce() {
   $('#results-block').show();
   doLines();
 }
+
+function autoNonce() {
+  for (var counter = 0; counter < 100000; counter++) {
+    $('#nonce-input').val(counter);
+    tryNonce();
+  }
+}
+//autoNonce();
 
 // Try nonce on enter
 var input = document.getElementById("nonce-input");
