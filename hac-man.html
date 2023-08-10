@@ -1,59 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>D++</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  /* background-color:black;
-  color:white; */
-}
-</style>
+  <title>D++</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'VT323', monospace;
+      font-size:26px;
+      margin: 0;
+      padding: 0;
+      text-align:justify;
+    }
+    .content-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    @media (max-width: 600px) {
+      .content-container {
+        padding: 10px;
+        /* width: 100%; */
+      }
+    }
+    h1, h2 {
+      font-size:26px;
+      font-family: 'Press Start 2P', monospace;
+    }
+    h2 {
+      font-size:16px;
+    }
+    span {
+      font-family: 'Press Start 2P', monospace;
+      font-size:16px;
+    }
+    h1 {
+      color: #00ff00;
+      text-align: center;
+    }
+    a {
+      color: #ff00ff;
+      text-decoration: underline;
+    }
+    b {
+      color: #ffff00;
+    }
+    hr {
+      border: 2px solid #00ff00;
+      width: 80%;
+    }
+  </style>
 </head>
 <body>
-
-<center><h1>Bitcoin Script Challenge</h1></center>
-<!-- <br><center><img src="https://i.imgur.com/2vo8M9i.png" style="width:300px; max-width:80%"></center><br> -->
-Did you know that bitcoin has its own, native smart contract language? <a href="https://en.bitcoin.it/wiki/Script" target="_blank">Bitcoin Script</a> is a <a target="_blank" href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a>-like, stack-based langauge, where operations either consume or manipulate elements on the stack.
-<br><br>
-In this challenge, your task is to evaluate a bitcoin script. The remaining stack elements will serve as your password to advance to the next Hac-Man level.
-<br><br>
-<b>Bonus bounty</b>: there are bitcoin funds locked up with this script.
-<br><br>
-<hr>
-<br>
-<b>Witness Data:</b><br><br>
-
-Hal_Finney<br>
-21<br>
-6<br>
-9<br>
-4<br>
-2<br>
-0
-<br><br>
-<b>Witness Script:</b><br><br>
-
-OP_NOP<br>
-OP_ADD<br>
-OP_SWAP<br>
-OP_ADD<br>
-OP_ROT<br>
-OP_ADD<br>
-OP_SWAP<br>
-OP_ADD<br>
-OP_EQUALVERIFY<br>
-OP_SHA256<br>
-0x2bf6333da067386ea1b34da004c28f309c535cf1c919bf5b27c7aa89cbe4f30c<br>
-OP_EQUAL<br>
-<br>
-<hr>
-<br>
-<center>
-Made with love by <a href="https://twitter.com/d_plus__plus" target="_blank">D++</a>.<br>
-Special thanks to <a href="https://twitter.com/portlandhodl" target="_blank">Portland.HODL</a>.
-</center>
-<br><br>
+  <br>
+  <center><h1>Bitcoin Script Challenge</h1></center>
+  <div class="content-container">
+    Did you know that bitcoin has its own, native smart contract language? <a href="https://en.bitcoin.it/wiki/Script" target="_blank">Bitcoin Script</a> is a <a target="_blank" href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a>-like, stack-based langauge, where operations either consume or manipulate elements on the stack.
+    <br><br>
+    In this challenge, your task is to evaluate a bitcoin script. The remaining stack elements will serve as your <b style="font-weight:normal">password</b> to advance to the next Hac-Man level.
+    <br><br>
+    <b style="color: #00ff00;">Bonus Bounty:</b> there are bitcoin funds locked to this script.
+    <br><br>
+    <hr>
+    <br>
+    <span><b>Witness Data</b></span><br>
+    Hal_Finney<br>
+    21<br>
+    6<br>
+    9<br>
+    4<br>
+    2<br>
+    0
+    <br><br>
+    <span><b>Witness Script</b></span><br>
+    OP_NOP<br>
+    OP_ADD<br>
+    OP_SWAP<br>
+    OP_ADD<br>
+    OP_ROT<br>
+    OP_ADD<br>
+    OP_SWAP<br>
+    OP_ADD<br>
+    OP_EQUALVERIFY<br>
+    OP_SHA256<br>
+    0x2bf6333da067386ea1b34da004c28f309c535cf1c919bf5b27c7aa89cbe4f30c<br>
+    OP_EQUAL<br>
+    <br>
+    <hr>
+    <br>
+  </div>
+  <center>
+    Made with love by <a href="https://twitter.com/d_plus__plus" target="_blank">D++</a><br>
+    Special thanks to <a href="https://twitter.com/portlandhodl" target="_blank">Portland.HODL</a>
+  </center>
+  <br><br>
 </body>
 </html>
