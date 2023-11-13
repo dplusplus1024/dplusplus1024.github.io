@@ -160,7 +160,7 @@ async function checksum() {
 	generateQRCode(wallet);
 
 	console.log(wallet);
-	$("#checksum-result").html("<!--b>Checksum:</b><br>" + twentyFour + "<br><br--><b>Binary:</b><br>" + key + "<br><br><b>Hash:</b><br>" + result + "<br><br><b>Mnemonic:</b><br>" + fullWords);
+	$("#checksum-result").html("<!--b>Checksum:</b><br>" + twentyFour + "<br><br--><b>Seed Phrase in Binary:</b><br>" + key + "<br><br><b>SHA256 Hash of Seed Phrase:</b><br>" + result);
 }
 
 async function validChecksums(key) {
@@ -199,8 +199,8 @@ function autofill(word, checksum) {
 function generateQRCode(string) {
 	let qrcodeContainer = document.getElementById("qrcode");
 	qrcodeContainer.innerHTML = "";
-	new QRCode(qrcodeContainer, string);
-	document.getElementById("qrcode-container").style.display = "block";
+	// new QRCode(qrcodeContainer, string);
+	// document.getElementById("qrcode-container").style.display = "block";
 }
 </script>
 <body>
@@ -208,23 +208,23 @@ function generateQRCode(string) {
   <!--img src=images/Title.png style="width:500px; max-width:95%"-->
   </header>
 	<br>
-<h3>Convert Binary to BIP 39 word</h3>
+<!-- <h3>Convert Binary to BIP 39 word</h3>
 
 <input class="button-class" placeholder="11 Bit Binary Number" id="binary" onkeypress="return isNumberKey(event,this, 11)"><br>
 <button class="button-class" onclick="convertBin()">Convert</button>
-<br><br>
+<br><br> -->
 
 <div id="result"></div>
 
-<br><br>
+<!-- <br><br> -->
 
 <h3>Calculate Hash of Seed Phrase</h3>
 
 <center>
-<button onclick="autofill('abandon', '0000000')">Autofill (All Zeros)</button>
+<!-- <button onclick="autofill('abandon', '0000000')">Autofill (All Zeros)</button>
 <button onclick="autofill('zoo', '1111111')">Autofill (All Ones)</button><br>
 <button onclick="autofill('bacon', '0000000')" style="margin-top:5px">Autofill (All Bacons)</button>
-<br><br>
+<br><br> -->
 <div class="container">
 	<div class="row">
 		<div class="col-sm-6 text-center"><span class="number">1.</span><input class="bip-input"></div>
