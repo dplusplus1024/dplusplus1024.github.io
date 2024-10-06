@@ -6,30 +6,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--link rel="shortcut icon" type="image/jpg" href="taproot.ico"/-->
 <base target="_blank"/>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="files/style.css">
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
 </style>
 <script src="files/words.js"></script>
 <style>
 td {
-  text-align:left;
-  padding:2px;
+  text-align: left;
+  padding: 5px;
 }
-
+#words {
+  padding-top:20px;
+  font-family: monospace;
+  display: inline-block;
+}
+#words table {
+  border-collapse: collapse;
+  width: 100%;
+}
+#words tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+#words tr:nth-child(odd) {
+  background-color: #ffffff;
+}
 </style>
 </head>
 <body>
   <header>
-  <!--img src=images/Title.png style="width:500px; max-width:95%"-->
+  <!--img src="images/Title.png" style="width:500px; max-width:95%"-->
   </header>
   <br>
-<h3>BIP 39 Dictionary</h3>
+<h3>BIP 39 Binary Word List</h3>
 
 <center>
 <div id="words"></div>
@@ -40,11 +54,14 @@ td {
 <script src="files/footer.js"></script>
 
 <script>
-$('#words').append("<table>");
-for (var i = 0; i < wordlist.length; i++) {
-	$('#words').append("<tr><td>" + i.toString(2).padStart(11, '0') + ") </td><td>" + wordlist[i] + "</td></tr>");
-}
-$('#words').append("</table>");
+$(document).ready(function() {
+  var tableContent = "<table><tbody>";
+  for (var i = 0; i < wordlist.length; i++) {
+    tableContent += "<tr><td>" + i.toString(2).padStart(11, '0') + "&nbsp;&nbsp;</td><td>" + wordlist[i] + "</td></tr>";
+  }
+  tableContent += "</tbody></table>";
+  $('#words').html(tableContent);
+});
 </script>
 
 </html>
