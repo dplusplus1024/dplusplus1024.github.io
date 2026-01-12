@@ -8,6 +8,8 @@
   <!-- libs -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 
   <style>
     :root{
@@ -519,7 +521,9 @@
     <div class="top">
       <div class="logo"></div>
       <div class="title">
-        <h1>256 Foundation  • Hash Dash</h1>
+        <!-- <span style="font-size:85%">⚒️⛏️</span> -->
+         
+        <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
         <div class="sub" style="margin-top:7px">
           <span class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Connecting</span></span>
           <span class="pill">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></span>
@@ -616,7 +620,7 @@
               stratum+tcp://pool.256foundation.org:3333
             </div>
 
-            <div class="copyLabel">Set your stratum user to <b>bitcoinaddress.workername</b>, e.g.:</div>
+            <div class="copyLabel">Set your stratum user to bitcoinaddress.workername, e.g.:</div>
             <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69">
               bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69
             </div>
@@ -635,7 +639,7 @@
               bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3
             </div>
 
-            <div class="copyLabel">Or donate via lightning to:</div>
+            <div class="copyLabel">Or donate via Lightning to:</div>
             <div class="copyField" data-copy="donate@256f.org">
               donate@256f.org
             </div>
@@ -1382,7 +1386,7 @@
               const wh = humanHashrateFromHps(ws[j].hps);
 
               const status = ws[j].active ? "active" : "idle";
-              const lastTxt = isFinite(ws[j].last) ? ("last: " + fmtTime(ws[j].last)) : "last: —";
+              const lastTxt = isFinite(ws[j].last) ? ("last share: " + fmtTime(ws[j].last)) : "last: —";
 
               const $line = $("<div>").addClass("workerLine");
 
