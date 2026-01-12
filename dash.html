@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hydrapool — Live Dashboard</title>
+
+  <!-- libs -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+      --bg0:#070b14;
+      --bg1:#0a1024;
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --accent:#38a6ff;
+      --good:#39d98a;
+      --bad:#ff5b7a;
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --r:26px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 14% 18%, rgba(56,166,255,.32), transparent 55%),
+        radial-gradient(900px 700px at 82% 22%, rgba(140,103,255,.26), transparent 55%),
+        radial-gradient(900px 900px at 55% 92%, rgba(37,196,255,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      color:var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+    }
+
+    a{ color: rgba(170,220,255,.95); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    .wrap{
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 18px 34px;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .logo{
+      width:58px;height:58px;border-radius:18px;
+      background:
+        radial-gradient(18px 18px at 30% 28%, rgba(255,255,255,.45), transparent 60%),
+        linear-gradient(135deg, rgba(56,166,255,.9), rgba(140,103,255,.75));
+      box-shadow: 0 18px 55px rgba(56,166,255,.25);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width: 0;
+    }
+
+    h1{
+      font-size: 34px;
+      line-height: 1.05;
+      margin:0;
+      letter-spacing: .2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted);
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing:.2px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(57,217,138,.15);
+    }
+    .dot.bad{
+      background: var(--bad);
+      box-shadow: 0 0 0 4px rgba(255,91,122,.15);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:16px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.045));
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      backdrop-filter: blur(16px);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(600px 180px at 30% 0%, rgba(56,166,255,.20), transparent 60%),
+        radial-gradient(520px 260px at 92% 12%, rgba(140,103,255,.16), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    .cardInner{
+      position:relative;
+      padding:22px 22px 18px;
+    }
+
+    .sectionTitle{
+      font-family: var(--mono);
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      font-size: 14px;
+      color: rgba(255,255,255,.55);
+      margin: 0 0 12px;
+    }
+
+    .headRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+
+    .meta{
+      color: rgba(255,255,255,.50);
+      font-family: var(--mono);
+      font-size: 15px;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    /* Overview */
+    .overview{ grid-column: 1 / -1; }
+
+    .kpiGrid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:16px;
+    }
+
+    .kpiTile{
+      grid-column: span 3;
+      min-height: 118px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+    }
+
+    .kpiTileInner{ padding:16px 16px 14px; }
+
+    .kpiTile .label{
+      color: rgba(255,255,255,.62);
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing:.04em;
+      margin:0 0 8px;
+    }
+
+    .kpiTile .value{
+      font-weight: 750;
+      font-size: 60px;
+      line-height: 1;
+      margin:0;
+      letter-spacing: .5px;
+    }
+
+    .kpiTile.small .value{ font-size: 54px; }
+
+    .kpiTile .value .unit{
+      font-size: .55em;
+      color: rgba(255,255,255,.78);
+      margin-left: 10px;
+      letter-spacing:.02em;
+    }
+
+    /* Charts Row */
+    .chartsRow{
+      grid-column: 1 / -1;
+      display:grid;
+      grid-template-columns: 8fr 4fr;
+      gap:16px;
+    }
+
+    .trendCard{ min-height: 420px; }
+    /* .pieCard{ min-height: 420px; } */
+
+    .canvasWrap, .pieWrap{
+      position:relative;
+      height: 320px;
+      margin-top: 8px;
+      border-radius: 18px;
+      overflow:hidden;
+    }
+
+    /* Trend keeps its subtle frame */
+    .canvasWrap{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+    }
+
+    /* Pie: remove extra outline / extra background frame on desktop */
+    .pieWrap{
+      border: none;
+      background: transparent;
+    }
+
+    .piePad{
+      position:absolute;
+      inset: 18px;
+    }
+
+    canvas{
+      display:block;
+      width:100% !important;
+      height:100% !important;
+    }
+
+    /* Users/workers list BELOW (narrow + centered) */
+    .usersCard{
+      grid-column: 1 / -1;
+      width: 100%;
+      max-width: 800px;
+      justify-self: center;
+    }
+
+    .narrowBlock{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top: 10px;
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
+    }
+
+    .row{
+      padding:12px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .minerTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .addr{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,.90);
+      flex: 1 1 520px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .totalHash{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
+
+    .workers{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+      padding: 10px 10px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .workerLine{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .workerLeft{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .badgeDot{
+      width:8px;height:8px;border-radius:999px;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(57,217,138,.12);
+      flex: 0 0 auto;
+    }
+    .badgeDot.bad{
+      background: var(--bad);
+      box-shadow: 0 0 0 4px rgba(255,91,122,.12);
+    }
+
+    .workerName{
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 620px;
+      color: rgba(255,255,255,.82);
+    }
+
+    .workerRight{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      color: rgba(255,255,255,.62);
+    }
+
+    .lastBadge{
+      display:none;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.70);
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .error{
+      color: rgba(255,91,122,.95);
+      font-family: var(--mono);
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    /* Custom fast tooltip for worker lines + copy-to-clipboard */
+    #hoverTip{
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 80ms linear, transform 80ms linear;
+      background: rgba(0,0,0,.78);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.45);
+      color: rgba(255,255,255,.92);
+      font-family: var(--mono);
+      font-size: 12px;
+      max-width: 360px;
+      backdrop-filter: blur(10px);
+    }
+    #hoverTip.show{
+      opacity: 1;
+      transform: translateY(0px);
+    }
+    #hoverTip .muted{
+      color: rgba(255,255,255,.70);
+    }
+
+    .brandFooter{
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      font-family: var(--mono);
+      color: rgba(255,255,255,.70);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brandFooter .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .brandFooter .sep{
+      color: rgba(255,255,255,.35);
+    }
+
+    /* =========================
+       DONATIONS (FULL WIDTH LIKE CHARTS)
+    ========================= */
+
+    .donationsRow{
+      grid-column: 1 / -1;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+
+    .centerTitle{
+      width:100%;
+      text-align:center;
+    }
+
+    .copyLabel{
+      margin: 12px 0 8px;
+      color: rgba(255,255,255,.72);
+      font-size: 16px;
+    }
+
+    .copyField{
+      display:block;
+      /* width: 100%; */
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.90);
+      font-family: var(--mono);
+      font-size: 16px;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 90ms ease, background 90ms ease, border-color 90ms ease;
+    }
+
+    .copyField:hover{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.16);
+    }
+
+    .copyField:active{
+      transform: scale(.995);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .kpiTile{ grid-column: span 6; }
+      .chartsRow{ grid-template-columns: 1fr; }
+      .workerName{ max-width: 380px; }
+      .piePad{ inset: 16px; }
+      .narrowBlock{ max-width: 100%; }
+      .donationsRow{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px){
+      h1{ font-size: 28px; }
+      .kpiTile{ grid-column: span 12; }
+      .kpiTile .value{ font-size: 54px; }
+      .canvasWrap, .pieWrap{ height: 280px; }
+      .piePad{ inset: 14px; }
+
+      .lastBadge.showMobile{
+        display:inline-flex;
+      }
+
+      .totalHash{ margin-left: 0; }
+      .addr{ flex-basis: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo"></div>
+      <div class="title">
+        <h1>256 Foundation   Hash Dash</h1>
+        <div class="sub" style="margin-top:7px">
+          <span class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Connecting</span></span>
+          <span class="pill">Powered by Hydra Pool</span>
+          <span class="pill" id="lastUpdate">Last Update: —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <!-- Overview -->
+      <div class="card overview">
+        <div class="cardInner">
+          <div class="headRow">
+            <div class="sectionTitle">Overview</div>
+            <!-- <div class="meta" id="overviewMeta">—</div> -->
+          </div>
+
+          <div class="kpiGrid">
+            <div class="kpiTile">
+              <div class="kpiTileInner">
+                <div class="label">HASHRATE (5M)</div>
+                <div class="value"><span id="hash5m">—</span><span class="unit" id="hash5mUnit"></span></div>
+              </div>
+            </div>
+
+            <div class="kpiTile small">
+              <div class="kpiTileInner">
+                <div class="label">AVERAGE HASHRATE (1H)</div>
+                <div class="value"><span id="hash1h">—</span><span class="unit" id="hash1hUnit"></span></div>
+              </div>
+            </div>
+
+            <div class="kpiTile">
+              <div class="kpiTileInner">
+                <div class="label">ACTIVE USERS</div>
+                <div class="value"><span id="usersNow">—</span><span class="unit"></span></div>
+              </div>
+            </div>
+
+            <div class="kpiTile">
+              <div class="kpiTileInner">
+                <div class="label">ACTIVE WORKERS</div>
+                <div class="value"><span id="workersOnline">—</span><span class="unit"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="chartsRow">
+        <div class="card trendCard">
+          <div class="cardInner">
+            <div class="headRow">
+              <div class="sectionTitle">Hashrate History</div>
+              <div class="meta" id="trendMeta">Last 6h</div>
+            </div>
+
+            <div class="canvasWrap">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card pieCard">
+          <div class="cardInner">
+            <div class="headRow">
+              <div class="sectionTitle">Miner Share</div>
+              <div class="meta" id="pieMeta">Last 5m</div>
+            </div>
+
+            <div class="pieWrap">
+              <div class="piePad">
+                <canvas id="minersPie"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donations row (FULL WIDTH like charts/cards) -->
+      <div class="donationsRow">
+
+        <!-- Hashrate Donations -->
+        <div class="card">
+          <div class="cardInner" style="padding:22px 30px 40px 30px">
+            <div class="headRow">
+              <div class="sectionTitle centerTitle">Hashrate Donations</div>
+            </div>
+
+            <div class="copyLabel">Point your hashrate to:</div>
+            <div class="copyField" data-copy="stratum+tcp://pool.256foundation.org:3333">
+              stratum+tcp://pool.256foundation.org:3333
+            </div>
+
+            <div class="copyLabel">Set your stratum user to <b>bitcoinaddress.workername</b>, e.g.:</div>
+            <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69">
+              bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69
+            </div>
+          </div>
+        </div>
+
+        <!-- Bitcoin Donations -->
+        <div class="card">
+          <div class="cardInner" style="padding:22px 30px 40px 30px">
+            <div class="headRow">
+              <div class="sectionTitle centerTitle">Bitcoin Donations</div>
+            </div>
+
+            <div class="copyLabel">Send bitcoin directly to:</div>
+            <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3">
+              bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3
+            </div>
+
+            <div class="copyLabel">Or donate via lightning to:</div>
+            <div class="copyField" data-copy="donate@256f.org">
+              donate@256f.org
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Users/workers list BELOW -->
+      <div class="card usersCard">
+        <div class="cardInner">
+          <div class="headRow">
+            <div class="sectionTitle centerTitle">Users + Workers</div>
+          </div>
+
+          <div class="list" id="usersList"></div>
+
+          <div id="err" class="error"></div>
+        </div>
+      </div>
+
+    </div><!-- grid -->
+
+    <div class="narrowBlock">
+      <div style="text-align:center; margin:0 auto; margin-top:60px">
+        <span>Made with ❤️ by <a href="https://x.com/d_plus__plus/" target="_blank"><b>D++</b></a> for the <a href="https://256foundation.org/" target="_blank" rel="noopener noreferrer"><b>256 Foundation</b></a></span>
+          
+        <div style="padding-top:4px">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></div>
+      </div>
+    </div>
+
+  </div><!-- wrap -->
+
+  <div id="hoverTip"></div>
+
+  <script>
+    /* =========================
+       CONFIG
+    ========================= */
+
+    const PROM_BASE = "https://bolt12.dplus.plus/256";
+
+    const TREND_HOURS = 6;
+    const TREND_STEP_SECONDS = 60;
+    const ONE_HOUR_STEP_SECONDS = 60;
+
+    const FAST_REFRESH_MS = 15 * 1000;
+    const TREND_REFRESH_MS = 60 * 1000;
+
+    const ROLLING_WINDOW_POINTS = 17;
+    const CLAMP_K = 6;
+    const EMA_ALPHA = 0.28;
+
+    const MAX_USERS = 18;
+    const MAX_WORKERS = 10;
+    const PIE_TOP_N = 8;
+
+    const promql = {
+      hashrate5m: "sum(rate(worker_shares_valid_total[5m]))",
+
+      usersHashrate5m: "sum by (btcaddress) (rate(worker_shares_valid_total[5m]))",
+      usersHashrate5mActiveCount: "count(sum by (btcaddress) (rate(worker_shares_valid_total[5m])) > 0)",
+
+      usersWorkers5m_workername: "sum by (btcaddress, workername) (rate(worker_shares_valid_total[5m]))",
+      usersWorkers5m_worker: "sum by (btcaddress, worker) (rate(worker_shares_valid_total[5m]))",
+      usersWorkers5m_rig: "sum by (btcaddress, rig) (rate(worker_shares_valid_total[5m]))",
+      usersWorkers5m_name: "sum by (btcaddress, name) (rate(worker_shares_valid_total[5m]))",
+
+      lastShare_workername: "max by (btcaddress, workername) (worker_last_share_at)",
+      lastShare_worker: "max by (btcaddress, worker) (worker_last_share_at)",
+      lastShare_rig: "max by (btcaddress, rig) (worker_last_share_at)",
+      lastShare_name: "max by (btcaddress, name) (worker_last_share_at)"
+    };
+
+    $("#basePath").text(new URL(PROM_BASE).pathname || "/");
+
+    function isMobile(){
+      return window.innerWidth <= 620;
+    }
+
+    /* =========================
+       PROM API
+    ========================= */
+
+    function promQuery(q){
+      return $.ajax({
+        url: PROM_BASE + "/api/v1/query",
+        method: "POST",
+        data: "query=" + encodeURIComponent(q),
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+      });
+    }
+
+    function promQueryRange(q, startSec, endSec, stepSec){
+      const body =
+        "query=" + encodeURIComponent(q) +
+        "&start=" + encodeURIComponent(startSec) +
+        "&end=" + encodeURIComponent(endSec) +
+        "&step=" + encodeURIComponent(stepSec);
+
+      return $.ajax({
+        url: PROM_BASE + "/api/v1/query_range",
+        method: "POST",
+        data: body,
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+      });
+    }
+
+    function okResult(resp){
+      return resp && resp.status === "success" && resp.data && resp.data.result;
+    }
+
+    function scalarValue(resp){
+      if (!okResult(resp)) return NaN;
+      const r = resp.data.result;
+      if (!r.length || !r[0].value) return NaN;
+      const v = parseFloat(r[0].value[1]);
+      return isFinite(v) ? v : NaN;
+    }
+
+    function series(resp){
+      if (!okResult(resp)) return [];
+      return resp.data.result || [];
+    }
+
+    async function promQueryFirst(list){
+      for (let i = 0; i < list.length; i++){
+        try{
+          const resp = await promQuery(list[i]);
+          const s = series(resp);
+          if (s && s.length) return { q: list[i], resp: resp };
+        } catch(_){}
+      }
+      return { q: "", resp: null };
+    }
+
+    /* =========================
+       HELPERS
+    ========================= */
+
+    function mean(xs){
+      if (!xs || !xs.length) return NaN;
+      let s = 0;
+      for (let i = 0; i < xs.length; i++) s += xs[i];
+      return s / xs.length;
+    }
+
+    function median(xs){
+      if (!xs || !xs.length) return NaN;
+      const a = xs.slice().sort(function(a,b){ return a - b; });
+      const mid = Math.floor(a.length / 2);
+      if (a.length % 2) return a[mid];
+      return (a[mid - 1] + a[mid]) / 2;
+    }
+
+    function mad(xs, med){
+      if (!xs || !xs.length) return NaN;
+      const m = isFinite(med) ? med : median(xs);
+      const dev = [];
+      for (let i = 0; i < xs.length; i++) dev.push(Math.abs(xs[i] - m));
+      return median(dev);
+    }
+
+    function fmtInt(n){
+      if (!isFinite(n)) return "—";
+      return Math.round(n).toLocaleString();
+    }
+
+    function toTHs(hPerSec){
+      return hPerSec / 1e12;
+    }
+
+    function humanHashrateFromHps(hPerSec){
+      if (!isFinite(hPerSec)) return { value: "—", unit: "" };
+      const abs = Math.abs(hPerSec);
+      if (abs >= 1e15) return { value: (hPerSec / 1e15).toFixed(2), unit: "PH/s" };
+      if (abs >= 1e12) return { value: (hPerSec / 1e12).toFixed(0), unit: "TH/s" };
+      if (abs >= 1e9)  return { value: (hPerSec / 1e9).toFixed(0), unit: "GH/s" };
+      if (abs >= 1e6)  return { value: (hPerSec / 1e6).toFixed(0), unit: "MH/s" };
+      if (abs >= 1e3)  return { value: (hPerSec / 1e3).toFixed(0), unit: "KH/s" };
+      return { value: (Math.round(hPerSec * 100) / 100).toString(), unit: "H/s" };
+    }
+
+    function fmtTime(tsSec){
+      const d = new Date(tsSec * 1000);
+      return d.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+    }
+
+    function fmtDateTime(d){
+      return d.toLocaleString([], { year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"2-digit", second:"2-digit" });
+    }
+
+    function shortAddr(a){
+      if (!a) return "—";
+      if (a.length <= 16) return a;
+      return a.slice(0, 10) + "…" + a.slice(-10);
+    }
+
+    function getWorkerName(metric){
+      if (!metric) return "";
+      if (metric.workername) return metric.workername;
+      if (metric.worker) return metric.worker;
+      if (metric.rig) return metric.rig;
+      if (metric.name) return metric.name;
+      return "";
+    }
+
+    function niceColorPalette(n){
+      const base = [
+        "#38a6ff","#8c67ff","#39d98a","#ffd36a","#ff5b7a","#25c4ff",
+        "#ff8a3d","#7cf7ff","#b7ff6a","#ff63d8","#7a5cff","#00f5a0",
+        "#ffe66a","#ff4d6d","#4de2ff","#9dff57"
+      ];
+      const out = [];
+      for (let i = 0; i < n; i++) out.push(base[i % base.length]);
+      return out;
+    }
+
+    function escapeHtml(s){
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /* =========================
+       1H AVG FIX
+    ========================= */
+
+    async function refreshHash1hFromSamples(){
+      const end = Math.floor(Date.now() / 1000);
+      const start = end - 3600;
+
+      const resp = await promQueryRange(promql.hashrate5m, start, end, ONE_HOUR_STEP_SECONDS);
+      const s = series(resp);
+      if (!s.length || !s[0].values || !s[0].values.length) return NaN;
+
+      const xs = s[0].values
+        .map(function(v){ return parseFloat(v[1]); })
+        .filter(function(v){ return isFinite(v) && v >= 0; });
+
+      if (!xs.length) return NaN;
+
+      const med = median(xs);
+      const m = mad(xs, med);
+
+      if (!isFinite(m) || m < 1e-12){
+        return toTHs(mean(xs));
+      }
+
+      const sigma = m * 1.4826;
+      const K = 8;
+      const lo = med - K * sigma;
+      const hi = med + K * sigma;
+
+      const filtered = xs.filter(function(v){ return v >= lo && v <= hi; });
+      const use = filtered.length >= Math.max(6, Math.floor(xs.length * 0.5)) ? filtered : xs;
+
+      return toTHs(mean(use));
+    }
+
+    /* =========================
+       TREND SMOOTHING
+    ========================= */
+
+    function rollingClampAndEma(points){
+      if (!points || !points.length) return [];
+
+      const xs = points
+        .map(p => p.v)
+        .filter(v => isFinite(v) && v > 0);
+
+      const mid = xs.length ? median(xs) : 0;
+
+      const clean = points.map(p => {
+        let v = p.v;
+        if (isFinite(v) && v > 0 && isFinite(mid) && mid > 0 && v > mid * 3){
+          v = mid;
+        }
+        return { t: p.t, v: v };
+      });
+
+      const alpha = 0.1;
+      const out = [];
+      let ema = NaN;
+
+      for (let i = 0; i < clean.length; i++){
+        const v = clean[i].v;
+
+        if (!isFinite(v)){
+          out.push({ t: clean[i].t, v: ema });
+          continue;
+        }
+
+        if (!isFinite(ema)) ema = v;
+        else ema = alpha * v + (1 - alpha) * ema;
+
+        out.push({ t: clean[i].t, v: ema });
+      }
+
+      return out;
+    }
+
+    /* =========================
+       TOOLTIP
+    ========================= */
+
+    const $hoverTip = $("#hoverTip");
+
+    function showHoverTip(html, x, y){
+      $hoverTip.html(html);
+
+      const pad = 14;
+      const tipW = $hoverTip.outerWidth();
+      const tipH = $hoverTip.outerHeight();
+
+      let left = x + 14;
+      let top = y + 14;
+
+      if (left + tipW + pad > window.innerWidth) left = x - tipW - 14;
+      if (top + tipH + pad > window.innerHeight) top = y - tipH - 14;
+
+      $hoverTip.css({ left: left + "px", top: top + "px" }).addClass("show");
+    }
+
+    function hideHoverTip(){
+      $hoverTip.removeClass("show");
+    }
+
+    function wireWorkerHover($el, payload){
+      $el.on("mouseenter", function(e){
+        if (isMobile()) return;
+        const html =
+          "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
+          "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
+        showHoverTip(html, e.clientX, e.clientY);
+      });
+
+      $el.on("mousemove", function(e){
+        if (isMobile()) return;
+        const html =
+          "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
+          "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
+        showHoverTip(html, e.clientX, e.clientY);
+      });
+
+      $el.on("mouseleave", hideHoverTip);
+    }
+
+    /* =========================
+       COPY-TO-CLIPBOARD (DONATIONS)
+    ========================= */
+
+    function pointerXY(e){
+      const oe = e && e.originalEvent ? e.originalEvent : e;
+      const t = oe && oe.touches && oe.touches.length ? oe.touches[0] : null;
+      const x = (typeof e.clientX === "number") ? e.clientX : (t ? t.clientX : Math.floor(window.innerWidth / 2));
+      const y = (typeof e.clientY === "number") ? e.clientY : (t ? t.clientY : 90);
+      return { x:x, y:y };
+    }
+
+    function flashCopiedTip(x, y){
+      showHoverTip("<div><b>Copied to clipboard!</b></div>", x, y);
+      setTimeout(hideHoverTip, 650);
+    }
+
+    function wireCopyFields(){
+      $(document).on("click", ".copyField", async function(e){
+        const text = $(this).attr("data-copy") || $(this).text();
+        const p = pointerXY(e);
+
+        try{
+          await navigator.clipboard.writeText(text);
+          flashCopiedTip(p.x, p.y);
+        } catch(_){
+          const $tmp = $("<textarea>").val(text).css({
+            position:"fixed", left:"-9999px", top:"-9999px", opacity:"0"
+          });
+          $("body").append($tmp);
+          $tmp[0].select();
+          document.execCommand("copy");
+          $tmp.remove();
+          flashCopiedTip(p.x, p.y);
+        }
+      });
+    }
+
+    /* =========================
+       CHARTS
+    ========================= */
+
+    let trendChart;
+    let minersPie;
+
+    let pieFullAddrs = [];
+    let pieTotalTH = 0;
+
+    function initTrendChart(){
+      const ctx = document.getElementById("trendChart").getContext("2d");
+
+      function trendGradient(chart){
+        const area = chart.chartArea;
+        if (!area) return "rgba(56,166,255,0.18)";
+        const g = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+        g.addColorStop(0, "rgba(56,166,255,0.28)");
+        g.addColorStop(1, "rgba(56,166,255,0.00)");
+        return g;
+      }
+
+      trendChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [{
+            label: "Hashrate (TH/s)",
+            data: [],
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
+            backgroundColor: function(c){
+              return trendGradient(c.chart);
+            },
+            fill: true,
+            borderWidth: 4,
+            pointRadius: 0,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: {
+              labels: {
+                color: "rgba(255,255,255,.78)",
+                font: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 13 },
+                padding: 18,
+                usePointStyle: true,
+                pointStyle: "line"
+              }
+            },
+            tooltip: {
+              backgroundColor: "rgba(0,0,0,.72)",
+              borderColor: "rgba(255,255,255,.18)",
+              borderWidth: 1,
+              titleColor: "rgba(255,255,255,.92)",
+              bodyColor: "rgba(255,255,255,.92)",
+              titleFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 13 },
+              bodyFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 13 },
+              callbacks: {
+                label: function(ctx){
+                  const v = ctx.parsed.y;
+                  return " Hashrate (TH/s): " + (isFinite(v) ? v.toFixed(2) : "—");
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "rgba(255,255,255,.55)",
+                maxRotation: 0,
+                autoSkip: true,
+                autoSkipPadding: 18,
+                font: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 }
+              },
+              grid: { color: "rgba(255,255,255,.07)" }
+            },
+            y: {
+              ticks: {
+                color: "rgba(255,255,255,.55)",
+                padding: 8,
+                font: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 },
+                callback: function(v){ return v.toFixed ? v.toFixed(0) : v; }
+              },
+              grid: { color: "rgba(255,255,255,.07)" }
+            }
+          }
+        }
+      });
+    }
+
+    function setTrendData(pointsTH){
+      const labels = [];
+      const data = [];
+
+      for (let i = 0; i < pointsTH.length; i++){
+        labels.push(new Date(pointsTH[i].t).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }));
+        data.push(pointsTH[i].v);
+      }
+
+      trendChart.data.labels = labels;
+      trendChart.data.datasets[0].data = data;
+      trendChart.update("none");
+    }
+
+    function initMinersPie(){
+      const ctx = document.getElementById("minersPie").getContext("2d");
+      minersPie = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: [],
+          datasets: [{
+            data: [],
+            backgroundColor: [],
+            borderColor: "rgba(255,255,255,.10)",
+            borderWidth: 1,
+            hoverOffset: 12
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          cutout: "64%",
+          plugins: {
+            legend: {
+              display: false,
+              position: "bottom",
+              labels: {
+                color: "rgba(255,255,255,.78)",
+                font: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 11 },
+                padding: 10,
+                usePointStyle: true,
+                pointStyle: "circle"
+              }
+            },
+            tooltip: {
+              backgroundColor: "rgba(0,0,0,.78)",
+              borderColor: "rgba(255,255,255,.18)",
+              borderWidth: 1,
+              titleColor: "rgba(255,255,255,.92)",
+              bodyColor: "rgba(255,255,255,.92)",
+              titleFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 },
+              bodyFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 },
+              callbacks: {
+                title: function(items){
+                  const idx = items && items.length ? items[0].dataIndex : 0;
+                  const full = pieFullAddrs[idx] || minersPie.data.labels[idx] || "";
+                  return full;
+                },
+                label: function(ctx){
+                  const v = ctx.parsed;
+                  const pct = (pieTotalTH > 0) ? ((v / pieTotalTH) * 100) : 0;
+                  return " " + (isFinite(v) ? v.toFixed(2) : "—") + " TH/s  •  " + pct.toFixed(1) + "%";
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function setPieLegendForViewport(){
+      const mobile = isMobile();
+      if (minersPie){
+        minersPie.options.plugins.legend.display = mobile;
+        minersPie.update("none");
+      }
+    }
+
+    function setPieData(minersSorted){
+      const labels = [];
+      const valsTH = [];
+      pieFullAddrs = [];
+
+      const top = minersSorted.slice(0, PIE_TOP_N);
+      let otherHps = 0;
+
+      for (let i = PIE_TOP_N; i < minersSorted.length; i++){
+        otherHps += minersSorted[i].totalHps;
+      }
+
+      for (let j = 0; j < top.length; j++){
+        labels.push(isMobile() ? top[j].addr : shortAddr(top[j].addr));
+        pieFullAddrs.push(top[j].addr);
+        valsTH.push(toTHs(top[j].totalHps));
+      }
+
+      if (minersSorted.length > PIE_TOP_N){
+        labels.push("other");
+        pieFullAddrs.push("other");
+        valsTH.push(toTHs(otherHps));
+      }
+
+      pieTotalTH = 0;
+      for (let k = 0; k < valsTH.length; k++) pieTotalTH += valsTH[k];
+
+      const colors = niceColorPalette(labels.length);
+
+      minersPie.data.labels = labels;
+      minersPie.data.datasets[0].data = valsTH;
+      minersPie.data.datasets[0].backgroundColor = colors;
+      minersPie.update("none");
+    }
+
+    /* =========================
+       REFRESH
+    ========================= */
+
+    async function refreshOverview(){
+      $("#err").text("");
+
+      try{
+        const upResp = await promQuery("up");
+        const online = (scalarValue(upResp) === 1);
+
+        $("#statusDot").toggleClass("bad", !online);
+        $("#statusText").text(online ? "Online" : "Offline");
+
+        const hash5mResp = await promQuery(promql.hashrate5m);
+        const hash5mHps = scalarValue(hash5mResp);
+
+        const hr = humanHashrateFromHps(hash5mHps);
+        $("#hash5m").text(hr.value);
+        $("#hash5mUnit").text(hr.unit);
+
+        const hash1hTH = await refreshHash1hFromSamples();
+        if (isFinite(hash1hTH)){
+          const hr1 = humanHashrateFromHps(hash1hTH * 1e12);
+          $("#hash1h").text(hr1.value);
+          $("#hash1hUnit").text(hr1.unit);
+        } else {
+          $("#hash1h").text("—");
+          $("#hash1hUnit").text("");
+        }
+
+        const usersNowResp = await promQuery(promql.usersHashrate5mActiveCount);
+        $("#usersNow").text(fmtInt(scalarValue(usersNowResp)));
+
+        const now = new Date();
+        $("#lastUpdate").text("Last Update: " + fmtDateTime(now));
+        // $("#overviewMeta").text("base: " + PROM_BASE);
+
+      } catch (e){
+        $("#statusDot").addClass("bad");
+        $("#statusText").text("error");
+        $("#err").text("overview error: " + (e?.statusText || e?.message || "unknown"));
+      }
+    }
+
+    async function refreshUsersWorkersAndPie(){
+      $("#err").text("");
+
+      try{
+        const totalsResp = await promQuery(promql.usersHashrate5m);
+        const totalsSeries = series(totalsResp);
+
+        const workersPick = await promQueryFirst([
+          promql.usersWorkers5m_workername,
+          promql.usersWorkers5m_worker,
+          promql.usersWorkers5m_rig,
+          promql.usersWorkers5m_name
+        ]);
+        const workersSeries = workersPick.resp ? series(workersPick.resp) : [];
+
+        const lastPick = await promQueryFirst([
+          promql.lastShare_workername,
+          promql.lastShare_worker,
+          promql.lastShare_rig,
+          promql.lastShare_name
+        ]);
+        const lastSeries = lastPick.resp ? series(lastPick.resp) : [];
+
+        const lastMap = {};
+        for (let i = 0; i < lastSeries.length; i++){
+          const metric = lastSeries[i].metric || {};
+          const addr = metric.btcaddress || "";
+          const w = getWorkerName(metric);
+          const t = lastSeries[i].value ? parseFloat(lastSeries[i].value[1]) : NaN;
+          if (!addr || !w || !isFinite(t)) continue;
+          lastMap[addr + "|" + w] = t;
+        }
+
+        const nowSec = Math.floor(Date.now() / 1000);
+
+        const users = {};
+
+        for (let i = 0; i < totalsSeries.length; i++){
+          const addr = totalsSeries[i].metric?.btcaddress || "";
+          const v = totalsSeries[i].value ? parseFloat(totalsSeries[i].value[1]) : NaN;
+          if (!addr || !isFinite(v)) continue;
+          if (!users[addr]) users[addr] = { addr: addr, totalHps: 0, workers: [] };
+          users[addr].totalHps = v;
+        }
+
+        for (let k = 0; k < workersSeries.length; k++){
+          const metric = workersSeries[k].metric || {};
+          const addr = metric.btcaddress || "";
+          const wName = getWorkerName(metric);
+          const v = workersSeries[k].value ? parseFloat(workersSeries[k].value[1]) : NaN;
+          if (!addr || !wName || !isFinite(v)) continue;
+
+          if (!users[addr]) users[addr] = { addr: addr, totalHps: 0, workers: [] };
+
+          const last = lastMap[addr + "|" + wName];
+          const active = isFinite(last) ? ((nowSec - last) <= 300) : (v > 0);
+
+          users[addr].workers.push({ name: wName, hps: v, last: last, active: active });
+        }
+
+        const userList = [];
+        for (const a in users) userList.push(users[a]);
+        userList.sort(function(a,b){ return b.totalHps - a.totalHps; });
+
+        setPieData(userList);
+
+        let workersOnlineNow = 0;
+        for (let m = 0; m < userList.length; m++){
+          for (let w = 0; w < userList[m].workers.length; w++){
+            if (userList[m].workers[w].active) workersOnlineNow++;
+          }
+        }
+        $("#workersOnline").text(fmtInt(workersOnlineNow));
+
+        const topUsers = userList.slice(0, MAX_USERS);
+        for (let m = 0; m < topUsers.length; m++){
+          topUsers[m].workers.sort(function(a,b){ return b.hps - a.hps; });
+        }
+
+        const $list = $("#usersList");
+        $list.empty();
+
+        for (let n = 0; n < topUsers.length; n++){
+          const addr = topUsers[n].addr;
+          const totalHps = topUsers[n].totalHps;
+          const totalHr = humanHashrateFromHps(totalHps);
+
+          const $row = $("<div>").addClass("row");
+
+          const $top = $("<div>").addClass("minerTop");
+          const $addr = $("<div>").addClass("addr").text(addr);
+          const $hash = $("<div>").addClass("totalHash").text(totalHr.value + " " + totalHr.unit);
+          $top.append($addr, $hash);
+
+          const $workers = $("<div>").addClass("workers");
+
+          const ws = topUsers[n].workers.slice(0, MAX_WORKERS);
+
+          if (ws.length){
+            for (let j = 0; j < ws.length; j++){
+              const wh = humanHashrateFromHps(ws[j].hps);
+
+              const status = ws[j].active ? "active" : "idle";
+              const lastTxt = isFinite(ws[j].last) ? ("last: " + fmtTime(ws[j].last)) : "last: —";
+
+              const $line = $("<div>").addClass("workerLine");
+
+              const $left = $("<div>").addClass("workerLeft");
+              const $dot = $("<span>").addClass("badgeDot").toggleClass("bad", !ws[j].active);
+              const $name = $("<div>").addClass("workerName").text(ws[j].name);
+              $left.append($dot, $name);
+
+              const $right = $("<div>").addClass("workerRight");
+
+              const $rate = $("<span>").text(wh.value + " " + wh.unit);
+              const $last = $("<span>").addClass("lastBadge");
+
+              if (isMobile()){
+                if (!ws[j].active){
+                  $last.addClass("showMobile").text(lastTxt);
+                  $right.append($last);
+                } else {
+                  $right.append($rate);
+                }
+              } else {
+                $right.append($rate);
+              }
+
+              $line.append($left, $right);
+              $workers.append($line);
+
+              wireWorkerHover($line, { status: status, lastTxt: lastTxt, name: ws[j].name });
+            }
+          } else {
+            const $line = $("<div>").addClass("workerLine");
+            const $left = $("<div>").addClass("workerLeft");
+            const $dot = $("<span>").addClass("badgeDot bad");
+            const $name = $("<div>").addClass("workerName").text("— no workers found —");
+            $left.append($dot, $name);
+            const $right = $("<div>").addClass("workerRight").text("");
+            $line.append($left, $right);
+            $workers.append($line);
+          }
+
+          $row.append($top, $workers);
+          $list.append($row);
+        }
+
+      } catch (e){
+        $("#err").text("users/workers error: " + (e?.statusText || e?.message || "unknown"));
+      }
+    }
+
+    async function refreshTrend(){
+      $("#err").text("");
+
+      try{
+        const end = Math.floor(Date.now() / 1000);
+        const start = end - (TREND_HOURS * 3600);
+
+        const resp = await promQueryRange(promql.hashrate5m, start, end, TREND_STEP_SECONDS);
+        const s = series(resp);
+        if (!s.length || !s[0].values || !s[0].values.length){
+          setTrendData([]);
+          return;
+        }
+
+        const raw = [];
+        for (let i = 0; i < s[0].values.length; i++){
+          const ts = s[0].values[i][0];
+          const v = parseFloat(s[0].values[i][1]);
+          if (!isFinite(v) || v < 0) continue;
+          raw.push({ t: ts * 1000, v: v });
+        }
+
+        const smooth = rollingClampAndEma(raw);
+
+        const smoothTH = [];
+        for (let j = 0; j < smooth.length; j++){
+          smoothTH.push({ t: smooth[j].t, v: toTHs(smooth[j].v) });
+        }
+
+        setTrendData(smoothTH);
+
+      } catch (e){
+        $("#err").text("trend error: " + (e?.statusText || e?.message || "unknown"));
+      }
+    }
+
+    /* =========================
+       BOOT
+    ========================= */
+
+    let lastTrendAt = 0;
+
+    async function refreshAll(forceTrend){
+      await refreshOverview();
+      await refreshUsersWorkersAndPie();
+
+      const now = Date.now();
+      if (forceTrend || (now - lastTrendAt > TREND_REFRESH_MS)){
+        lastTrendAt = now;
+        await refreshTrend();
+      }
+    }
+
+    $(function(){
+      initTrendChart();
+      initMinersPie();
+      setPieLegendForViewport();
+      wireCopyFields();
+
+      window.addEventListener("resize", function(){
+        setPieLegendForViewport();
+      });
+
+      document.addEventListener("scroll", hideHoverTip, { passive: true });
+
+      refreshAll(true);
+
+      setInterval(function(){
+        refreshAll(false);
+      }, FAST_REFRESH_MS);
+    });
+  </script>
+</body>
+</html>
