@@ -54,22 +54,22 @@
       margin-bottom:18px;
     }
 
-    /* MODIFIED: Updated for Image Logo */
     .logo{
       width:75px;height:75px;border-radius:18px;
-      background: #ffffff; /* White background for visibility */
+      background: #ffffff;
       box-shadow: 0 18px 55px rgba(56,166,255,.25);
       border: 1px solid rgba(255,255,255,.18);
       flex: 0 0 auto;
-      object-fit: contain; /* Ensures logo fits inside */
-      padding: 6px; /* Padding inside the box */
+      object-fit: contain;
+      padding: 6px;
       box-sizing: border-box;
     }
 
     .title{
       display:flex;
       flex-direction:column;
-      gap:4px;
+      /* FIX 2: Increased gap to prevent squashing on Desktop */
+      gap:10px;
       min-width: 0;
     }
 
@@ -103,6 +103,7 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
       backdrop-filter: blur(12px);
+      white-space: nowrap;
     }
 
     .dot{
@@ -740,14 +741,53 @@
       .usersContentConstrainer { width: 100%; }
     }
 
+    /* MODIFIED: Chic Mobile Header Layout */
     @media (max-width: 620px){
-      .logo { display: none; }
+      /* Header Layout */
+      .top {
+        align-items: flex-start; /* Aligns logo to top of text */
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      
+      /* Resized Logo */
+      .logo {
+        display: block; /* Unhide */
+        width: 48px;
+        height: 48px;
+        border-radius: 12px; /* Tighter radius for mobile */
+        padding: 4px;
+        box-shadow: 0 8px 20px rgba(56,166,255,.20); /* Softer shadow */
+      }
+      
+      /* Title area */
+      .title {
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+      
       h1 { 
-        font-size: 28px; 
+        font-size: 22px; /* Balanced size */
         white-space: normal;
         overflow: visible;
-        word-wrap: break-word;
+        line-height: 1.15;
       }
+      
+      /* FIX 1: Pills WRAP naturally instead of scrolling off-screen */
+      .sub {
+        /* margin-top: 8px; */
+        flex-wrap: wrap; /* Wrap allows multiple lines */
+        gap: 8px; /* Tighter gap for mobile */
+      }
+      
+      /* Make pills slightly more compact */
+      .pill {
+        font-size: 11px;
+        padding: 4px 10px;
+        flex: 0 0 auto; /* Don't shrink */
+      }
+
+      /* Rest of mobile styles */
       .kpiTile{ grid-column: span 12; }
       .kpiTile .value{ font-size: 54px; }
       .canvasWrap, .pieWrap{ height: 280px; }
@@ -756,7 +796,6 @@
       .totalHash{ margin-left: 0; }
       .addr{ flex-basis: 100%; flex-direction:column; align-items:flex-start; gap:6px; }
       .lastBadge{ display:none; }
-      /* .lastBadge.showMobile{ display:inline-flex; } */
       .filterBar{ 
         flex-direction:column; 
         align-items:stretch; 
@@ -785,7 +824,7 @@
       <img src="https://i.imgur.com/Fiot6qk.png" class="logo" alt="256 Foundation">
       <div class="title">
         <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
-        <div class="sub" style="margin-top:7px">
+        <div class="sub">
           <span class="pill"><span id="statusDot" class="dot pulse"></span><span id="statusText">Connecting</span></span>
           <span class="pill">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></span>
           <span class="pill" id="lastUpdate">Last Update: —</span>
