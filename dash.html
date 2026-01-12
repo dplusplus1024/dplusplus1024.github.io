@@ -1697,6 +1697,9 @@
     
                 $toggleRow.append($btn);
                 $wrap.append($workers, $toggleRow);
+            } else {
+                // BUG FIX: If filtering, attach the whole list (including extra) to the DOM
+                $wrap.append($workers);
             }
           } else {
             $wrap.append($workers);
