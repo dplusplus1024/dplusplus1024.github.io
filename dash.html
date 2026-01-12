@@ -326,7 +326,7 @@
     #userFilter{
       width: 100%;
       height: 56px;
-      border-radius: 999px;
+      border-radius: 18px; /* may want to change this */
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.88);
@@ -351,7 +351,7 @@
     .filterBtn{
       height: 56px;
       padding: 0 22px;
-      border-radius: 999px;
+      border-radius: 18px; /* may want to change this */
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(140,103,255,.18);
       color: rgba(255,255,255,.86);
@@ -800,7 +800,7 @@
               <i class="fa-solid fa-users kpiBgIcon"></i>
               <div class="kpiTileInner">
                 <div class="label"><i class="fa-solid fa-users"></i> ACTIVE USERS</div>
-                <div class="value"><span id="usersNow" style="padding-left:30px">—</span><span class="unit"></span></div>
+                <div class="value"><span id="usersNow" style="padding-left:20px">—</span><span class="unit"></span></div>
               </div>
             </div>
 
@@ -808,7 +808,7 @@
               <i class="fa-solid fa-microchip kpiBgIcon"></i>
               <div class="kpiTileInner">
                 <div class="label"><i class="fa-solid fa-microchip"></i> ACTIVE WORKERS</div>
-                <div class="value"><span id="workersOnline" style="padding-left:30px">—</span><span class="unit"></span></div>
+                <div class="value"><span id="workersOnline" style="padding-left:20px">—</span><span class="unit"></span></div>
               </div>
             </div>
           </div>
@@ -859,7 +859,7 @@
               <i class="fa-regular fa-copy"></i>
             </div>
 
-            <div class="copyLabel">Set your stratum user to bitcoinaddress.workername, e.g.:</div>
+            <div class="copyLabel" style="padding-top:10px">Set your stratum user to bitcoinaddress.workername, e.g.:</div>
             <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69">
               <span>bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69</span>
               <i class="fa-regular fa-copy"></i>
@@ -879,7 +879,7 @@
               <i class="fa-regular fa-copy"></i>
             </div>
 
-            <div class="copyLabel">Or donate via Lightning to:</div>
+            <div class="copyLabel" style="padding-top:10px">Or donate via Lightning to:</div>
             <div class="copyField" data-copy="donate@256f.org">
               <span>donate@256f.org</span>
               <i class="fa-regular fa-copy"></i>
@@ -1382,7 +1382,7 @@
               callbacks: {
                 label: function(ctx){
                   const v = ctx.parsed.y;
-                  return " Hashrate (TH/s): " + (isFinite(v) ? v.toFixed(2) : "—");
+                  return " Hashrate (TH/s): " + (isFinite(v) ? v.toFixed(1) : "—");
                 }
               }
             }
