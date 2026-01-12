@@ -54,14 +54,16 @@
       margin-bottom:18px;
     }
 
+    /* MODIFIED: Updated for Image Logo */
     .logo{
-      width:58px;height:58px;border-radius:18px;
-      background:
-        radial-gradient(18px 18px at 30% 28%, rgba(255,255,255,.45), transparent 60%),
-        linear-gradient(135deg, rgba(56,166,255,.9), rgba(140,103,255,.75));
+      width:75px;height:75px;border-radius:18px;
+      background: #ffffff; /* White background for visibility */
       box-shadow: 0 18px 55px rgba(56,166,255,.25);
       border: 1px solid rgba(255,255,255,.18);
       flex: 0 0 auto;
+      object-fit: contain; /* Ensures logo fits inside */
+      padding: 6px; /* Padding inside the box */
+      box-sizing: border-box;
     }
 
     .title{
@@ -780,7 +782,7 @@
 <body>
   <div class="wrap">
     <div class="top">
-      <div class="logo"></div>
+      <img src="https://i.imgur.com/Fiot6qk.png" class="logo" alt="256 Foundation">
       <div class="title">
         <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
         <div class="sub" style="margin-top:7px">
