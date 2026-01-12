@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Hydrapool — Live Dashboard</title>
 
-  <!-- libs -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 
   <style>
     :root{
@@ -48,6 +46,7 @@
       padding: 28px 18px 34px;
     }
 
+    /* HEADER */
     .top{
       display:flex;
       align-items:center;
@@ -62,6 +61,7 @@
         linear-gradient(135deg, rgba(56,166,255,.9), rgba(140,103,255,.75));
       box-shadow: 0 18px 55px rgba(56,166,255,.25);
       border: 1px solid rgba(255,255,255,.18);
+      flex: 0 0 auto;
     }
 
     .title{
@@ -113,6 +113,7 @@
       box-shadow: 0 0 0 4px rgba(255,91,122,.15);
     }
 
+    /* GRID SYSTEM */
     .grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
@@ -187,32 +188,53 @@
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.05);
       overflow:hidden;
+      position: relative;
     }
 
-    .kpiTileInner{ padding:16px 16px 14px; }
+    .kpiTileInner{ padding:16px 16px 14px; position:relative; z-index:2; }
+
+    .kpiBgIcon{
+      position:absolute;
+      right: -10px;
+      bottom: -10px;
+      font-size: 80px;
+      color: rgba(255,255,255,.03);
+      transform: rotate(-15deg);
+      pointer-events: none;
+      z-index: 1;
+    }
 
     .kpiTile .label{
       color: rgba(255,255,255,.62);
       font-family: var(--mono);
-      font-size: 16px;
+      font-size: 14px; 
       letter-spacing:.04em;
       margin:0 0 8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    
+    .kpiTile .label i {
+      color: var(--accent);
+      font-size: 14px;
+      opacity: 0.8;
     }
 
     .kpiTile .value{
       font-weight: 750;
-      font-size: 60px;
+      font-size: 52px;
       line-height: 1;
       margin:0;
       letter-spacing: .5px;
     }
 
-    .kpiTile.small .value{ font-size: 54px; }
+    .kpiTile.small .value{ font-size: 48px; }
 
     .kpiTile .value .unit{
       font-size: .55em;
       color: rgba(255,255,255,.78);
-      margin-left: 10px;
+      margin-left: 8px;
       letter-spacing:.02em;
     }
 
@@ -225,7 +247,6 @@
     }
 
     .trendCard{ min-height: 420px; }
-    /* .pieCard{ min-height: 420px; } */
 
     .canvasWrap, .pieWrap{
       position:relative;
@@ -235,13 +256,11 @@
       overflow:hidden;
     }
 
-    /* Trend keeps its subtle frame */
     .canvasWrap{
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.10);
     }
 
-    /* Pie: remove extra outline / extra background frame on desktop */
     .pieWrap{
       border: none;
       background: transparent;
@@ -258,12 +277,17 @@
       height:100% !important;
     }
 
-    /* Users/workers list BELOW (narrow + centered) */
+    /* Users/workers list BELOW */
     .usersCard{
       grid-column: 1 / -1;
       width: 100%;
-      max-width: 800px;
-      justify-self: center;
+      max-width: none;
+      justify-self: stretch;
+    }
+    
+    .usersContentConstrainer {
+      width: 80%;
+      margin: 0 auto;
     }
 
     .narrowBlock{
@@ -271,14 +295,125 @@
       margin: 0 auto;
     }
 
+    /* =========================
+       FILTER BAR
+    ========================= */
+
+    .filterBar{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin: 6px 0 14px;
+    }
+
+    .filterField{
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .filterField i{
+      position:absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,.55);
+      opacity: .95;
+      font-size: 16px;
+      pointer-events:none;
+    }
+
+    #userFilter{
+      width: 100%;
+      height: 56px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      font-family: var(--mono);
+      font-size: 16px;
+      padding: 0 18px 0 50px;
+      outline: none;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 44px rgba(0,0,0,.18);
+      box-sizing: border-box;
+    }
+
+    #userFilter::placeholder{
+      color: rgba(255,255,255,.42);
+    }
+
+    #userFilter:focus{
+      border-color: rgba(56,166,255,.30);
+      background: rgba(255,255,255,.075);
+    }
+
+    .filterBtn{
+      height: 56px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(140,103,255,.18);
+      color: rgba(255,255,255,.86);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 44px rgba(0,0,0,.18);
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+      flex: 0 0 auto;
+    }
+
+    .filterBtn:hover{
+      background: rgba(140,103,255,.24);
+      border-color: rgba(255,255,255,.20);
+      transform: translateY(-1px);
+    }
+
+    .filterBtn:active{
+      transform: translateY(0px) scale(.995);
+    }
+
+    .filterBtn:disabled{
+      opacity: .45;
+      cursor: default;
+      transform: none;
+    }
+
+    /* SCROLL LIST - With Chic Fade Mask */
     .list{
       display:flex;
       flex-direction:column;
       gap:12px;
       margin-top: 10px;
-      max-height: none;
-      overflow: visible;
+      max-height: 800px;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding-right: 0;
+      scroll-behavior: smooth;
+      mask-image: linear-gradient(to bottom, 
+        transparent 0%, 
+        black 24px, 
+        black calc(100% - 24px), 
+        transparent 100%
+      );
+      -webkit-mask-image: linear-gradient(to bottom, 
+        transparent 0%, 
+        black 24px, 
+        black calc(100% - 24px), 
+        transparent 100%
+      );
+      padding-top: 24px;
+      padding-bottom: 24px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .list::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
     .row{
@@ -290,7 +425,7 @@
 
     .minerTop{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:12px;
       margin-bottom: 10px;
@@ -301,9 +436,16 @@
       font-family: var(--mono);
       font-size: 13px;
       color: rgba(255,255,255,.90);
-      flex: 1 1 520px;
       white-space: normal;
       overflow-wrap: anywhere;
+      cursor: pointer; /* Hint that its clickable/hoverable */
+      border-radius: 6px;
+      padding: 4px 6px;
+      margin-left: -6px;
+      transition: background 120ms;
+    }
+    .addr:hover{
+      background: rgba(255,255,255,.06);
     }
 
     .totalHash{
@@ -313,6 +455,13 @@
       white-space:nowrap;
       flex: 0 0 auto;
       margin-left: auto;
+    }
+
+    /* Workers box */
+    .workersWrap{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
     .workers{
@@ -333,6 +482,12 @@
       font-family: var(--mono);
       font-size: 13px;
       color: rgba(255,255,255,.78);
+      cursor: pointer; /* Signal interactivity */
+      padding: 4px 0;
+      border-radius: 4px;
+    }
+    .workerLine:hover{
+        background: rgba(255,255,255,.03);
     }
 
     .workerLeft{
@@ -373,8 +528,10 @@
     }
 
     .lastBadge{
-      display:none;
-      padding: 4px 8px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 4px 10px;
       border-radius: 999px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
@@ -382,6 +539,7 @@
       font-family: var(--mono);
       font-size: 12px;
       white-space: nowrap;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
     }
 
     .error{
@@ -391,7 +549,7 @@
       margin-top: 12px;
     }
 
-    /* Custom fast tooltip for worker lines + copy-to-clipboard */
+    /* TOOLTIP */
     #hoverTip{
       position: fixed;
       z-index: 9999;
@@ -418,34 +576,9 @@
       color: rgba(255,255,255,.70);
     }
 
-    .brandFooter{
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-      font-family: var(--mono);
-      color: rgba(255,255,255,.70);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .brandFooter .left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .brandFooter .sep{
-      color: rgba(255,255,255,.35);
-    }
-
     /* =========================
-       DONATIONS (FULL WIDTH LIKE CHARTS)
+       DONATIONS
     ========================= */
-
     .donationsRow{
       grid-column: 1 / -1;
       display:grid;
@@ -465,8 +598,10 @@
     }
 
     .copyField{
-      display:block;
-      /* width: 100%; */
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center;
+      gap: 12px;
       padding: 14px 16px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
@@ -480,13 +615,96 @@
       transition: transform 90ms ease, background 90ms ease, border-color 90ms ease;
     }
 
+    .copyField i {
+        opacity: 0.5;
+        font-size: 14px;
+    }
+
     .copyField:hover{
       background: rgba(255,255,255,.08);
       border-color: rgba(255,255,255,.16);
     }
+    
+    .copyField:hover i { opacity: 1; }
 
     .copyField:active{
       transform: scale(.995);
+    }
+
+    /* =========================
+       WORKERS TOGGLE
+    ========================= */
+
+    .workersExtra{
+      overflow:hidden;
+      max-height: 980px;
+      opacity: 1;
+      transform: translateY(0px);
+      transition:
+        max-height 260ms cubic-bezier(.2,.9,.2,1),
+        opacity 180ms ease,
+        transform 260ms cubic-bezier(.2,.9,.2,1);
+      will-change: max-height, opacity, transform;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .workers.collapsed .workersExtra{
+      max-height: 0px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition:
+        max-height 240ms cubic-bezier(.4,0,.2,1),
+        opacity 160ms ease,
+        transform 240ms cubic-bezier(.4,0,.2,1);
+    }
+
+    .workersToggleRow{
+      display:flex;
+      justify-content:center;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    .toggleMore{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 44px rgba(0,0,0,.22);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggleMore:hover{
+      background: rgba(255,255,255,.085);
+      border-color: rgba(255,255,255,.20);
+      transform: translateY(-1px);
+    }
+
+    .toggleMore:active{
+      transform: translateY(0px) scale(.995);
+    }
+    
+    .toggleMore i {
+        margin-top: -2px; /* Fix alignment */
+    }
+
+    .toggleMore .count{
+      letter-spacing: .10em;
+      color: rgba(255,255,255,.68);
+      margin-left: 0px;
     }
 
     /* Responsive */
@@ -497,21 +715,44 @@
       .piePad{ inset: 16px; }
       .narrowBlock{ max-width: 100%; }
       .donationsRow{ grid-template-columns: 1fr; }
+      .usersContentConstrainer { width: 100%; }
     }
 
     @media (max-width: 620px){
-      h1{ font-size: 28px; }
+      .logo { display: none; }
+      h1 { 
+        font-size: 28px; 
+        white-space: normal;
+        overflow: visible;
+        word-wrap: break-word;
+      }
       .kpiTile{ grid-column: span 12; }
       .kpiTile .value{ font-size: 54px; }
       .canvasWrap, .pieWrap{ height: 280px; }
       .piePad{ inset: 14px; }
-
-      .lastBadge.showMobile{
-        display:inline-flex;
-      }
-
+      .trendCard{ min-height: 390px; }
       .totalHash{ margin-left: 0; }
-      .addr{ flex-basis: 100%; }
+      .addr{ flex-basis: 100%; flex-direction:column; align-items:flex-start; gap:6px; }
+      .lastBadge{ display:none; }
+      .lastBadge.showMobile{ display:inline-flex; }
+      .filterBar{ 
+        flex-direction:column; 
+        align-items:stretch; 
+      }
+      .filterField {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      #userFilter{ 
+        height: 54px; 
+        width: 100%;
+      }
+      .filterBtn{ 
+        width: 100%; 
+        height: 54px; 
+        padding: 0 18px; 
+      }
+      .list{ max-height: 800px; padding-right: 0px; }
     }
   </style>
 </head>
@@ -521,8 +762,6 @@
     <div class="top">
       <div class="logo"></div>
       <div class="title">
-        <!-- <span style="font-size:85%">⚒️⛏️</span> -->
-         
         <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
         <div class="sub" style="margin-top:7px">
           <span class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Connecting</span></span>
@@ -534,47 +773,48 @@
 
     <div class="grid">
 
-      <!-- Overview -->
       <div class="card overview">
         <div class="cardInner">
           <div class="headRow">
             <div class="sectionTitle">Overview</div>
-            <!-- <div class="meta" id="overviewMeta">—</div> -->
           </div>
 
           <div class="kpiGrid">
             <div class="kpiTile">
+              <i class="fa-solid fa-bolt kpiBgIcon"></i>
               <div class="kpiTileInner">
-                <div class="label">HASHRATE (5M)</div>
+                <div class="label"><i class="fa-solid fa-bolt"></i> HASHRATE (5M)</div>
                 <div class="value"><span id="hash5m">—</span><span class="unit" id="hash5mUnit"></span></div>
               </div>
             </div>
 
             <div class="kpiTile small">
+              <i class="fa-solid fa-stopwatch kpiBgIcon"></i>
               <div class="kpiTileInner">
-                <div class="label">AVERAGE HASHRATE (1H)</div>
+                <div class="label"><i class="fa-solid fa-stopwatch"></i> AVG HASHRATE (1H)</div>
                 <div class="value"><span id="hash1h">—</span><span class="unit" id="hash1hUnit"></span></div>
               </div>
             </div>
 
             <div class="kpiTile">
+              <i class="fa-solid fa-users kpiBgIcon"></i>
               <div class="kpiTileInner">
-                <div class="label">ACTIVE USERS</div>
-                <div class="value"><span id="usersNow">—</span><span class="unit"></span></div>
+                <div class="label"><i class="fa-solid fa-users"></i> ACTIVE USERS</div>
+                <div class="value"><span id="usersNow" style="padding-left:30px">—</span><span class="unit"></span></div>
               </div>
             </div>
 
             <div class="kpiTile">
+              <i class="fa-solid fa-microchip kpiBgIcon"></i>
               <div class="kpiTileInner">
-                <div class="label">ACTIVE WORKERS</div>
-                <div class="value"><span id="workersOnline">—</span><span class="unit"></span></div>
+                <div class="label"><i class="fa-solid fa-microchip"></i> ACTIVE WORKERS</div>
+                <div class="value"><span id="workersOnline" style="padding-left:30px">—</span><span class="unit"></span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Charts row -->
       <div class="chartsRow">
         <div class="card trendCard">
           <div class="cardInner">
@@ -605,10 +845,8 @@
         </div>
       </div>
 
-      <!-- Donations row (FULL WIDTH like charts/cards) -->
       <div class="donationsRow">
 
-        <!-- Hashrate Donations -->
         <div class="card">
           <div class="cardInner" style="padding:22px 30px 40px 30px">
             <div class="headRow">
@@ -617,17 +855,18 @@
 
             <div class="copyLabel">Point your hashrate to:</div>
             <div class="copyField" data-copy="stratum+tcp://pool.256foundation.org:3333">
-              stratum+tcp://pool.256foundation.org:3333
+              <span>stratum+tcp://pool.256foundation.org:3333</span>
+              <i class="fa-regular fa-copy"></i>
             </div>
 
             <div class="copyLabel">Set your stratum user to bitcoinaddress.workername, e.g.:</div>
             <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69">
-              bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69
+              <span>bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3.bitaxe69</span>
+              <i class="fa-regular fa-copy"></i>
             </div>
           </div>
         </div>
 
-        <!-- Bitcoin Donations -->
         <div class="card">
           <div class="cardInner" style="padding:22px 30px 40px 30px">
             <div class="headRow">
@@ -636,44 +875,52 @@
 
             <div class="copyLabel">Send bitcoin directly to:</div>
             <div class="copyField" data-copy="bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3">
-              bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3
+              <span>bc1qce93hy5rhg02s6aeu7mfdvxg76x66pqqtrvzs3</span>
+              <i class="fa-regular fa-copy"></i>
             </div>
 
             <div class="copyLabel">Or donate via Lightning to:</div>
             <div class="copyField" data-copy="donate@256f.org">
-              donate@256f.org
+              <span>donate@256f.org</span>
+              <i class="fa-regular fa-copy"></i>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Users/workers list BELOW -->
       <div class="card usersCard">
         <div class="cardInner">
-          <div class="headRow">
-            <div class="sectionTitle centerTitle">Users + Workers</div>
-          </div>
+          
+          <div class="usersContentConstrainer">
+          
+            <div class="headRow">
+              <div class="sectionTitle centerTitle">Users + Workers</div>
+            </div>
 
-          <div class="list" id="usersList"></div>
+            <div class="filterBar">
+              <div class="filterField">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="userFilter" type="text" autocomplete="off" spellcheck="false"
+                  placeholder="filter by user / worker" />
+              </div>
+              <button id="filterReset" type="button" class="filterBtn" disabled>CLEAR</button>
+            </div>
 
-          <div id="err" class="error"></div>
-        </div>
+            <div class="list" id="usersList"></div>
+            <div id="err" class="error"></div>
+            
+          </div></div>
       </div>
 
-    </div><!-- grid -->
-
-    <div class="narrowBlock">
+    </div><div class="narrowBlock">
       <div style="text-align:center; margin:0 auto; margin-top:60px">
         <span>Made with ❤️ by <a href="https://x.com/d_plus__plus/" target="_blank"><b>D++</b></a> for the <a href="https://256foundation.org/" target="_blank" rel="noopener noreferrer"><b>256 Foundation</b></a></span>
-          
         <div style="padding-top:4px">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></div>
       </div>
     </div>
 
-  </div><!-- wrap -->
-
-  <div id="hoverTip"></div>
+  </div><div id="hoverTip"></div>
 
   <script>
     /* =========================
@@ -689,13 +936,18 @@
     const FAST_REFRESH_MS = 15 * 1000;
     const TREND_REFRESH_MS = 60 * 1000;
 
-    const ROLLING_WINDOW_POINTS = 17;
-    const CLAMP_K = 6;
-    const EMA_ALPHA = 0.28;
-
     const MAX_USERS = 18;
     const MAX_WORKERS = 10;
     const PIE_TOP_N = 8;
+
+    // super chic worker collapse
+    const WORKERS_COLLAPSED = 3;
+    const expandedAddrs = new Set();
+
+    // filter
+    let latestUserList = [];
+    let filterQuery = "";
+    let filterTimer = null;
 
     const promql = {
       hashrate5m: "sum(rate(worker_shares_valid_total[5m]))",
@@ -713,8 +965,6 @@
       lastShare_rig: "max by (btcaddress, rig) (worker_last_share_at)",
       lastShare_name: "max by (btcaddress, name) (worker_last_share_at)"
     };
-
-    $("#basePath").text(new URL(PROM_BASE).pathname || "/");
 
     function isMobile(){
       return window.innerWidth <= 620;
@@ -812,14 +1062,14 @@
       return hPerSec / 1e12;
     }
 
-    function humanHashrateFromHps(hPerSec){
+    function humanHashrateFromHps(hPerSec, decimals = 1){
       if (!isFinite(hPerSec)) return { value: "—", unit: "" };
       const abs = Math.abs(hPerSec);
-      if (abs >= 1e15) return { value: (hPerSec / 1e15).toFixed(2), unit: "PH/s" };
-      if (abs >= 1e12) return { value: (hPerSec / 1e12).toFixed(0), unit: "TH/s" };
-      if (abs >= 1e9)  return { value: (hPerSec / 1e9).toFixed(0), unit: "GH/s" };
-      if (abs >= 1e6)  return { value: (hPerSec / 1e6).toFixed(0), unit: "MH/s" };
-      if (abs >= 1e3)  return { value: (hPerSec / 1e3).toFixed(0), unit: "KH/s" };
+      if (abs >= 1e15) return { value: (hPerSec / 1e15).toFixed(decimals), unit: "PH/s" };
+      if (abs >= 1e12) return { value: (hPerSec / 1e12).toFixed(decimals), unit: "TH/s" };
+      if (abs >= 1e9)  return { value: (hPerSec / 1e9).toFixed(decimals), unit: "GH/s" };
+      if (abs >= 1e6)  return { value: (hPerSec / 1e6).toFixed(decimals), unit: "MH/s" };
+      if (abs >= 1e3)  return { value: (hPerSec / 1e3).toFixed(decimals), unit: "KH/s" };
       return { value: (Math.round(hPerSec * 100) / 100).toString(), unit: "H/s" };
     }
 
@@ -836,6 +1086,12 @@
       if (!a) return "—";
       if (a.length <= 16) return a;
       return a.slice(0, 10) + "…" + a.slice(-10);
+    }
+    
+    function superShortAddr(a){
+      if (!a) return "—";
+      if (a.length <= 12) return a;
+      return a.slice(0, 6) + "…" + a.slice(-4);
     }
 
     function getWorkerName(metric){
@@ -865,6 +1121,37 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    function applyFilter(list, q){
+      const t = String(q || "").trim().toLowerCase();
+      if (!t) return list;
+
+      return list.filter(function(u){
+        if ((u.addr || "").toLowerCase().includes(t)) return true;
+        const ws = u.workers || [];
+        for (let i = 0; i < ws.length; i++){
+          if ((ws[i].name || "").toLowerCase().includes(t)) return true;
+        }
+        return false;
+      });
+    }
+
+    function animateListScrollToRowBottom($row){
+      const $scroller = $("#usersList");
+      if (!$scroller.length || !$row.length) return;
+
+      const rowTop = $row.position().top;
+      const rowBottom = rowTop + $row.outerHeight(true);
+      const viewH = $scroller.height();
+      const curTop = $scroller.scrollTop();
+
+      const pad = 18;
+      const target = Math.max(0, rowBottom - viewH + pad);
+
+      if (target > curTop + 2){
+        $scroller.stop(true).animate({ scrollTop: target }, 260);
+      }
     }
 
     /* =========================
@@ -907,41 +1194,25 @@
        TREND SMOOTHING
     ========================= */
 
-    function rollingClampAndEma(points){
-      if (!points || !points.length) return [];
-
-      const xs = points
-        .map(p => p.v)
-        .filter(v => isFinite(v) && v > 0);
-
-      const mid = xs.length ? median(xs) : 0;
-
-      const clean = points.map(p => {
-        let v = p.v;
-        if (isFinite(v) && v > 0 && isFinite(mid) && mid > 0 && v > mid * 3){
-          v = mid;
-        }
-        return { t: p.t, v: v };
-      });
-
-      const alpha = 0.1;
+    function weightedMovingAverage(points) {
+      if (!points || points.length < 2) return points;
+      const clean = points.filter(p => isFinite(p.v) && p.v >= 0);
+      if (clean.length < 2) return clean;
+      const windowSize = 3; 
       const out = [];
-      let ema = NaN;
 
-      for (let i = 0; i < clean.length; i++){
-        const v = clean[i].v;
-
-        if (!isFinite(v)){
-          out.push({ t: clean[i].t, v: ema });
-          continue;
+      for (let i = 0; i < clean.length; i++) {
+        let sumW = 0;
+        let sumV = 0;
+        for (let j = 0; j < windowSize; j++) {
+           if (i - j < 0) break;
+           const w = windowSize - j;
+           sumW += w;
+           sumV += clean[i - j].v * w;
         }
-
-        if (!isFinite(ema)) ema = v;
-        else ema = alpha * v + (1 - alpha) * ema;
-
-        out.push({ t: clean[i].t, v: ema });
+        if (sumW > 0) out.push({ t: clean[i].t, v: sumV / sumW });
+        else out.push(clean[i]);
       }
-
       return out;
     }
 
@@ -972,8 +1243,8 @@
     }
 
     function wireWorkerHover($el, payload){
+      // Mouse listeners for desktop
       $el.on("mouseenter", function(e){
-        if (isMobile()) return;
         const html =
           "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
           "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
@@ -981,7 +1252,6 @@
       });
 
       $el.on("mousemove", function(e){
-        if (isMobile()) return;
         const html =
           "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
           "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
@@ -989,10 +1259,27 @@
       });
 
       $el.on("mouseleave", hideHoverTip);
+      
+      // Click/Tap listener for Mobile
+      $el.on("click", function(e){
+        // Optional: check if mobile via screen width or touch event presence if needed
+        const html =
+          "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
+          "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
+        
+        // Show slightly above finger
+        let yPos = e.clientY - 20;
+        if(yPos < 0) yPos = 10;
+
+        showHoverTip(html, e.clientX, yPos);
+        
+        // Auto-hide after 2.5s
+        setTimeout(hideHoverTip, 2500);
+      });
     }
 
     /* =========================
-       COPY-TO-CLIPBOARD (DONATIONS)
+       COPY-TO-CLIPBOARD
     ========================= */
 
     function pointerXY(e){
@@ -1046,7 +1333,8 @@
         const area = chart.chartArea;
         if (!area) return "rgba(56,166,255,0.18)";
         const g = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
-        g.addColorStop(0, "rgba(56,166,255,0.28)");
+        // More dramatic shading
+        g.addColorStop(0, "rgba(56,166,255,0.55)");
         g.addColorStop(1, "rgba(56,166,255,0.00)");
         return g;
       }
@@ -1146,10 +1434,11 @@
           labels: [],
           datasets: [{
             data: [],
+            activeCounts: [], // Custom data for tooltip
             backgroundColor: [],
             borderColor: "rgba(255,255,255,.10)",
             borderWidth: 1,
-            hoverOffset: 12
+            hoverOffset: 0
           }]
         },
         options: {
@@ -1161,6 +1450,15 @@
             legend: {
               display: false,
               position: "bottom",
+              onClick: function(e, legendItem, legend) {
+                 // Trigger tooltip logic for mobile clicks on legend
+                 const index = legendItem.index;
+                 const chart = legend.chart;
+                 if(chart.tooltip) {
+                     chart.tooltip.setActiveElements([{datasetIndex: 0, index: index}], {x: 0, y: 0});
+                     chart.update();
+                 }
+              },
               labels: {
                 color: "rgba(255,255,255,.78)",
                 font: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 11 },
@@ -1185,8 +1483,12 @@
                 },
                 label: function(ctx){
                   const v = ctx.parsed;
+                  const idx = ctx.dataIndex;
                   const pct = (pieTotalTH > 0) ? ((v / pieTotalTH) * 100) : 0;
-                  return " " + (isFinite(v) ? v.toFixed(2) : "—") + " TH/s  •  " + pct.toFixed(1) + "%";
+                  const active = minersPie.data.datasets[0].activeCounts[idx] || 0;
+                  
+                  // Cleaner format on same line
+                  return ` ${v.toFixed(2)} TH/s • ${pct.toFixed(1)}% • ${active} active workers`;
                 }
               }
             }
@@ -1206,25 +1508,39 @@
     function setPieData(minersSorted){
       const labels = [];
       const valsTH = [];
+      const activeCounts = [];
       pieFullAddrs = [];
 
       const top = minersSorted.slice(0, PIE_TOP_N);
       let otherHps = 0;
+      let otherActive = 0;
 
       for (let i = PIE_TOP_N; i < minersSorted.length; i++){
         otherHps += minersSorted[i].totalHps;
+        const workers = minersSorted[i].workers || [];
+        for(let w=0; w<workers.length; w++) {
+           if(workers[w].active) otherActive++;
+        }
       }
 
       for (let j = 0; j < top.length; j++){
-        labels.push(isMobile() ? top[j].addr : shortAddr(top[j].addr));
+        labels.push(isMobile() ? superShortAddr(top[j].addr) : shortAddr(top[j].addr));
         pieFullAddrs.push(top[j].addr);
         valsTH.push(toTHs(top[j].totalHps));
+        
+        let active = 0;
+        const workers = top[j].workers || [];
+        for(let w=0; w<workers.length; w++) {
+           if(workers[w].active) active++;
+        }
+        activeCounts.push(active);
       }
 
       if (minersSorted.length > PIE_TOP_N){
         labels.push("other");
         pieFullAddrs.push("other");
         valsTH.push(toTHs(otherHps));
+        activeCounts.push(otherActive);
       }
 
       pieTotalTH = 0;
@@ -1235,7 +1551,178 @@
       minersPie.data.labels = labels;
       minersPie.data.datasets[0].data = valsTH;
       minersPie.data.datasets[0].backgroundColor = colors;
+      minersPie.data.datasets[0].activeCounts = activeCounts;
       minersPie.update("none");
+    }
+
+    /* =========================
+       RENDER USERS LIST
+    ========================= */
+
+    function renderUsersList(list){
+      const $list = $("#usersList");
+      $list.empty();
+
+      const filtered = applyFilter(list, filterQuery);
+      const topUsers = filtered.slice(0, MAX_USERS);
+
+      for (let i = 0; i < topUsers.length; i++){
+        topUsers[i].workers.sort(function(a,b){ return b.hps - a.hps; });
+      }
+
+      for (let n = 0; n < topUsers.length; n++){
+        const addr = topUsers[n].addr;
+        const totalHps = topUsers[n].totalHps;
+        // User Total: 1 decimal
+        const totalHr = humanHashrateFromHps(totalHps, 1);
+        
+        // Count active workers
+        let activeCount = 0;
+        const ws = topUsers[n].workers;
+        for(let w=0; w<ws.length; w++) if(ws[w].active) activeCount++;
+
+        const $row = $("<div>").addClass("row");
+
+        const $top = $("<div>").addClass("minerTop");
+        const $addr = $("<div>").addClass("addr").text(addr);
+        
+        // Add hover tooltip for Active Worker Count
+        $addr.on("mouseenter", function(e){
+            const txt = activeCount === 1 ? "1 active worker" : (activeCount + " active workers");
+            showHoverTip(`<div><b>${txt}</b></div>`, e.clientX, e.clientY);
+        }).on("mouseleave", hideHoverTip);
+        
+        // Add tap tooltip for Mobile
+        $addr.on("click", function(e){
+            const txt = activeCount === 1 ? "1 active worker" : (activeCount + " active workers");
+            showHoverTip(`<div><b>${txt}</b></div>`, e.clientX, e.clientY - 20);
+            setTimeout(hideHoverTip, 2500);
+        });
+
+        const $hash = $("<div>").addClass("totalHash").text(totalHr.value + " " + totalHr.unit);
+        $top.append($addr, $hash);
+
+        const $wrap = $("<div>").addClass("workersWrap");
+        const $workers = $("<div>").addClass("workers");
+        const $extra = $("<div>").addClass("workersExtra");
+
+        // Logic: If filtering, we SHOW ALL and EXPAND ALL
+        const isFiltering = filterQuery && filterQuery.length > 0;
+        
+        // If filtering, ignore MAX_WORKERS cap so we can see the deep results
+        const workersToShow = isFiltering ? ws : ws.slice(0, MAX_WORKERS);
+        
+        // CRITICAL FIX: If filtering, never collapse
+        const shouldCollapse = !isFiltering && (workersToShow.length > WORKERS_COLLAPSED) && !expandedAddrs.has(addr);
+        
+        if (shouldCollapse) $workers.addClass("collapsed");
+
+        if (workersToShow.length){
+          for (let j = 0; j < workersToShow.length; j++){
+            // Worker Rate: 0 decimals
+            const wh = humanHashrateFromHps(workersToShow[j].hps, 0);
+
+            const status = workersToShow[j].active ? "active" : "idle";
+            const lastTxt = isFinite(workersToShow[j].last) ? ("last share: " + fmtTime(workersToShow[j].last)) : "last: —";
+
+            const $line = $("<div>").addClass("workerLine");
+
+            const $left = $("<div>").addClass("workerLeft");
+            const $dot = $("<span>").addClass("badgeDot").toggleClass("bad", !workersToShow[j].active);
+            const $name = $("<div>").addClass("workerName").text(workersToShow[j].name);
+            $left.append($dot, $name);
+
+            const $right = $("<div>").addClass("workerRight");
+            const $rate = $("<span>").text(wh.value + " " + wh.unit);
+            const $last = $("<span>").addClass("lastBadge").text(lastTxt);
+
+            if (isMobile()){
+              if (workersToShow[j].active){
+                $right.append($rate);
+              } else {
+                $last.addClass("showMobile");
+                $right.append($rate, $last);
+              }
+            } else {
+              $right.append($rate, $last);
+            }
+
+            $line.append($left, $right);
+
+            if (j < WORKERS_COLLAPSED) $workers.append($line);
+            else $extra.append($line);
+
+            // CRITICAL FIX: Ensure hover logic is attached to every line
+            wireWorkerHover($line, { status: status, lastTxt: lastTxt, name: workersToShow[j].name });
+          }
+
+          if (workersToShow.length > WORKERS_COLLAPSED){
+            $workers.append($extra);
+            const hiddenCount = workersToShow.length - WORKERS_COLLAPSED;
+
+            // Only show toggle if NOT filtering (auto-expanded when filtering)
+            if (!isFiltering) {
+                const $toggleRow = $("<div>").addClass("workersToggleRow");
+                const $btn = $("<button>").attr("type", "button").addClass("toggleMore");
+    
+                function renderToggle(){
+                  const open = expandedAddrs.has(addr);
+                  if (open){
+                    $btn.html(`VIEW LESS <i class='fa-solid fa-caret-up'></i>`);
+                  } else {
+                    $btn.html(`VIEW <span class='count'>${hiddenCount}</span> MORE <i class='fa-solid fa-caret-down'></i>`);
+                  }
+                }
+    
+                renderToggle();
+    
+                $btn.on("click", function(){
+                  hideHoverTip();
+    
+                  const $scroller = $("#usersList");
+                  const wasOpen = expandedAddrs.has(addr);
+    
+                  if (wasOpen) expandedAddrs.delete(addr);
+                  else expandedAddrs.add(addr);
+    
+                  $workers.toggleClass("collapsed", !expandedAddrs.has(addr));
+                  renderToggle();
+    
+                  if (!wasOpen){
+                    requestAnimationFrame(function(){
+                      animateListScrollToRowBottom($row);
+                    });
+                  }
+                });
+    
+                $toggleRow.append($btn);
+                $wrap.append($workers, $toggleRow);
+            }
+          } else {
+            $wrap.append($workers);
+          }
+
+        } else {
+          const $line = $("<div>").addClass("workerLine");
+          const $left = $("<div>").addClass("workerLeft");
+          const $dot = $("<span>").addClass("badgeDot bad");
+          const $name = $("<div>").addClass("workerName").text("— no workers found —");
+          $left.append($dot, $name);
+          const $right = $("<div>").addClass("workerRight").text("");
+          $line.append($left, $right);
+          $workers.append($line);
+          $wrap.append($workers);
+        }
+
+        $row.append($top, $wrap);
+        $list.append($row);
+      }
+
+      if (filterQuery && !topUsers.length){
+        const $empty = $("<div>").addClass("row").css({ textAlign:"center", padding:"18px 12px" })
+          .text("No matches for: " + filterQuery);
+        $list.append($empty);
+      }
     }
 
     /* =========================
@@ -1274,7 +1761,6 @@
 
         const now = new Date();
         $("#lastUpdate").text("Last Update: " + fmtDateTime(now));
-        // $("#overviewMeta").text("base: " + PROM_BASE);
 
       } catch (e){
         $("#statusDot").addClass("bad");
@@ -1347,6 +1833,8 @@
         for (const a in users) userList.push(users[a]);
         userList.sort(function(a,b){ return b.totalHps - a.totalHps; });
 
+        latestUserList = userList.slice();
+
         setPieData(userList);
 
         let workersOnlineNow = 0;
@@ -1357,79 +1845,7 @@
         }
         $("#workersOnline").text(fmtInt(workersOnlineNow));
 
-        const topUsers = userList.slice(0, MAX_USERS);
-        for (let m = 0; m < topUsers.length; m++){
-          topUsers[m].workers.sort(function(a,b){ return b.hps - a.hps; });
-        }
-
-        const $list = $("#usersList");
-        $list.empty();
-
-        for (let n = 0; n < topUsers.length; n++){
-          const addr = topUsers[n].addr;
-          const totalHps = topUsers[n].totalHps;
-          const totalHr = humanHashrateFromHps(totalHps);
-
-          const $row = $("<div>").addClass("row");
-
-          const $top = $("<div>").addClass("minerTop");
-          const $addr = $("<div>").addClass("addr").text(addr);
-          const $hash = $("<div>").addClass("totalHash").text(totalHr.value + " " + totalHr.unit);
-          $top.append($addr, $hash);
-
-          const $workers = $("<div>").addClass("workers");
-
-          const ws = topUsers[n].workers.slice(0, MAX_WORKERS);
-
-          if (ws.length){
-            for (let j = 0; j < ws.length; j++){
-              const wh = humanHashrateFromHps(ws[j].hps);
-
-              const status = ws[j].active ? "active" : "idle";
-              const lastTxt = isFinite(ws[j].last) ? ("last share: " + fmtTime(ws[j].last)) : "last: —";
-
-              const $line = $("<div>").addClass("workerLine");
-
-              const $left = $("<div>").addClass("workerLeft");
-              const $dot = $("<span>").addClass("badgeDot").toggleClass("bad", !ws[j].active);
-              const $name = $("<div>").addClass("workerName").text(ws[j].name);
-              $left.append($dot, $name);
-
-              const $right = $("<div>").addClass("workerRight");
-
-              const $rate = $("<span>").text(wh.value + " " + wh.unit);
-              const $last = $("<span>").addClass("lastBadge");
-
-              if (isMobile()){
-                if (!ws[j].active){
-                  $last.addClass("showMobile").text(lastTxt);
-                  $right.append($last);
-                } else {
-                  $right.append($rate);
-                }
-              } else {
-                $right.append($rate);
-              }
-
-              $line.append($left, $right);
-              $workers.append($line);
-
-              wireWorkerHover($line, { status: status, lastTxt: lastTxt, name: ws[j].name });
-            }
-          } else {
-            const $line = $("<div>").addClass("workerLine");
-            const $left = $("<div>").addClass("workerLeft");
-            const $dot = $("<span>").addClass("badgeDot bad");
-            const $name = $("<div>").addClass("workerName").text("— no workers found —");
-            $left.append($dot, $name);
-            const $right = $("<div>").addClass("workerRight").text("");
-            $line.append($left, $right);
-            $workers.append($line);
-          }
-
-          $row.append($top, $workers);
-          $list.append($row);
-        }
+        renderUsersList(latestUserList);
 
       } catch (e){
         $("#err").text("users/workers error: " + (e?.statusText || e?.message || "unknown"));
@@ -1458,7 +1874,7 @@
           raw.push({ t: ts * 1000, v: v });
         }
 
-        const smooth = rollingClampAndEma(raw);
+        const smooth = weightedMovingAverage(raw);
 
         const smoothTH = [];
         for (let j = 0; j < smooth.length; j++){
@@ -1470,6 +1886,39 @@
       } catch (e){
         $("#err").text("trend error: " + (e?.statusText || e?.message || "unknown"));
       }
+    }
+
+    /* =========================
+       FILTER UI
+    ========================= */
+
+    function wireFilter(){
+      function applyNow(){
+        filterQuery = String($("#userFilter").val() || "").trim();
+        $("#filterReset").prop("disabled", !filterQuery.length);
+        renderUsersList(latestUserList);
+      }
+
+      $("#userFilter").on("input", function(){
+        clearTimeout(filterTimer);
+        filterTimer = setTimeout(applyNow, 80);
+      });
+
+      $("#userFilter").on("keydown", function(e){
+        if (e.key === "Escape"){
+          $(this).val("");
+          filterQuery = "";
+          $("#filterReset").prop("disabled", true);
+          renderUsersList(latestUserList);
+        }
+      });
+
+      $("#filterReset").on("click", function(){
+        $("#userFilter").val("");
+        filterQuery = "";
+        $(this).prop("disabled", true);
+        renderUsersList(latestUserList);
+      });
     }
 
     /* =========================
@@ -1494,6 +1943,7 @@
       initMinersPie();
       setPieLegendForViewport();
       wireCopyFields();
+      wireFilter();
 
       window.addEventListener("resize", function(){
         setPieLegendForViewport();
