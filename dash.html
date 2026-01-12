@@ -108,9 +108,19 @@
       background: var(--good);
       box-shadow: 0 0 0 4px rgba(57,217,138,.15);
     }
+    .dot.pulse {
+      animation: pulse 2s infinite;
+    }
     .dot.bad{
       background: var(--bad);
       box-shadow: 0 0 0 4px rgba(255,91,122,.15);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(57, 217, 138, 0.4); }
+      70% { box-shadow: 0 0 0 6px rgba(57, 217, 138, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(57, 217, 138, 0); }
     }
 
     /* GRID SYSTEM */
@@ -189,6 +199,12 @@
       background: rgba(255,255,255,.05);
       overflow:hidden;
       position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .kpiTile:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
     }
 
     .kpiTileInner{ padding:16px 16px 14px; position:relative; z-index:2; }
@@ -326,7 +342,7 @@
     #userFilter{
       width: 100%;
       height: 56px;
-      border-radius: 18px; /* may want to change this */
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.88);
@@ -351,7 +367,7 @@
     .filterBtn{
       height: 56px;
       padding: 0 22px;
-      border-radius: 18px; /* may want to change this */
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(140,103,255,.18);
       color: rgba(255,255,255,.86);
@@ -438,7 +454,7 @@
       color: rgba(255,255,255,.90);
       white-space: normal;
       overflow-wrap: anywhere;
-      cursor: pointer; /* Hint that its clickable/hoverable */
+      cursor: pointer;
       border-radius: 6px;
       padding: 4px 6px;
       margin-left: -6px;
@@ -467,8 +483,9 @@
     .workers{
       display:flex;
       flex-direction:column;
-      gap:7px;
-      padding: 10px 10px;
+      /* TIGHTER SPACING */
+      gap:2px;
+      padding: 8px 8px;
       border-radius: 16px;
       background: rgba(0,0,0,.14);
       border: 1px solid rgba(255,255,255,.08);
@@ -482,12 +499,15 @@
       font-family: var(--mono);
       font-size: 13px;
       color: rgba(255,255,255,.78);
-      cursor: pointer; /* Signal interactivity */
-      padding: 4px 0;
-      border-radius: 4px;
+      cursor: pointer;
+      /* TIGHTER LINE HEIGHT */
+      padding: 3px 6px;
+      border-radius: 6px;
+      transition: background 0.1s ease;
     }
     .workerLine:hover{
-        background: rgba(255,255,255,.03);
+        background: rgba(255,255,255,.06);
+        color: rgba(255,255,255,.95);
     }
 
     .workerLeft{
@@ -555,22 +575,21 @@
       z-index: 9999;
       pointer-events: none;
       opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 80ms linear, transform 80ms linear;
-      background: rgba(0,0,0,.78);
+      /* Remove transform for manual positioning logic */
+      transition: opacity 80ms linear;
+      background: rgba(0,0,0,.85);
       border: 1px solid rgba(255,255,255,.16);
       border-radius: 12px;
-      padding: 10px 12px;
-      box-shadow: 0 18px 55px rgba(0,0,0,.45);
+      padding: 10px 14px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.6);
       color: rgba(255,255,255,.92);
       font-family: var(--mono);
       font-size: 12px;
-      max-width: 360px;
-      backdrop-filter: blur(10px);
+      white-space: nowrap;
+      backdrop-filter: blur(14px);
     }
     #hoverTip.show{
       opacity: 1;
-      transform: translateY(0px);
     }
     #hoverTip .muted{
       color: rgba(255,255,255,.70);
@@ -647,7 +666,8 @@
       will-change: max-height, opacity, transform;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      /* Matches .workers gap */
+      gap: 2px;
     }
 
     .workers.collapsed .workersExtra{
@@ -663,7 +683,7 @@
     .workersToggleRow{
       display:flex;
       justify-content:center;
-      padding-top: 2px;
+      padding-top: 6px;
       padding-bottom: 2px;
     }
 
@@ -676,7 +696,7 @@
       font-size: 12px;
       letter-spacing: .22em;
       text-transform: uppercase;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-radius: 999px;
       cursor: pointer;
       transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
@@ -698,7 +718,7 @@
     }
     
     .toggleMore i {
-        margin-top: -2px; /* Fix alignment */
+        margin-top: -2px; 
     }
 
     .toggleMore .count{
@@ -734,7 +754,7 @@
       .totalHash{ margin-left: 0; }
       .addr{ flex-basis: 100%; flex-direction:column; align-items:flex-start; gap:6px; }
       .lastBadge{ display:none; }
-      .lastBadge.showMobile{ display:inline-flex; }
+      /* .lastBadge.showMobile{ display:inline-flex; } */
       .filterBar{ 
         flex-direction:column; 
         align-items:stretch; 
@@ -764,7 +784,7 @@
       <div class="title">
         <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
         <div class="sub" style="margin-top:7px">
-          <span class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Connecting</span></span>
+          <span class="pill"><span id="statusDot" class="dot pulse"></span><span id="statusText">Connecting</span></span>
           <span class="pill">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></span>
           <span class="pill" id="lastUpdate">Last Update: —</span>
         </div>
@@ -1262,19 +1282,15 @@
       
       // Click/Tap listener for Mobile
       $el.on("click", function(e){
-        // Optional: check if mobile via screen width or touch event presence if needed
         const html =
           "<div><b>" + escapeHtml(payload.name) + "</b></div>" +
           "<div class='muted'>" + escapeHtml(payload.status) + " • " + escapeHtml(payload.lastTxt) + "</div>";
         
-        // Show slightly above finger
         let yPos = e.clientY - 20;
         if(yPos < 0) yPos = 10;
 
         showHoverTip(html, e.clientX, yPos);
-        
-        // Auto-hide after 2.5s
-        setTimeout(hideHoverTip, 2500);
+        setTimeout(hideHoverTip, 5000);
       });
     }
 
@@ -1333,7 +1349,6 @@
         const area = chart.chartArea;
         if (!area) return "rgba(56,166,255,0.18)";
         const g = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
-        // More dramatic shading
         g.addColorStop(0, "rgba(56,166,255,0.55)");
         g.addColorStop(1, "rgba(56,166,255,0.00)");
         return g;
@@ -1351,8 +1366,10 @@
               return trendGradient(c.chart);
             },
             fill: true,
-            borderWidth: 4,
+            borderWidth: 2.5,
             pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: "#fff",
             tension: 0.25
           }]
         },
@@ -1426,6 +1443,81 @@
       trendChart.update("none");
     }
 
+    // CUSTOM PIE TOOLTIP HANDLER (External)
+    const pieTooltipHandler = (context) => {
+      // Tooltip Element
+      let tooltipEl = document.getElementById('hoverTip');
+
+      const { chart, tooltip } = context;
+
+      // Hide if no tooltip
+      if (tooltip.opacity === 0) {
+        tooltipEl.classList.remove('show');
+        return;
+      }
+
+      // Set Text
+      if (tooltip.body) {
+        const dataPoints = tooltip.dataPoints;
+        if(dataPoints && dataPoints.length > 0) {
+          const idx = dataPoints[0].dataIndex;
+          const dataset = chart.data.datasets[0];
+          
+          const rawVal = dataset.data[idx];
+          const activeCount = dataset.activeCounts[idx];
+          
+          const pct = (pieTotalTH > 0) ? ((rawVal / pieTotalTH) * 100) : 0;
+          const userTitle = pieFullAddrs[idx] || "";
+          
+          const plural = activeCount > 1 ? 's' : '';
+          
+          // Use color dot from the chart data
+          const color = dataset.backgroundColor[idx];
+          
+          // Construct HTML
+          // We truncate title via CSS if needed, or handle width
+          let innerHtml = `
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+               <div style="width:10px;height:10px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color};"></div>
+               <div style="font-weight:700;font-size:13px;max-width:300px">${escapeHtml(userTitle)}</div>
+            </div>
+            <div class="muted">
+               ${rawVal.toFixed(2)} TH/s • ${pct.toFixed(1)}% • ${activeCount} active worker${plural}
+            </div>
+          `;
+          
+          tooltipEl.innerHTML = innerHtml;
+        }
+      }
+
+      // Position logic (Responsive Clamping)
+      const rect = chart.canvas.getBoundingClientRect();
+      const tipW = tooltipEl.offsetWidth;
+      const tipH = tooltipEl.offsetHeight;
+      const pad = 12;
+
+      // Target position: caretX/Y are relative to chart canvas area
+      let left = rect.left + tooltip.caretX + 14; 
+      let top = rect.top + tooltip.caretY;
+
+      // Clamp to viewport
+      // If goes off right edge, flip to left
+      if (left + tipW + pad > window.innerWidth) {
+         left = rect.left + tooltip.caretX - tipW - 14;
+      }
+      // If goes off left edge (after flipping or initially), clamp to 10px
+      if (left < 10) left = 10;
+      
+      // If goes off bottom, flip up
+      if (top + tipH + pad > window.innerHeight) {
+         top = rect.top + tooltip.caretY - tipH - 10;
+      }
+
+      tooltipEl.style.left = left + 'px';
+      tooltipEl.style.top = top + 'px';
+      tooltipEl.classList.add('show');
+    };
+
     function initMinersPie(){
       const ctx = document.getElementById("minersPie").getContext("2d");
       minersPie = new Chart(ctx, {
@@ -1434,7 +1526,7 @@
           labels: [],
           datasets: [{
             data: [],
-            activeCounts: [], // Custom data for tooltip
+            activeCounts: [], 
             backgroundColor: [],
             borderColor: "rgba(255,255,255,.10)",
             borderWidth: 1,
@@ -1451,7 +1543,6 @@
               display: false,
               position: "bottom",
               onClick: function(e, legendItem, legend) {
-                 // Trigger tooltip logic for mobile clicks on legend
                  const index = legendItem.index;
                  const chart = legend.chart;
                  if(chart.tooltip) {
@@ -1468,30 +1559,8 @@
               }
             },
             tooltip: {
-              backgroundColor: "rgba(0,0,0,.78)",
-              borderColor: "rgba(255,255,255,.18)",
-              borderWidth: 1,
-              titleColor: "rgba(255,255,255,.92)",
-              bodyColor: "rgba(255,255,255,.92)",
-              titleFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 },
-              bodyFont: { family: getComputedStyle(document.documentElement).getPropertyValue("--mono").trim(), size: 12 },
-              callbacks: {
-                title: function(items){
-                  const idx = items && items.length ? items[0].dataIndex : 0;
-                  const full = pieFullAddrs[idx] || minersPie.data.labels[idx] || "";
-                  return full;
-                },
-                label: function(ctx){
-                  const v = ctx.parsed;
-                  const idx = ctx.dataIndex;
-                  const pct = (pieTotalTH > 0) ? ((v / pieTotalTH) * 100) : 0;
-                  const active = minersPie.data.datasets[0].activeCounts[idx] || 0;
-                  
-                  // Cleaner format on same line
-                  const plural = active > 1 ? 's' : '';
-                  return ` ${v.toFixed(2)} TH/s • ${pct.toFixed(1)}% • ${active} active worker${plural}`;
-                }
-              }
+              enabled: false, // Use custom handler
+              external: pieTooltipHandler
             }
           }
         }
