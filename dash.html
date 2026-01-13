@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>256 Foundation — Hash Dash</title>
+  <title>256 Foundation • Hashdash</title>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -309,6 +309,31 @@
       margin: 0 auto;
     }
 
+    /* NEW HEADER LAYOUT FOR USERS CARD - FORCE CENTER TITLE + RIGHT TOGGLE */
+    .usersHeadRow {
+      position: relative; /* Allows absolute positioning of children */
+      display: flex;
+      justify-content: center; /* Forces Title to center */
+      align-items: center;
+      margin-bottom: 14px;
+      min-height: 32px;
+    }
+    
+    .usersHeadRow .sectionTitle {
+      margin: 0; /* Remove default margin to center perfectly */
+      white-space: nowrap;
+    }
+    
+    /* Toggle Positioned Absolute Right */
+    .toggleContainer {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+    }
+
     .narrowBlock{
       max-width: 980px;
       margin: 0 auto;
@@ -344,7 +369,8 @@
 
     #userFilter{
       width: 100%;
-      height: 56px;
+      /* height: 56px; */
+      height:45px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -368,7 +394,7 @@
     }
 
     .filterBtn{
-      height: 56px;
+      height: 45px;
       padding: 0 22px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
@@ -401,12 +427,61 @@
       transform: none;
     }
 
-    /* SCROLL LIST - With Chic Fade Mask */
+    /* Chic Toggle Switch */
+    .chicToggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      user-select:none;
+      font-family: var(--mono);
+      font-size:11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+      flex: 0 0 auto;
+      transition: color 0.2s;
+    }
+    .chicToggle:hover { color: rgba(255,255,255,.9); }
+    
+    .chicToggle input { display:none; }
+    
+    .chicToggle .track {
+      width: 34px; height: 18px; /* Slightly smaller for header */
+      background: rgba(255,255,255,.08);
+      border-radius: 99px;
+      position: relative;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      border: 1px solid rgba(255,255,255,.15);
+    }
+    
+    .chicToggle .thumb {
+      width: 12px; height: 12px;
+      background: rgba(255,255,255,.4);
+      border-radius: 50%;
+      position: absolute; 
+      top: 2px; left: 3px;
+      transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), background 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    }
+    
+    .chicToggle input:checked + .track {
+      background: rgba(56,166,255,.15);
+      border-color: var(--accent);
+    }
+    
+    .chicToggle input:checked + .track .thumb {
+      transform: translateX(14px);
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* SCROLL LIST */
     .list{
       display:flex;
       flex-direction:column;
       gap:12px;
-      margin-top: 10px;
+      margin-top: -10px;
       max-height: 800px;
       overflow-y: auto;
       overflow-x: hidden;
@@ -741,8 +816,12 @@
       .usersContentConstrainer { width: 100%; }
     }
 
-    /* MODIFIED: Chic Mobile Header Layout */
+    /* mobile layout */
     @media (max-width: 620px){
+      .list { margin-top: -20px; }
+
+      #filterReset { display: none; }
+
       /* Header Layout */
       .top {
         align-items: flex-start; /* Aligns logo to top of text */
@@ -805,7 +884,8 @@
         margin-bottom: 8px;
       }
       #userFilter{ 
-        height: 54px; 
+        /* height: 54px;  */
+        height:45px;
         width: 100%;
       }
       .filterBtn{ 
@@ -814,6 +894,11 @@
         padding: 0 18px; 
       }
       .list{ max-height: 800px; padding-right: 0px; }
+      
+      /* Toggle on Mobile - Ensure it stays in Header Grid */
+      .usersHeadRow {
+        margin-bottom: 12px;
+      }
     }
   </style>
 </head>
@@ -823,7 +908,7 @@
     <div class="top">
       <img src="https://i.imgur.com/Fiot6qk.png" class="logo" alt="256 Foundation">
       <div class="title">
-        <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hash Dash</h1>
+        <h1>256 Foundation &nbsp;<span style="font-size:80%"><i class="fa-solid fa-screwdriver-wrench"></i></span>&nbsp; Hashdash</h1>
         <div class="sub">
           <span class="pill"><span id="statusDot" class="dot pulse"></span><span id="statusText">Connecting</span></span>
           <span class="pill">Powered by <a href="https://hydrapool.org/" target="_blank" rel="noopener noreferrer"><b>Hydra Pool</b></a></span>
@@ -955,8 +1040,17 @@
           
           <div class="usersContentConstrainer">
           
-            <div class="headRow">
+            <div class="usersHeadRow">
               <div class="sectionTitle centerTitle">Users + Workers</div>
+              <div class="toggleContainer">
+                <label class="chicToggle">
+                  <input type="checkbox" id="showIdleCheck">
+                  <span class="track">
+                    <span class="thumb"></span>
+                  </span>
+                  <span class="label">Show Idle</span>
+                </label>
+              </div>
             </div>
 
             <div class="filterBar">
@@ -1583,6 +1677,12 @@
             legend: {
               display: false,
               position: "bottom",
+              title: {
+                display: true,
+                text: " ",   // A space forces the block to render
+                padding: 4  ,  // The text height itself (~12px) acts as the 10px spacer
+              },
+
               onClick: function(e, legendItem, legend) {
                  const index = legendItem.index;
                  const chart = legend.chart;
@@ -1671,15 +1771,55 @@
     ========================= */
 
     function renderUsersList(list){
+
       const $list = $("#usersList");
       $list.empty();
 
-      const filtered = applyFilter(list, filterQuery);
-      const topUsers = filtered.slice(0, MAX_USERS);
+      // Check current toggle state
+      const showIdle = $("#showIdleCheck").is(":checked");
+      const isFiltering = filterQuery.length > 0;
+      
+      // LOGIC: If filtered by search, always show matches regardless of idle status.
+      // Otherwise, respect the toggle.
+      const effectiveShowIdle = showIdle || isFiltering;
 
-      for (let i = 0; i < topUsers.length; i++){
-        topUsers[i].workers.sort(function(a,b){ return b.hps - a.hps; });
+      // 1. First, create a filtered copy of the list based on IDLE preferences
+      // We must filter the WORKERS inside each user first.
+      const processedUsers = [];
+
+      for(let i=0; i<list.length; i++) {
+          const user = list[i];
+          const allWorkers = user.workers || [];
+          
+          // Filter workers based on idle setting
+          const visibleWorkers = allWorkers.filter(w => effectiveShowIdle || w.active);
+          
+          // If we are hiding idle, and this user has NO visible workers, skip user completely.
+          // Exception: If searching (isFiltering), applyFilter will handle matches, 
+          // so we pass the user along if they have matched active workers.
+          if (!effectiveShowIdle && visibleWorkers.length === 0) {
+             continue; 
+          }
+          
+          // Clone user object to avoid mutating original, attach filtered workers
+          const processedUser = Object.assign({}, user);
+          processedUser.workers = visibleWorkers;
+          
+          // Sort workers: Active first, then by hashrate
+          processedUser.workers.sort(function(a,b){ 
+             if(a.active && !b.active) return -1;
+             if(!a.active && b.active) return 1;
+             return b.hps - a.hps; 
+          });
+          
+          processedUsers.push(processedUser);
       }
+
+      // 2. Apply Text Filter (Search)
+      const filtered = applyFilter(processedUsers, filterQuery);
+      
+      // 3. Slice Top N
+      const topUsers = filtered.slice(0, MAX_USERS);
 
       for (let n = 0; n < topUsers.length; n++){
         const addr = topUsers[n].addr;
@@ -1687,7 +1827,8 @@
         // User Total: 1 decimal
         const totalHr = humanHashrateFromHps(totalHps, 1);
         
-        // Count active workers
+        // Count active workers (from original user data, to show correct stats?)
+        // Or from visible? Let's count from visible to be consistent with view.
         let activeCount = 0;
         const ws = topUsers[n].workers;
         for(let w=0; w<ws.length; w++) if(ws[w].active) activeCount++;
@@ -1717,10 +1858,8 @@
         const $workers = $("<div>").addClass("workers");
         const $extra = $("<div>").addClass("workersExtra");
 
-        // Logic: If filtering, we SHOW ALL and EXPAND ALL
-        const isFiltering = filterQuery && filterQuery.length > 0;
-        
         // If filtering, ignore MAX_WORKERS cap so we can see the deep results
+        // Also if we have filtered specifically for idle, we might have fewer workers anyway
         const workersToShow = isFiltering ? ws : ws.slice(0, MAX_WORKERS);
         
         // CRITICAL FIX: If filtering, never collapse
@@ -1809,7 +1948,6 @@
                 $toggleRow.append($btn);
                 $wrap.append($workers, $toggleRow);
             } else {
-                // BUG FIX: If filtering, attach the whole list (including extra) to the DOM
                 $wrap.append($workers);
             }
           } else {
@@ -1830,6 +1968,7 @@
 
         $row.append($top, $wrap);
         $list.append($row);
+        
       }
 
       if (filterQuery && !topUsers.length){
@@ -2032,6 +2171,11 @@
         filterQuery = "";
         $(this).prop("disabled", true);
         renderUsersList(latestUserList);
+      });
+      
+      // Wire Toggle
+      $("#showIdleCheck").on("change", function(){
+         renderUsersList(latestUserList);
       });
     }
 
