@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D++'s Prize Palace</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #080818;
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+/* ============ CABINET CONTAINER ============ */
+.cabinet-container {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 1024 / 1536;
+  height: 96vh;
+  max-height: 96vh;
+  user-select: none;
+}
+
+.cabinet-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('better-shadow.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ============ REEL WINDOW OVERLAY ============ */
+.reel-window {
+  position: absolute;
+  top: 35.4%;
+  left: 20.6%;
+  width: 58.4%;
+  height: 20.6%;
+  z-index: 2;
+  display: flex;
+  overflow: hidden;
+  background: #FFF8E8;
+}
+
+/* Vignette fade around reel window edges into dark cabinet */
+.reel-window::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 7;
+  pointer-events: none;
+  box-shadow: inset 0 0 18px 8px rgba(20,15,30,0.7), inset 0 0 6px 3px rgba(0,0,0,0.9);
+}
+
+.reel-col {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border-right: 3px solid rgba(80,80,80,0.4);
+}
+.reel-col:nth-child(4) { border-right: none; }
+
+.reel-strip {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transition: none;
+}
+
+.reel-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.reel-item canvas {
+  image-rendering: pixelated;
+  width: 55%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.reel-item .label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(5px, 0.7vw, 9px);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  text-align: center;
+  line-height: 1;
+}
+
+/* Payline tickers — uncomment to restore arrows pointing to center row
+.reel-window .ticker {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  z-index: 8;
+  pointer-events: none;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.4));
+}
+.reel-window .ticker-left {
+  left: 0px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 14px solid #111;
+}
+.reel-window .ticker-right {
+  right: 0px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 14px solid #111;
+}
+*/
+
+/* Fade edges top/bottom of reels */
+.reel-col::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg,
+    rgba(255,248,232,0.9) 0%,
+    transparent 18%,
+    transparent 82%,
+    rgba(255,248,232,0.9) 100%);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* ============ LED PANEL OVERLAY ============ */
+.led-panel {
+  position: absolute;
+  top: 59.2%;
+  left: 21.0%;
+  width: 44.0%;
+  height: 6.0%;
+  z-index: 2;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px 4px;
+  overflow: hidden;
+  gap: 2px;
+}
+
+.led-main {
+  font-size: clamp(10px, 1.8vw, 22px);
+  color: #f5c518;
+  text-shadow: 0 0 10px rgba(245,197,24,0.6);
+  text-align: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.led-main.show { opacity: 1; transform: scale(1); }
+.led-main.lose { color: #e74c3c; text-shadow: 0 0 8px rgba(231,76,60,0.4); }
+
+.led-sub {
+  font-size: clamp(5px, 0.75vw, 10px);
+  color: #f5c518;
+  text-shadow: 0 0 6px rgba(245,197,24,0.4);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.3s;
+}
+.led-sub.show { opacity: 1; }
+.led-sub.lose { color: #e74c3c; text-shadow: 0 0 6px rgba(231,76,60,0.3); margin-top: 1px; }
+
+.led-idle {
+  font-size: clamp(7px, 1vw, 12px);
+  color: #43B047;
+  text-shadow: 0 0 8px rgba(67,176,71,0.5);
+  animation: blink-idle 1.5s ease-in-out infinite;
+  text-align: center;
+  line-height: 1.8;
+  padding-top: 5px;
+}
+
+.led-spinning {
+  font-size: clamp(8px, 1.1vw, 13px);
+  color: #f5c518;
+  text-shadow: 0 0 10px rgba(245,197,24,0.6);
+  text-align: left;
+  display: none;
+  width: 100%;
+  padding-left: 15%;
+  padding-top: 2px;
+}
+.led-spinning.active { display: block; }
+
+@keyframes blink-idle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============ SPIN BUTTON (invisible overlay on image's SPIN) ============ */
+.spin-btn {
+  position: absolute;
+  top: 59.5%;
+  left: 67%;
+  width: 14%;
+  height: 5.5%;
+  z-index: 3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+}
+.spin-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+.spin-btn:active, .spin-btn.pressed {
+  background: rgba(0,0,0,0.15);
+}
+.spin-btn:disabled {
+  cursor: pointer;
+  background: transparent;
+}
+
+/* ============ LEVER (invisible overlay on image's lever) ============ */
+.lever-area {
+  position: absolute;
+  top: 32%;
+  left: 84%;
+  width: 10%;
+  height: 8%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* ============ PLAY COUNTER ============ */
+.play-counter {
+  position: absolute;
+  bottom: 3.2%;
+  right: 8%;
+  font-size: clamp(6px, 0.8vw, 10px);
+  color: rgba(200,200,200,0.6);
+  z-index: 3;
+  letter-spacing: 1px;
+}
+
+/* ============ WIN FLASH ============ */
+.win-flash {
+  position: absolute;
+  top: 35.4%;
+  left: 20.6%;
+  width: 58.4%;
+  height: 20.6%;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 4px;
+}
+
+.win-flash.active {
+  animation: winPulse 0.4s ease-out 3;
+}
+
+@keyframes winPulse {
+  0% { opacity: 0; box-shadow: inset 0 0 60px rgba(245,197,24,0.6); }
+  50% { opacity: 1; box-shadow: inset 0 0 60px rgba(245,197,24,0.6); }
+  100% { opacity: 0; }
+}
+
+/* ============ CRT SCANLINE OVERLAY ============ */
+#scanline-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 999;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<canvas id="scanline-overlay"></canvas>
+
+<div class="cabinet-container">
+  <!-- Functional overlays sit BEHIND the cabinet image -->
+  <div class="reel-window" id="reel-window">
+    <div class="ticker ticker-left"></div>
+    <div class="reel-col" id="reel-0"><div class="reel-strip" id="strip-0"></div></div>
+    <div class="reel-col" id="reel-1"><div class="reel-strip" id="strip-1"></div></div>
+    <div class="reel-col" id="reel-2"><div class="reel-strip" id="strip-2"></div></div>
+    <div class="ticker ticker-right"></div>
+  </div>
+
+  <div class="led-panel" id="led-panel">
+    <div class="led-idle" id="led-idle">INSERT BITCOINS<br>PRESS SPIN</div>
+    <div class="led-spinning" id="led-spinning"></div>
+    <div class="led-main" id="led-main"></div>
+    <div class="led-sub" id="led-sub"></div>
+  </div>
+
+  <div class="win-flash" id="win-flash"></div>
+
+  <!-- Cabinet image on top (pointer-events: none so clicks pass through) -->
+  <div class="cabinet-bg"></div>
+
+  <!-- Clickable areas (above the image) -->
+  <button class="spin-btn" id="spin-btn" title="SPIN"></button>
+  <div class="lever-area" id="lever" title="Pull lever"></div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const PRIZES = [
+  { name: 'Bitaxe',          weight: 3,  rarity: 'LEGENDARY', color: '#FFD700' },
+  { name: 'Hardware Wallet',  weight: 5,  rarity: 'EPIC',      color: '#A855F7' },
+  { name: 'Plushie',         weight: 12, rarity: 'RARE',      color: '#F8A0C8' },
+  { name: 'Hat',             weight: 20, rarity: 'UNCOMMON',  color: '#E52521' },
+  { name: 'T-Shirt',         weight: 20, rarity: 'UNCOMMON',  color: '#049CD8' },
+  { name: 'Sticker',         weight: 25, rarity: 'COMMON',    color: '#43B047' },
+];
+const LOSS_WEIGHT = 15;
+
+const TIER_MESSAGES = {
+  'LEGENDARY': { text: '★ JACKPOT ★',    sub: 'YOU WON A BITAXE!' },
+  'EPIC':      { text: '✦ BIG WIN ✦',    sub: 'HARDWARE WALLET!' },
+  'RARE':      { text: '♥ WINNER ♥',     sub: 'YOU WON A PLUSHIE!' },
+  'UNCOMMON':  { text: '● WINNER! ●',    sub: '' },
+  'COMMON':    { text: '● WINNER! ●',    sub: 'YOU WON A STICKER!' },
+};
+
+// ============================================================
+// PIXEL ART (16x16)
+// ============================================================
+const PIXEL_ART = {
+  'Bitaxe': {
+    size: 16,
+    colors: { 1: '#22cc55', 2: '#1a9e42', 3: '#f5c518', 4: '#cc8800', 5: '#1a1a1a', 6: '#15b358', 7: '#0d8040', 8: '#2eef6a' },
+    grid: [
+      [0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],
+      [0,0,5,2,2,2,2,2,2,2,2,2,2,5,0,0],
+      [0,5,2,1,1,1,1,1,1,1,1,1,1,2,5,0],
+      [5,2,1,8,1,3,1,1,1,3,1,1,8,1,2,5],
+      [5,2,1,1,6,1,1,6,1,1,6,1,1,1,2,5],
+      [5,2,1,1,1,1,7,1,1,7,1,1,1,1,2,5],
+      [5,2,1,3,1,4,4,4,1,1,1,3,1,1,2,5],
+      [5,2,1,1,1,4,4,4,1,6,1,1,1,1,2,5],
+      [5,2,1,1,6,1,1,1,7,1,1,1,6,1,2,5],
+      [5,2,1,1,1,1,6,1,1,1,8,1,1,1,2,5],
+      [5,2,1,8,1,1,1,1,1,1,1,1,8,1,2,5],
+      [5,2,1,1,1,3,1,1,6,3,1,1,1,1,2,5],
+      [5,2,1,1,6,1,1,7,1,1,1,6,1,1,2,5],
+      [0,5,2,1,1,1,1,1,1,1,1,1,1,2,5,0],
+      [0,0,5,2,2,2,2,2,2,2,2,2,2,5,0,0],
+      [0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],
+    ]
+  },
+  'Hardware Wallet': {
+    size: 16,
+    colors: { 1: '#222244', 2: '#333366', 3: '#dddde8', 4: '#6666cc', 5: '#8888aa', 6: '#aaaacc', 7: '#444477' },
+    grid: [
+      [0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,1,7,7,7,7,7,7,7,7,7,1,0,0,0],
+      [0,1,7,2,2,2,2,2,2,2,2,2,7,1,0,0],
+      [0,1,2,3,3,3,3,3,3,3,3,3,2,1,0,0],
+      [0,1,2,3,4,4,4,4,4,4,4,3,2,1,0,0],
+      [0,1,2,3,4,3,3,3,3,3,4,3,2,1,0,0],
+      [0,1,2,3,4,3,4,4,4,3,4,3,2,1,0,0],
+      [0,1,2,3,4,3,3,3,4,3,4,3,2,1,0,0],
+      [0,1,2,3,4,4,4,4,4,4,4,3,2,1,0,0],
+      [0,1,2,3,3,3,3,3,3,3,3,3,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,2,2,2,1,0,0],
+      [0,1,2,5,5,5,6,6,5,5,5,5,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,2,2,2,1,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+      [0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+    ]
+  },
+  'Plushie': {
+    size: 16,
+    colors: { 1: '#e91e63', 2: '#c2185b', 3: '#fbb4cc', 4: '#111', 5: '#fff', 6: '#e57373', 7: '#f48fb1' },
+    grid: [
+      [0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0],
+      [0,1,3,3,1,0,0,0,0,1,3,3,1,0,0,0],
+      [0,1,3,3,3,1,1,1,1,3,3,3,1,0,0,0],
+      [1,3,3,3,3,3,3,3,3,3,3,3,3,1,0,0],
+      [1,3,3,4,5,3,3,3,3,4,5,3,3,1,0,0],
+      [1,3,3,4,4,3,3,3,3,4,4,3,3,1,0,0],
+      [1,3,3,3,3,3,3,3,3,3,3,3,3,1,0,0],
+      [1,3,3,3,3,6,6,6,6,3,3,3,3,1,0,0],
+      [1,7,3,3,3,3,6,6,3,3,3,3,7,1,0,0],
+      [0,1,7,3,3,3,3,3,3,3,3,7,1,0,0,0],
+      [0,1,3,7,3,3,3,3,3,3,7,3,1,0,0,0],
+      [0,1,3,3,1,1,1,1,1,1,3,3,1,0,0,0],
+      [0,1,1,3,3,1,0,0,1,3,3,1,1,0,0,0],
+      [0,1,3,3,1,0,0,0,0,1,3,3,1,0,0,0],
+      [0,1,3,1,0,0,0,0,0,0,1,3,1,0,0,0],
+      [0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    ]
+  },
+  'Hat': {
+    size: 16,
+    colors: { 1: '#cc2222', 2: '#991818', 3: '#661010', 4: '#f0e0c0', 5: '#d4c4a4', 6: '#f5c518', 7: '#ee4444' },
+    grid: [
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,6,6,6,0,0,0,0,0,0,0],
+      [0,0,0,0,0,6,6,6,6,6,0,0,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0],
+      [0,0,0,1,7,7,7,7,7,7,7,1,0,0,0,0],
+      [0,0,1,7,1,1,1,1,1,1,1,7,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,2,2,2,1,0,0],
+      [0,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0],
+      [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0],
+      [3,4,4,4,4,4,4,4,4,4,4,4,4,4,3,0],
+      [3,5,5,5,5,5,5,5,5,5,5,5,5,5,3,0],
+      [0,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ]
+  },
+  'T-Shirt': {
+    size: 16,
+    colors: { 1: '#2266dd', 2: '#1a50bb', 3: '#f0e0c0', 4: '#1144aa', 5: '#f5c518', 6: '#3388ee' },
+    grid: [
+      [0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0],
+      [0,0,1,1,1,1,3,3,3,1,1,1,1,0,0,0],
+      [0,1,6,1,1,1,3,3,3,1,1,1,6,1,0,0],
+      [1,6,6,2,1,1,1,1,1,1,1,2,6,6,1,0],
+      [1,6,6,2,1,1,1,1,1,1,1,2,6,6,1,0],
+      [0,1,1,2,1,1,1,1,1,1,1,2,1,1,0,0],
+      [0,0,1,4,1,5,5,5,5,5,1,4,1,0,0,0],
+      [0,0,1,1,1,5,5,5,5,5,1,1,1,0,0,0],
+      [0,0,1,1,1,5,5,5,5,5,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,2,2,2,2,2,2,2,2,2,2,2,0,0,0],
+      [0,0,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ]
+  },
+  'Sticker': {
+    size: 16,
+    colors: { 1: '#f5c518', 2: '#eeaa00', 3: '#cc8800', 4: '#fff9e0', 5: '#dd9900', 6: '#ffdd44' },
+    grid: [
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0],
+      [0,0,0,0,0,1,1,6,1,1,0,0,0,0,0,0],
+      [0,0,1,0,0,1,6,6,6,1,0,0,1,0,0,0],
+      [0,0,1,1,1,2,2,4,2,2,1,1,1,0,0,0],
+      [0,1,1,2,2,2,4,4,4,2,2,2,1,1,0,0],
+      [1,1,2,2,2,4,4,4,4,4,2,2,2,1,1,0],
+      [1,6,2,2,4,4,4,4,4,4,4,2,2,6,1,0],
+      [1,1,2,2,2,4,4,4,4,4,2,2,2,1,1,0],
+      [0,1,1,2,2,2,4,4,4,2,2,2,1,1,0,0],
+      [0,0,1,1,1,2,2,4,2,2,1,1,1,0,0,0],
+      [0,0,3,0,0,1,2,2,2,1,0,0,3,0,0,0],
+      [0,0,0,0,0,1,1,2,1,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,5,1,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ]
+  },
+};
+
+// ============================================================
+// DRAW PIXEL ART
+// ============================================================
+function drawIcon(name) {
+  const art = PIXEL_ART[name];
+  const s = art.size;
+  const canvas = document.createElement('canvas');
+  canvas.width = s;
+  canvas.height = s;
+  const ctx = canvas.getContext('2d');
+  for (let y = 0; y < s; y++) {
+    for (let x = 0; x < s; x++) {
+      const v = art.grid[y][x];
+      if (v !== 0) {
+        ctx.fillStyle = art.colors[v];
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+  }
+  return canvas;
+}
+
+// ============================================================
+// WEIGHTED RANDOM
+// ============================================================
+const totalWeight = PRIZES.reduce((s, p) => s + p.weight, 0) + LOSS_WEIGHT;
+
+function pickOutcome() {
+  let r = Math.random() * totalWeight;
+  for (const p of PRIZES) {
+    r -= p.weight;
+    if (r <= 0) return { win: true, prize: p };
+  }
+  return { win: false, prize: null };
+}
+
+// ============================================================
+// AUDIO v1 — Optimized: single-oscillator ticking, minimal nodes
+// v0 (pre-scheduled 90+ oscillators) backed up in index-v0.html
+// ============================================================
+const AUDIO_VERSION = 1;
+let audioCtx;
+let audioReady = false;
+let tickInterval = null;  // single tick stream shared across all reels
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().then(() => { audioReady = true; });
+  } else {
+    audioReady = true;
+  }
+  // Warm up with silent tone so first real sound isn't swallowed
+  if (!audioReady) {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    g.gain.value = 0;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + 0.01);
+  }
+}
+
+['click', 'keydown', 'touchstart', 'mousedown'].forEach(evt => {
+  document.addEventListener(evt, () => initAudio(), { once: true });
+});
+
+// Core tone player — used for discrete sounds (coin, stop, fanfare)
+function playTone(freq, dur, type = 'square', vol = 0.12, delay = 0) {
+  if (!audioCtx) initAudio();
+  if (!audioCtx || audioCtx.state === 'closed') return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, t + delay);
+  g.gain.exponentialRampToValueAtTime(0.001, t + delay + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(t + delay);
+  o.stop(t + delay + dur);
+  o.onended = () => { o.disconnect(); g.disconnect(); };
+}
+
+// v1b tick approach: ONE tick stream with deceleration.
+// Uses setTimeout chain instead of setInterval so we can slow down
+// the tick rate to match the visual easing of the reels.
+let tickActive = false;
+let tickStopTime = 0;
+
+function startTickLoop(totalDuration) {
+  if (tickActive) return;
+  if (!audioCtx) initAudio();
+  tickActive = true;
+  const startTime = performance.now();
+  tickStopTime = startTime + totalDuration - 200; // stop 200ms before last reel lands
+
+  function tick() {
+    if (!tickActive) return;
+    const now = performance.now();
+    if (now >= tickStopTime) { tickActive = false; return; }
+
+    playTone(600 + Math.random() * 400, 0.03, 'square', 0.04);
+
+    // Decelerate: start at 60ms interval, slow to 200ms near the end
+    const progress = (now - startTime) / totalDuration; // 0→1
+    const interval = 60 + progress * progress * 180; // quadratic ease: 60ms→240ms
+    setTimeout(tick, interval);
+  }
+  tick();
+}
+
+function stopTickLoop() {
+  tickActive = false;
+}
+
+function sfxCoin() {
+  playTone(988, 0.08, 'square', 0.12);
+  playTone(1319, 0.3, 'square', 0.12, 0.08);
+}
+function sfxSpin() {
+  for (let i = 0; i < 6; i++) playTone(800 + i * 50, 0.05, 'square', 0.06, i * 0.07);
+}
+function sfxReelStop() {
+  playTone(523, 0.08, 'square', 0.18);
+  playTone(659, 0.08, 'square', 0.18, 0.08);
+}
+function sfxLever() {
+  playTone(200, 0.1, 'sawtooth', 0.1);
+  playTone(150, 0.15, 'sawtooth', 0.08, 0.1);
+}
+
+function sfxWin(rarity) {
+  if (rarity === 'LEGENDARY') {
+    [523,659,784,1047,1175,1319,1568,2093].forEach((n, i) => {
+      playTone(n, 0.15, 'square', 0.16, i * 0.1);
+      playTone(n * 1.5, 0.15, 'triangle', 0.08, i * 0.1);
+    });
+  } else if (rarity === 'EPIC') {
+    [523,659,784,1047,1319].forEach((n, i) => playTone(n, 0.15, 'square', 0.14, i * 0.12));
+  } else {
+    [523,587,659,784,880,1047].forEach((n, i) => playTone(n, 0.12, 'square', 0.11, i * 0.1));
+  }
+}
+
+function sfxLose() {
+  playTone(350, 0.2, 'square', 0.12);
+  playTone(300, 0.2, 'square', 0.12, 0.2);
+  playTone(250, 0.3, 'square', 0.12, 0.4);
+}
+
+// ============================================================
+// BACKGROUND STARS
+// ============================================================
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let stars = [];
+
+function initBg() {
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 120; i++) {
+    stars.push({
+      x: Math.random() * bgCanvas.width,
+      y: Math.random() * bgCanvas.height,
+      size: Math.random() < 0.3 ? 2 : 1,
+      twinkleSpeed: 0.5 + Math.random() * 2,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function drawBg(time) {
+  bgCtx.fillStyle = '#080818';
+  bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  for (const s of stars) {
+    const a = 0.3 + 0.7 * Math.abs(Math.sin(time * 0.001 * s.twinkleSpeed + s.phase));
+    bgCtx.fillStyle = `rgba(255,255,255,${a})`;
+    bgCtx.fillRect(Math.floor(s.x), Math.floor(s.y), s.size, s.size);
+  }
+}
+
+// ============================================================
+// REELS
+// ============================================================
+const prizeNames = PRIZES.map(p => p.name);
+const prizeMap = {};
+PRIZES.forEach(p => prizeMap[p.name] = p);
+let spinning = false;
+let playCount = 0;
+
+function getItemHeight() {
+  const col = document.getElementById('reel-0');
+  // Taller rows = top/bottom items partially clipped, more breathing room
+  return col.offsetHeight / 2.35;
+}
+
+function randomPrizeName() {
+  return prizeNames[Math.floor(Math.random() * prizeNames.length)];
+}
+
+const SPIN_ITEMS = 30;
+
+function buildReelStrip(inner, items, rowH) {
+  inner.innerHTML = '';
+  items.forEach(name => {
+    const div = document.createElement('div');
+    div.className = 'reel-item';
+    div.dataset.name = name;
+    div.style.height = rowH + 'px';
+    div.style.minHeight = rowH + 'px';
+    div.style.maxHeight = rowH + 'px';
+    div.appendChild(drawIcon(name));
+    inner.appendChild(div);
+  });
+}
+
+let strips;
+
+function initReels() {
+  strips = [];
+  for (let i = 0; i < 3; i++) {
+    const inner = document.getElementById(`strip-${i}`);
+    const col = document.getElementById(`reel-${i}`);
+    const rowH = getItemHeight();
+    const containerH = col.offsetHeight;
+    const items = [randomPrizeName(), randomPrizeName(), randomPrizeName()];
+    buildReelStrip(inner, items, rowH);
+    inner.style.transition = 'none';
+    // Center the middle item (index 1) vertically
+    const offset = -(1 * rowH) + (containerH / 2 - rowH / 2);
+    inner.style.transform = `translateY(${offset}px)`;
+    strips.push(inner);
+  }
+}
+
+// ============================================================
+// SPIN LOGIC (immediate spin like Satoshi Slots)
+// ============================================================
+const ledMain = document.getElementById('led-main');
+const ledSub = document.getElementById('led-sub');
+const ledIdle = document.getElementById('led-idle');
+const ledSpinning = document.getElementById('led-spinning');
+const spinBtn = document.getElementById('spin-btn');
+const lever = document.getElementById('lever');
+const winFlash = document.getElementById('win-flash');
+
+let ellipsisInterval = null;
+function startEllipsis() {
+  let dots = 0;
+  ledSpinning.textContent = 'SPIN TO WIN';
+  ledSpinning.classList.add('active');
+  ellipsisInterval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    ledSpinning.textContent = 'SPIN TO WIN' + '.'.repeat(dots);
+  }, 375);
+}
+function stopEllipsis() {
+  if (ellipsisInterval) { clearInterval(ellipsisInterval); ellipsisInterval = null; }
+  ledSpinning.classList.remove('active');
+}
+
+function pickWinOnly() {
+  // Weighted random but guaranteed win (no loss)
+  const winWeight = PRIZES.reduce((s, p) => s + p.weight, 0);
+  let r = Math.random() * winWeight;
+  for (const p of PRIZES) {
+    r -= p.weight;
+    if (r <= 0) return { win: true, prize: p };
+  }
+  return { win: true, prize: PRIZES[PRIZES.length - 1] };
+}
+
+function forceWin(name) {
+  const p = PRIZES.find(pr => pr.name === name);
+  return { win: true, prize: p };
+}
+
+function spin(forcedOutcome) {
+  if (spinning) return;
+  spinning = true;
+  initAudio();
+  sfxCoin();
+  spinBtn.disabled = true;
+
+  // Clear LED
+  ledIdle.style.display = 'none';
+  ledMain.classList.remove('show', 'lose');
+  ledSub.classList.remove('show', 'lose');
+  ledMain.textContent = '';
+  ledSub.textContent = '';
+
+  // Show spinning message
+  startEllipsis();
+
+  // Pick outcome
+  const outcome = forcedOutcome || pickOutcome();
+  const isWin = outcome.win;
+  let targets;
+
+  if (isWin) {
+    targets = [outcome.prize.name, outcome.prize.name, outcome.prize.name];
+  } else {
+    const a = randomPrizeName();
+    let b = randomPrizeName();
+    let c = randomPrizeName();
+    while (a === b && b === c) { c = randomPrizeName(); }
+    targets = [a, b, c];
+  }
+
+  const rowH = getItemHeight();
+  const delays = [0, 500, 1000];
+  const durations = [1800, 2400, 3000];
+  const totalTime = Math.max(...durations.map((d, i) => d + delays[i]));
+
+  // Start ONE decelerating tick loop for the entire spin
+  startTickLoop(totalTime);
+
+  for (let i = 0; i < 3; i++) {
+    animateReel(i, targets[i], durations[i], delays[i], rowH);
+  }
+  setTimeout(() => showResult(outcome, isWin), totalTime + 300);
+}
+
+function animateReel(idx, targetName, dur, delay, rowH) {
+  const inner = strips[idx];
+  const col = document.getElementById(`reel-${idx}`);
+  const containerH = col.offsetHeight;
+
+  // Capture what's currently visible (top, center, bottom icons)
+  // so we can place them at the START of the new strip
+  const currentItems = Array.from(inner.querySelectorAll('.reel-item'));
+  const currentNames = [];
+  // Read the data-name attribute or fall back to first 3 prize names
+  currentItems.forEach(el => {
+    const name = el.dataset.name;
+    if (name) currentNames.push(name);
+  });
+  // We need the 3 currently visible: top, center (payline), bottom
+  // They're the ones closest to the current scroll position
+  const currentY = parseFloat((inner.style.transform.match(/translateY\(([^)]+)px\)/) || [0, 0])[1]);
+  const topVisibleIdx = Math.round(-currentY / rowH);
+  const visibleTop = currentNames[topVisibleIdx] || randomPrizeName();
+  const visibleMid = currentNames[topVisibleIdx + 1] || randomPrizeName();
+  const visibleBot = currentNames[topVisibleIdx + 2] || randomPrizeName();
+
+  // Build the full strip:
+  // [current top] [current mid] [current bot] [SPIN_ITEMS random] [target] [random bottom]
+  const strip = [];
+  strip.push(visibleTop, visibleMid, visibleBot);  // start with what's on screen
+  for (let i = 0; i < SPIN_ITEMS; i++) strip.push(randomPrizeName());
+  strip.push(targetName);       // target in center row
+  strip.push(randomPrizeName()); // bottom row
+
+  buildReelStrip(inner, strip, rowH);
+
+  // Start position: center the SECOND item (index 1 = current middle/payline)
+  const startOffset = -(1 * rowH) + (containerH / 2 - rowH / 2);
+  inner.style.transition = 'none';
+  inner.style.transform = `translateY(${startOffset}px)`;
+
+  // End position: center the TARGET item (3 + SPIN_ITEMS = index of target)
+  const targetIdx = 3 + SPIN_ITEMS;
+  const endOffset = -(targetIdx * rowH) + (containerH / 2 - rowH / 2);
+
+  // Force reflow so browser sees start position before animating
+  inner.offsetHeight;
+
+  setTimeout(() => {
+    sfxSpin();
+    inner.style.transition = `transform ${dur}ms cubic-bezier(0.12, 0.8, 0.28, 1)`;
+    inner.style.transform = `translateY(${endOffset}px)`;
+
+    setTimeout(() => sfxReelStop(), dur);
+  }, delay);
+}
+
+function showResult(outcome, isWin) {
+  playCount++;
+  stopEllipsis();
+
+  if (isWin) {
+    const p = outcome.prize;
+    const msg = TIER_MESSAGES[p.rarity];
+    ledMain.textContent = msg.text;
+    ledMain.style.color = p.color;
+    ledMain.style.textShadow = `0 0 10px ${p.color}`;
+    ledMain.classList.add('show');
+
+    ledSub.textContent = msg.sub || `YOU WON A ${p.name.toUpperCase()}!`;
+    ledSub.style.color = p.color;
+    setTimeout(() => ledSub.classList.add('show'), 400);
+
+    winFlash.className = 'win-flash active';
+    setTimeout(() => winFlash.className = 'win-flash', 1500);
+    sfxWin(p.rarity);
+  } else {
+    ledMain.textContent = 'NO DICE';
+    ledMain.style.color = '#e74c3c';
+    ledMain.style.textShadow = '0 0 8px rgba(231,76,60,0.4)';
+    ledMain.classList.add('show', 'lose');
+
+    ledSub.textContent = 'BETTER LUCK NEXT TIME!';
+    ledSub.style.color = '#e74c3c';
+    ledSub.classList.add('lose');
+    setTimeout(() => ledSub.classList.add('show'), 400);
+    sfxLose();
+  }
+
+  setTimeout(() => {
+    spinning = false;
+    spinBtn.disabled = false;
+  }, 2500);
+}
+
+// ============================================================
+// INPUT HANDLERS
+// ============================================================
+spinBtn.addEventListener('click', () => { if (!spinning) spin(pickWinOnly()); });
+
+lever.addEventListener('click', () => {
+  if (spinning) return;
+  sfxLever();
+  spin(pickWinOnly());
+});
+
+// Hotkeys
+const HOTKEY_MAP = {
+  'Space':  null,      // always win (random prize)
+  'KeyH':   'Hat',
+  'KeyW':   'Hardware Wallet',
+  'KeyS':   'Sticker',
+  'KeyT':   'T-Shirt',
+  'KeyB':   'Bitaxe',
+  'KeyP':   'Plushie',
+  'KeyN':   'LOSE',    // force no match
+};
+
+document.addEventListener('keydown', (e) => {
+  if (spinning) return;
+  const mapped = HOTKEY_MAP[e.code];
+  if (mapped !== undefined) {
+    e.preventDefault();
+    spinBtn.classList.add('pressed');
+    setTimeout(() => spinBtn.classList.remove('pressed'), 150);
+    if (mapped === null) {
+      spin(pickWinOnly());  // Space = always win, random prize
+    } else if (mapped === 'LOSE') {
+      spin({ win: false, prize: null });  // N = force loss
+    } else {
+      spin(forceWin(mapped));  // Letter = force specific prize
+    }
+  }
+});
+
+// ============================================================
+// ANIMATION LOOP
+// ============================================================
+window.addEventListener('resize', () => {
+  initBg();
+  if (strips) initReels();
+});
+initBg();
+
+requestAnimationFrame(() => {
+  initReels();
+});
+
+function loop(time) {
+  drawBg(time);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ============================================================
+// CRT SCANLINES
+// Modeled after MK64++ CRT shader — Gaussian scanline pattern
+// with configurable hardness, bloom, and brightness.
+// ============================================================
+const CRT = {
+  enabled: true,        // Toggle scanlines on/off
+  scanlineCount: 240,   // Number of scanlines (N64 native = 240)
+  hardScan: -4.0,       // Scanline sharpness: -2 (soft) to -12 (razor sharp)
+  bloomAmount: 0.7,     // Gap brightness: 0.0 (black gaps) to 1.0 (invisible)
+  brightness: 1.15,     // Overall brightness multiplier (compensates darkening)
+};
+
+const scanCanvas = document.getElementById('scanline-overlay');
+const scanCtx = scanCanvas.getContext('2d');
+
+function renderScanlines() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  scanCanvas.width = w;
+  scanCanvas.height = h;
+
+  if (!CRT.enabled) {
+    scanCanvas.style.display = 'none';
+    return;
+  }
+  scanCanvas.style.display = 'block';
+
+  // Line spacing based on scanline count
+  const lineSpacing = h / CRT.scanlineCount;
+
+  // Create scanline pattern
+  const imgData = scanCtx.createImageData(1, h);
+  const data = imgData.data;
+
+  for (let y = 0; y < h; y++) {
+    // Position within scanline cycle (0.0 to 1.0)
+    const pos = (y % lineSpacing) / lineSpacing;
+    // Distance from scanline center (0.0 = center, 0.5 = gap)
+    const dist = Math.abs(pos - 0.5) * 2.0;
+
+    // Gaussian falloff — hardScan controls sharpness
+    // More negative hardScan = sharper/darker lines
+    const weight = Math.exp(CRT.hardScan * dist * dist);
+
+    // Bloom fills in the gaps (higher = more transparent gaps)
+    const scanWeight = Math.max(weight, CRT.bloomAmount);
+
+    // Apply brightness
+    const final = Math.min(scanWeight * CRT.brightness, 1.0);
+
+    // Write as multiply blend (white = no effect, dark = darken)
+    const val = Math.round(final * 255);
+    const idx = y * 4;
+    data[idx] = val;
+    data[idx + 1] = val;
+    data[idx + 2] = val;
+    data[idx + 3] = 255;
+  }
+
+  // Draw single column, then stretch across
+  scanCtx.putImageData(imgData, 0, 0);
+  scanCtx.drawImage(scanCanvas, 0, 0, 1, h, 0, 0, w, h);
+}
+
+renderScanlines();
+window.addEventListener('resize', renderScanlines);
+
+// Keyboard toggle: press 'C' to toggle CRT scanlines
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'KeyC' && !e.ctrlKey && !e.altKey) {
+    CRT.enabled = !CRT.enabled;
+    renderScanlines();
+    console.log(`CRT scanlines: ${CRT.enabled ? 'ON' : 'OFF'}`);
+  }
+});
+
+// Console helpers for live tuning:
+// CRT.hardScan = -8; renderScanlines();   // sharper
+// CRT.bloomAmount = 0.85; renderScanlines(); // lighter
+// CRT.brightness = 1.0; renderScanlines();   // darker
+</script>
+</body>
+</html>
