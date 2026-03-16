@@ -748,11 +748,13 @@ function spin(forcedOutcome) {
   if (isWin) {
     targets = [outcome.prize.name, outcome.prize.name, outcome.prize.name];
   } else {
-    const a = randomPrizeName();
-    let b = randomPrizeName();
-    let c = randomPrizeName();
-    while (a === b && b === c) { c = randomPrizeName(); }
-    targets = [a, b, c];
+    // Near-miss: two reels match, third is the odd one out (more dramatic!)
+    const match = randomPrizeName();
+    let odd = randomPrizeName();
+    while (odd === match) odd = randomPrizeName();
+    // Always make reel 2 (last to stop) the odd one for maximum suspense
+    targets = [match, match, odd];
+    outcome.nearMiss = true;
   }
 
   const rowH = getItemHeight();
@@ -839,7 +841,7 @@ function showResult(outcome, isWin) {
     setTimeout(() => winFlash.className = 'win-flash', 1500);
     sfxWin(p.rarity);
   } else {
-    ledMain.textContent = 'NO DICE';
+    ledMain.textContent = outcome.nearMiss ? 'SO CLOSE!' : 'NO DICE';
     ledMain.classList.add('show', 'lose');
 
     ledSub.textContent = 'BETTER LUCK NEXT TIME!';
