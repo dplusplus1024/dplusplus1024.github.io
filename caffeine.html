@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>D++</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/jpg" href="taproot.ico"/>
+<base target="_blank"/>
+
+<style>
+a {
+  color: black;
+  text-decoration: none;
+}
+
+#avatar {
+  width:210px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
+
+table {
+  border:1px solid red;
+  border-collapse: collapse;
+}
+
+td {
+  border:1px solid black;
+  padding:8px;
+  text-align:center;
+}
+
+body {
+  background-color:black;
+  background-position:center!important;
+  background-attachment:fixed!important;
+  background-size:cover!important;
+  color:white;
+  font-family: monospace;
+/*   text-transform: uppercase; */
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 80px;
+}
+
+#main {
+  padding-top: 40px;
+  text-align: left;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.button {
+   transition: transform .12s ease, box-shadow .12s ease;
+
+  font-weight:bold;
+  background-color:white;
+  color:black;
+  border: 2px solid black;
+  /* border: 2px solid #06ff07; */
+  /* outline: 3px solid black; */
+  max-width: 400px;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 5px 5px #06ff07;
+}
+
+.button:hover {
+  box-shadow: 2px 2px #06ff07;
+  transform: translate(3px, 3px);
+}
+
+.social {
+  height: 35px;
+  margin-top: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+/* Background medium view */
+@media (max-width: 899px) {
+  body {
+    background:url('images/background-medium.jpg');
+  }
+}
+/* Desktop View */
+@media (min-width:900px) {
+  body {
+    background:url('images/dplusplussmaller.jpg');
+  }
+}
+/* Mobile View */
+@media (max-width:535px) {
+ body {
+   /* background:url('images/mobile.jpg'); */
+ }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a href=https://twitter.com/d_plus__plus>
+<img src=images/Logo-trans.png id="avatar">
+</a>
+
+<center>
+
+  ALL UR SCREENS 4 BELONG 2 US
+
+<!--a href=https://twitter.com/d_plus__plus><img class="social" src=https://i.imgur.com/HnmzzT7.jpg></a>  <a href=https://instagram.com/d_plus_plus><img class="social" src=https://i.imgur.com/IYv27nP.jpg></a-->
+</center>
+  <script>
+    let wakeLock = null;
+
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    console.log('Wake Lock active');
+  } catch (err) {
+    console.log(`Wake Lock error: ${err.name}, ${err.message}`);
+  }
+}
+    requestWakeLock();
+
+  </script>
+</body>
+</html>
