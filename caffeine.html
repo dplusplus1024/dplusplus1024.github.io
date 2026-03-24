@@ -125,6 +125,13 @@ async function requestWakeLock() {
     console.log(`Wake Lock error: ${err.name}, ${err.message}`);
   }
 }
+    document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestWakeLock();
+  }
+});
+
+    
     function caffeine() {
     requestWakeLock();
     }
